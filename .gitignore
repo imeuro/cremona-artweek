@@ -37,6 +37,7 @@ php_errorlog
 
 dbs/
 
+/wp-*.php
 /wp-config*
 /.htaccess
 /sitemap.xml
