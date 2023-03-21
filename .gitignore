@@ -1,17 +1,22 @@
-# ignore everything in the root except the "wp-content" directory.
-!wp-content/
-
 wp-admin/
 wp-includes/
-# ignore everything in the "wp-content" directory, except:
-# "mu-plugins", "plugins", "themes" directory
 
-!wp-content/mu-plugins/
-!wp-content/plugins/
-!wp-content/themes/
+wp-content/ewww/
+wp-content/languages/
+wp-content/advanced-cache.php
+wp-content/backup-db/
+wp-content/backups/
+wp-content/blogs.dir/
+wp-content/cache/
+wp-content/upgrade/
+wp-content/uploads/
+wp-content/wp-cache-config.php
 
-# ignore these plugins
-wp-content/plugins/hello.php
+/.htaccess
+/license.txt
+/readme.html
+/sitemap.xml
+/sitemap.xml.gz
 
 # ignore specific themes
 wp-content/themes/twenty*/
@@ -30,11 +35,11 @@ node_modules/
 php_errorlog
 .DS_Store
 
+dbs/
+
 /wp-config*
-
-
-dbs
-
 /.htaccess
 /sitemap.xml
 /sitemap.xml.gz
+licenza.html
+xmlrpc.php
