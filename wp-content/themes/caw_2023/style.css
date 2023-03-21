@@ -1,0 +1,15 @@
+/*
+Theme Name: Cremona Art Week 2023
+Theme URI: https://localhost/cremona-artweek/
+Description: theme for Cremona Art Week 2023
+Author: Mauro Fioravanzi
+Author URI: https://meuro.dev
+Template: twentytwentytwo
+Version: 1.0.3
+*/
+
+body {
+	background-color: #f00;
+	font-size: 24px;
+	border: 5px solid#f0f;
+}
