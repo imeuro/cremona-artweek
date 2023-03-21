@@ -1,0 +1,25 @@
+@font-face {
+  font-family: 'OPSPlacard-Regular';
+  src: url('fonts/OPSPlacard-Regular.woff2') format('woff2'),
+       url('fonts/OPSPlacard-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+a, 
+a:visited,
+a:active { 
+	color: #e53935;
+	transition: color 250ms ease-in-out;
+}
+a:hover { color: #e57373 }
+
+body {
+	font-family: 'OPSPlacard-Regular';
+	background-color: #f6f6f6;
+	color: #444;
+	margin: 0 5vw;
+}
+div#page {
+    max-width: 1440px;
+    margin: 0 auto;
+}
