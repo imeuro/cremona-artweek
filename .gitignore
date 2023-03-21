@@ -21,3 +21,17 @@ node_modules/
 *.log
 *.sql
 *.sqlite
+
+*.zip
+*.tar
+*.tar.*
+php_errorlog
+.DS_Store
+
+
+
+dbs
+
+/.htaccess
+/sitemap.xml
+/sitemap.xml.gz
