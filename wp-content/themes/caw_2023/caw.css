@@ -14,7 +14,6 @@ a:active {
 a:hover { color: #e57373 }
 
 body {
-	font-family: 'OPSPlacard-Regular';
 	background-color: #f6f6f6;
 	color: #444;
 	margin: 0 5vw;
@@ -22,4 +21,8 @@ body {
 div#page {
     max-width: 1440px;
     margin: 0 auto;
+}
+.entry-header,
+.site-header {
+	font-family: 'OPSPlacard-Regular';
 }
