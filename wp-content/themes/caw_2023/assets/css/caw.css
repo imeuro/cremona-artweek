@@ -1,0 +1,72 @@
+@font-face {
+  font-family: 'OPSPlacard-Regular';
+  src: url('../fonts/OPSPlacard-Regular.woff2') format('woff2'),
+       url('../fonts/OPSPlacard-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.entry-header,
+.site-header {
+	font-family: 'OPSPlacard-Regular';
+}
+
+a, 
+a:visited,
+a:active { 
+	color: #e53935;
+	transition: color 250ms ease-in-out;
+}
+a:hover { color: #e57373 }
+
+body {
+	background-color: #f6f6f6;
+	color: #444;
+	margin: 0 5vw;
+}
+
+/* the grid */
+div#page {
+    display: flex;
+    flex-flow: column nowrap;
+}
+@media screen and (min-width: 37.5em) {
+	div#page {
+	    max-width: 1440px;
+	    height: 100vh;
+	    margin: 0 auto;
+	    display: grid;
+	    grid-template-columns: min-content 1fr;
+	    grid-template-rows: repeat(3, min-content);
+	    grid-column-gap: 10px;
+	    grid-row-gap: 0;
+	}
+	.site-header { grid-area: 1 / 1 / 3 / 2;}
+	.site-main {
+		grid-area: 1 / 2 / 3 / 3; 
+		min-height: calc(100vh - 25px);
+	}
+	.site-footer {
+		grid-area: 3 / 1 / 4 / 3; 
+		height: 20px;
+	}
+}
+/* /END the grid */
+
+
+.site-header .main-navigation ul {
+	flex-flow: column wrap;
+}
+.site-header .main-navigation a {
+	font-size: 1.375em;
+	text-transform: uppercase;
+}
+
+.site-title a {
+    background: url(../graphics/CRC_2023.svg) no-repeat left center;
+    display: block;
+    max-width: 250px;
+    width: 90vw;
+    height: 140px;
+    margin-bottom: 40px;
+}
