@@ -59,8 +59,9 @@ div#page {
 		z-index: 2;
 		height: 100%;
 		width: 33vw;
+		max-width: 250px;
 		background: #ffffff88;
-		padding: 30px;
+		padding: 10px 30px;
 		box-sizing: border-box;
 	}
 	.home .site-main {
