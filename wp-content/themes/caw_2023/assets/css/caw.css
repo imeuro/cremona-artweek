@@ -29,12 +29,12 @@ body {
 div#page {
     display: flex;
     flex-flow: column nowrap;
+    margin: 0 5vw;
 }
 @media screen and (min-width: 37.5em) {
 	div#page {
 	    max-width: 1440px;
 	    height: 100vh;
-	    margin: 0 auto;
 	    display: grid;
 	    grid-template-columns: min-content 1fr;
 	    grid-template-rows: repeat(3, min-content);
@@ -69,4 +69,11 @@ div#page {
     width: 90vw;
     height: 140px;
     margin-bottom: 40px;
+}
+
+
+#caw-mapbox {
+	width: 100%;
+	height: 100%;
+
 }
