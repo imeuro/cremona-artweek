@@ -172,6 +172,7 @@ div#page {
 
 #caw-content {
     position: absolute;
+    z-index: 3;
     top: 0;
     left: 250px;
     width: 0;
@@ -180,17 +181,17 @@ div#page {
     overflow-x: hidden;
     background: #ffffff88;
     border-right: 15px solid var(--main-color);
-    transition: width 250ms ease-in-out;
+    transition: width 500ms ease-in-out;
 }
-#caw-content .close-tabcontent {
+#caw-content .close-tabcontainer {
 	position: absolute;
     top: 5px;
     right: 5px;
     width: 50px;
     height: 50px;
 }
-#caw-content .close-tabcontent:before,
-#caw-content .close-tabcontent:after {
+#caw-content .close-tabcontainer:before,
+#caw-content .close-tabcontainer:after {
 	content: "";
     display: block;
     position: absolute;
@@ -202,7 +203,7 @@ div#page {
     border-left: 2px solid var(--main-color);
     transform: rotate(45deg);
 }
-#caw-content .close-tabcontent:after {
+#caw-content .close-tabcontainer:after {
     transform: rotate(-45deg);
     top: 1px;
     left: 20px;
@@ -214,10 +215,10 @@ div#page {
 #caw-content.full.open { 
 	width: 100vw;
 }
-#caw-content .tabcontent {
+#caw-tabcontainer {
 	padding: 0 40px;
 	color: var(--main-color);
 }
-#caw-content .title-tabcontent {
+#caw-tabcontainer .title-tabcontent {
 	font-family: var(--main-font);
 }
