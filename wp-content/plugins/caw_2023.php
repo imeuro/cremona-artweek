@@ -66,7 +66,14 @@ function events_post_type() {
 add_action( 'init', 'events_post_type', 0 );
 
 
-function my_acf_init() {
-    acf_update_setting('google_api_key', 'AIzaSyAntKVh1XNkFwRhPm8xzDVT3EuHseeo94E');
+// function my_acf_init() {
+//     acf_update_setting('google_api_key', 'AIzaSyAntKVh1XNkFwRhPm8xzDVT3EuHseeo94E');
+// }
+// add_action('acf/init', 'my_acf_init');
+
+add_filter('nav_menu_link_attributes', 'menu_post_ids');
+function menu_post_ids($val){
+ $postid = url_to_postid( $val['href'] );
+ $val['data-postid'] = $postid;
+ return $val;
 }
-add_action('acf/init', 'my_acf_init');

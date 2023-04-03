@@ -38,11 +38,9 @@
 				<p class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" title="<?php bloginfo( 'name' ); ?>"></a></p>
 				<?php
 			endif;
-			$caw_2023_description = get_bloginfo( 'description', 'display' );
-			if ( $caw_2023_description || is_customize_preview() ) :
-				?>
-				<p class="site-description"><?php echo $caw_2023_description; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
-			<?php endif; ?>
+			?>
+
+			<p class="caw-event-description"><span>27.05</span><span>3.06</span></p>
 		</div><!-- .site-branding -->
 
 		<nav id="site-navigation" class="main-navigation">
@@ -56,4 +54,16 @@
 			);
 			?>
 		</nav><!-- #site-navigation -->
+		<div class="lettering lettering-left">
+			<span data-letter="A"></span>
+			<span data-letter="B"></span>
+			<span data-letter="C"></span>
+			<span data-letter="D"></span>
+		</div>
+		<div class="lettering lettering-right">
+			<span data-letter="A"></span>
+			<span data-letter="B"></span>
+			<span data-letter="C"></span>
+			<span data-letter="D"></span>
+		</div>
 	</header><!-- #masthead -->
