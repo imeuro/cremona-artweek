@@ -60,10 +60,12 @@ const menuDivName = 'primary-menu';
 const MenuDiv = document.getElementById(menuDivName);
 const TabDivName = 'caw-content';
 const TabDiv = document.getElementById(TabDivName);
+const TabContainerName = 'caw-tabcontainer';
+const TabContainer = document.getElementById(TabContainerName);
 
 Array.from(MenuDiv.children).forEach((el) => {
 	let itemID = el.firstChild.dataset.postid;
-	let divType = el.firstChild.classList.contains('fullDiv')?'full':'normal';
+	let divType = el.classList.contains('fullDiv')?'full':'normal';
 	el.firstChild.addEventListener('click', (e) => {
 		e.preventDefault();
 		LoadItInTheDiv(itemID, divType);
@@ -73,6 +75,11 @@ Array.from(MenuDiv.children).forEach((el) => {
 	//console.debug(itemID, divType);
 	//el.firstChild.removeAttribute('href');
 })
+
+document.querySelector('.close-tabcontainer').addEventListener('click', () => {
+	TabDiv.classList = '';
+})
+
 
 async function getPostsFromWp() {
 	try {
@@ -87,29 +94,24 @@ async function getPostsFromWp() {
 const LoadItInTheDiv = (itemID, divType) => {
 	TabDiv.classList.remove('open',divType);
 	urlRequest = Baseurl+'/wp-json/wp/v2/pages/'+itemID;
-	let TabContent = '<div class="close-tabcontent"></div>';
-	TabDiv.innerHTML = TabContent;
+	// let TabContent = '<div class="close-tabcontent"></div>';
+	// TabDiv.innerHTML = TabContent;
+	let TabContent = '';
 	
 	
 	const resultFromWP = getPostsFromWp();
 	resultFromWP.then( 
 		data => {
-			// console.log( data ) 
+			console.debug( data ) 
 			TabContent += `
-			<div class="tabcontent">
 				<h2 class="title-tabcontent">`+data.title.rendered+`</h2>
 				<div class="content-tabcontent">`+data.content.rendered+`</div>
-			</div>
 			`;
-			console.debug(TabContent, divType);
-			TabDiv.innerHTML = TabContent;
+			console.info(TabContent, divType);
+			TabContainer.innerHTML = TabContent;
 		}
 	);
 	setTimeout(() => {
 		TabDiv.classList.add('open',divType);
-		document.querySelector('.close-tabcontent').addEventListener('click', () => {
-		TabDiv.classList.remove('open',divType);
-	})
 	},500);
-	//console.debug(TabContent, divType);
 }

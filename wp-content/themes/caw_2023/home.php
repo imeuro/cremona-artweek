@@ -10,7 +10,10 @@ get_header();
 			the_post();
 		?>
 			<div id='caw-mapbox'>Loading map...</div>
-			<div id="caw-content">Loading content...</div>
+			<div id="caw-content">
+				<div class="close-tabcontainer"></div>
+				<div id="caw-tabcontainer">Loading content...</div>
+			</div>
 
 			<!-- <iframe width='100%' height='400px' src="https://api.mapbox.com/styles/v1/meuro/clftwthuu002b01ogx6r445s7.html?title=false&access_token=pk.eyJ1IjoibWV1cm8iLCJhIjoiY2xmcjA2ZDczMDEwYTQzcWZwZXk4dmpvdSJ9.YHkGCdl-D6YkWDJbNGOBEQ&zoomwheel=false#13.64/45.13642/10.02768" title="CAW-2023" style="border:none;"></iframe> -->
 		
