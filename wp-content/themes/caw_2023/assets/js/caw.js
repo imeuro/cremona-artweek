@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // THE PAGE TAB
-const Baseurl = document.location.hostname.includes('localhost','meuro.dev') ? '/cremona-artweek' : '/';
+const Baseurl = ['localhost','meuro.dev'].includes(window.location.hostname) ? '/cremona-artweek' : '/';
 const menuDivName = 'primary-menu';
 const MenuDiv = document.getElementById(menuDivName);
 const TabDivName = 'caw-content';
