@@ -1,10 +1,12 @@
+
+
 // THE MAP BOX
 let map = '';
 const generateMapbox = () => {
 	mapboxgl.accessToken = 'pk.eyJ1IjoibWV1cm8iLCJhIjoiY2xmcjA2ZDczMDEwYTQzcWZwZXk4dmpvdSJ9.YHkGCdl-D6YkWDJbNGOBEQ';
 	map = new mapboxgl.Map({
 		container: 'caw-mapbox', // container ID
-		style: 'mapbox://styles/meuro/clftwthuu002b01ogx6r445s7', // style URL
+		style: 'mapbox://styles/meuro/clg4t7v1e004p01mpehknvnkd', // style URL
 		center: [10.015,45.135], // starting position [lng, lat]
 		zoom: 12.5, // starting zoom
 		// cooperativeGestures: true,
@@ -69,6 +71,7 @@ Array.from(MenuDiv.children).forEach((el) => {
 	el.firstChild.addEventListener('click', (e) => {
 		e.preventDefault();
 		LoadItInTheDiv(itemID, divType);
+		el.firstChild.classList.add('current');
 	}, false)
 
 
@@ -93,6 +96,10 @@ async function getPostsFromWp() {
 
 const LoadItInTheDiv = (itemID, divType) => {
 	TabDiv.classList.remove('open',divType);
+	Array.from(MenuDiv.children).forEach((el) => {
+		el.firstChild.classList.remove('current');
+	});
+
 	urlRequest = Baseurl+'/wp-json/wp/v2/pages/'+itemID;
 	// let TabContent = '<div class="close-tabcontent"></div>';
 	// TabDiv.innerHTML = TabContent;

@@ -65,15 +65,23 @@ function events_post_type() {
 }
 add_action( 'init', 'events_post_type', 0 );
 
+function my_acf_init() {
+	acf_update_setting('google_api_key', 'AIzaSyAntKVh1XNkFwRhPm8xzDVT3EuHseeo94E');
+}
+add_action('acf/init', 'my_acf_init');
 
-// function my_acf_init() {
-//     acf_update_setting('google_api_key', 'AIzaSyAntKVh1XNkFwRhPm8xzDVT3EuHseeo94E');
-// }
-// add_action('acf/init', 'my_acf_init');
-
+// NAVIGATION
 add_filter('nav_menu_link_attributes', 'menu_post_ids');
 function menu_post_ids($val){
  $postid = url_to_postid( $val['href'] );
  $val['data-postid'] = $postid;
  return $val;
 }
+
+// add_filter('nav_menu_css_class' , 'special_nav_class' , 10 , 2);
+// function special_nav_class ($classes, $item) {
+//   if (in_array('current-menu-item', $classes) ){
+//     $classes[] = 'activeee ';
+//   }
+//   return $classes;
+// }

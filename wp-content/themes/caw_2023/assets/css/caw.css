@@ -1,6 +1,6 @@
 :root {
 	--main-font: 'OPSPlacard-Regular';
-	--secondary-font: 'Arial, sans serif';
+	--secondary-font: Arial, 'Helvetica', sans-serif;
 	--main-color: #f00;
 	--backgorund-color: #f00;
 }
@@ -114,6 +114,12 @@ div#page {
     height: 140px;
     margin-bottom: 0;
 }
+
+#primary-menu .current {
+	border-bottom: 2px solid var(--main-color);
+	display: inline;
+}
+
 .lettering {
 	position: fixed;
 	top: 0;
@@ -218,7 +224,15 @@ div#page {
 #caw-tabcontainer {
 	padding: 0 40px;
 	color: var(--main-color);
+	font-family: var(--secondary-font);
+	font-size: 1em;
 }
 #caw-tabcontainer .title-tabcontent {
 	font-family: var(--main-font);
+	font-size: 2em;
+}
+#caw-tabcontainer .content-tabcontent img {
+    max-height: 300px;
+    max-width: 50vw;
+    object-fit: cover;
 }
