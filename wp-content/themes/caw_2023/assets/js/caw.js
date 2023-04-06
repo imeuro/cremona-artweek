@@ -94,13 +94,20 @@ async function getPostsFromWp() {
 	}
 }
 
+
+let resultFromWP = [];
 const LoadItInTheDiv = (itemID, divType) => {
 	TabDiv.classList.remove('open',divType);
 	Array.from(MenuDiv.children).forEach((el) => {
 		el.firstChild.classList.remove('current');
 	});
 
-	urlRequest = Baseurl+'/wp-json/wp/v2/pages/'+itemID;
+	if (itemID == 12) { // archivio eventi by nearest in time
+		urlRequest = Baseurl+'/wp-json/wp/v2/eventi?filter[orderby]=meta_value_num&filter[meta_key]=evento_date_start&filter[order]=ASC'
+		// urlRequest = Baseurl+'/wp-json/wp/v2/eventi?filter[orderby]=meta_value_num&filter[meta_key]=evento_date_start&filter[order]=ASC'
+	} else {
+		urlRequest = Baseurl+'/wp-json/wp/v2/pages/'+itemID;
+	}
 	// let TabContent = '<div class="close-tabcontent"></div>';
 	// TabDiv.innerHTML = TabContent;
 	let TabContent = '';
@@ -108,13 +115,38 @@ const LoadItInTheDiv = (itemID, divType) => {
 	
 	const resultFromWP = getPostsFromWp();
 	resultFromWP.then( 
-		data => {
-			console.debug( data ) 
-			TabContent += `
-				<h2 class="title-tabcontent">`+data.title.rendered+`</h2>
-				<div class="content-tabcontent">`+data.content.rendered+`</div>
-			`;
-			console.info(TabContent, divType);
+		CAWdata => {
+
+			if (itemID == 12) { // LISTING "EVENTI" (by nearest start date):
+				// console.debug( typeof( CAWdata ) , CAWdata );
+				// sort by the acf.evento_date_start field
+				CAWdata.sort((x, y) => {
+				     x = new Date(x.acf.evento_date_start),
+				      y = new Date(y.acf.evento_date_start);
+				    return x - y;
+				});
+
+				Object.values(CAWdata).forEach(el => {
+					//console.debug(el);
+					let EVdate = new Date(el.acf.evento_date_start);
+					let EVMonth = new Date(el.acf.evento_date_start).getMonth() + 1;
+					let paddedMonth = EVMonth<=9 ? ('0'+EVMonth).slice(-2) : EVMonth;
+					TabContent += `
+						<div class="caw-listing-item">
+							<time class="time-tabcontent">`+EVdate.getDate()+`.`+paddedMonth+`</time>
+							<h2 class="title-tabcontent">`+el.title.rendered+`</h2>
+							<span class="info-tabcontent">`+el.acf.evento_location.name+`</span>
+							<div class="content-tabcontent">`+el.content.rendered+`</div>
+						</div>
+					`;
+				})
+			} else { // SIMPLE POSTS/PAGES:
+					TabContent += `
+						<h2 class="title-tabcontent">`+CAWdata.title.rendered+`</h2>
+						<div class="content-tabcontent">`+CAWdata.content.rendered+`</div>
+					`;
+			}
+			//console.info(TabContent, divType);
 			TabContainer.innerHTML = TabContent;
 		}
 	);
