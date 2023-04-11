@@ -226,7 +226,10 @@ div#page {
 	color: var(--main-color);
 	font-family: var(--secondary-font);
 	font-size: 1em;
+	opacity: 0;
+	transition: opacity 250ms ease-in-out;
 }
+#caw-tabcontainer.visible { opacity: 1 };
 #caw-tabcontainer .title-tabcontent,
 #caw-tabcontainer .time-tabcontent {
 	font-family: var(--main-font);
@@ -235,7 +238,7 @@ div#page {
 }
 #caw-tabcontainer .content-tabcontent img {
     max-height: 300px;
-    max-width: 50vw;
+    max-width: 100%;
     object-fit: cover;
 }
 

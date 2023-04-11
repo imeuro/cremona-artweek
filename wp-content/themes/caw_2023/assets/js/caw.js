@@ -15,46 +15,62 @@ const generateMapbox = () => {
 	map.addControl(new mapboxgl.NavigationControl());
 
 }
-document.addEventListener('DOMContentLoaded', () => {
-	generateMapbox()
-	map.on('click', (event) => {
-	// If the user clicked on one of your markers, get its information.
-	const features = map.queryRenderedFeatures(event.point, {
-		layers: ['caw-2023-locations'] // replace with your layer name
-	});
-	if (!features.length) {
-		return;
-	}
-	const feature = features[0];
-	console.debug({feature})
 
-	/* 
-	Create a popup, specify its options 
-	and properties, and add it to the map.
-	*/
-	const popup = new mapboxgl.Popup({ 
+document.addEventListener('DOMContentLoaded', () => {
+	generateMapbox();
+
+	map.on('load', () => {
+		const popup = new mapboxgl.Popup({ 
 			anchor: 'left', 
-			offset: [20, 0], 
+			offset: [20, 10], 
 			className: 'caw-popup' ,
 			closeButton: false,
 			maxWidth: '400px'
 		})
-		.setLngLat(feature.geometry.coordinates)
-		.setHTML(
-			`<h3>${feature.properties.title}, ${feature.properties.description}</h3>`
-		)
-		.addTo(map);
+
+		let readmorelink;
+		map.on('mouseenter', 'caw-2023-artisti', (event) => {
+			map.getCanvas().style.cursor = 'pointer';
+			// If the user clicked on one of your markers, get its information.
+			const features = map.queryRenderedFeatures(event.point, {
+				layers: ['caw-2023-artisti'] // replace with your layer name
+			});
+			if (!features.length) {
+				return;
+			}
+			const feature = features[0];
+			console.debug({feature})
+			readmorelink = feature.properties.post_id;
+			/* 
+			Create a popup, specify its options 
+			and properties, and add it to the map.
+			*/
+			popup.setLngLat(feature.geometry.coordinates)
+			.setHTML(
+				`<p><a onclick="LoadItInTheDiv(${feature.properties.post_id},'artisti','HalfDiv');">${feature.properties.title}, ${feature.properties.description}<br><small>more info</a></small></p>`
+			)
+			.addTo(map);
+		});
+
+		map.on('mouseleave', 'caw-2023-artisti', () => {
+			map.getCanvas().style.cursor = '';
+			//popup.remove();
+		});
+
+		map.on('click', 'caw-2023-artisti', () => {
+			LoadItInTheDiv(readmorelink,'artisti','HalfDiv');
+		});
+
+		// Change the cursor to a pointer when the mouse is over the places layer.
+		// map.on('mouseenter', 'caw-2023-artisti', () => {
+		// 	map.getCanvas().style.cursor = 'pointer';
+		// });
+		 
 	});
-	// Change the cursor to a pointer when the mouse is over the places layer.
-	map.on('mouseenter', 'places', () => {
-	map.getCanvas().style.cursor = 'pointer';
-	});
-	 
-	// Change it back to a pointer when it leaves.
-	map.on('mouseleave', 'places', () => {
-	map.getCanvas().style.cursor = '';
-	});
+
 });
+
+
 
 // THE PAGE TAB
 const Baseurl = ['localhost','meuro.dev'].includes(window.location.hostname) ? '/cremona-artweek' : '/';
@@ -70,7 +86,7 @@ Array.from(MenuDiv.children).forEach((el) => {
 	let divType = el.classList.contains('fullDiv')?'full':'normal';
 	el.firstChild.addEventListener('click', (e) => {
 		e.preventDefault();
-		LoadItInTheDiv(itemID, divType);
+		LoadItInTheDiv(itemID, '',divType);
 		el.firstChild.classList.add('current');
 	}, false)
 
@@ -81,6 +97,7 @@ Array.from(MenuDiv.children).forEach((el) => {
 
 document.querySelector('.close-tabcontainer').addEventListener('click', () => {
 	TabDiv.classList = '';
+	TabContainer.classList.remove('visible');
 })
 
 
@@ -96,17 +113,20 @@ async function getPostsFromWp() {
 
 
 let resultFromWP = [];
-const LoadItInTheDiv = (itemID, divType) => {
+const LoadItInTheDiv = (itemID, postType, divType) => {
 	TabDiv.classList.remove('open',divType);
+	TabContainer.classList.remove('visible');
 	Array.from(MenuDiv.children).forEach((el) => {
 		el.firstChild.classList.remove('current');
 	});
 
-	if (itemID == 12) { // archivio eventi by nearest in time
-		urlRequest = Baseurl+'/wp-json/wp/v2/eventi?filter[orderby]=meta_value_num&filter[meta_key]=evento_date_start&filter[order]=ASC'
-		// urlRequest = Baseurl+'/wp-json/wp/v2/eventi?filter[orderby]=meta_value_num&filter[meta_key]=evento_date_start&filter[order]=ASC'
+	if (itemID == 0) { // archivio artisti by nearest in time
+		urlRequest = Baseurl+'/wp-json/wp/v2/artisti'
+	} else if (itemID == 12) { // archivio eventi by nearest in time
+		urlRequest = Baseurl+'/wp-json/wp/v2/eventi'
 	} else {
-		urlRequest = Baseurl+'/wp-json/wp/v2/pages/'+itemID;
+		postType = (postType == '') ? 'pages' : postType;
+		urlRequest = Baseurl+'/wp-json/wp/v2/'+postType+"/"+itemID;
 	}
 	// let TabContent = '<div class="close-tabcontent"></div>';
 	// TabDiv.innerHTML = TabContent;
@@ -116,9 +136,24 @@ const LoadItInTheDiv = (itemID, divType) => {
 	const resultFromWP = getPostsFromWp();
 	resultFromWP.then( 
 		CAWdata => {
+			console.debug( typeof( CAWdata ) , CAWdata );
 
-			if (itemID == 12) { // LISTING "EVENTI" (by nearest start date):
-				// console.debug( typeof( CAWdata ) , CAWdata );
+			if (postType == 'artisti') {
+				let EVPlace = CAWdata.acf.evento_location.name ? CAWdata.acf.evento_location.name : CAWdata.acf.evento_location.street_name+', '+CAWdata.acf.evento_location.street_number;
+				let EVdate = new Date(CAWdata.acf.evento_date_start);
+				let EVMonth = new Date(CAWdata.acf.evento_date_start).getMonth() + 1;
+				let paddedMonth = EVMonth<=9 ? ('0'+EVMonth).slice(-2) : EVMonth;
+				TabContent += `
+					<div class="caw-listing-item">
+						<time class="time-tabcontent">`+EVdate.getDate()+`.`+paddedMonth+`</time>
+						<h2 class="title-tabcontent">`+CAWdata.title.rendered+`</h2>
+						<span class="info-tabcontent">`+EVPlace+`</span>
+						<div class="content-tabcontent">`+CAWdata.content.rendered+`</div>
+					</div>
+				`;
+			}
+
+			else if (itemID == 12 || itemID == 0) { // LISTING "EVENTI" (by nearest start date):
 				// sort by the acf.evento_date_start field
 				CAWdata.sort((x, y) => {
 				     x = new Date(x.acf.evento_date_start),
@@ -128,6 +163,7 @@ const LoadItInTheDiv = (itemID, divType) => {
 
 				Object.values(CAWdata).forEach(el => {
 					//console.debug(el);
+					let EVPlace = el.acf.evento_location.name ? el.acf.evento_location.name : el.acf.evento_location.street_name+', '+el.acf.evento_location.street_number;
 					let EVdate = new Date(el.acf.evento_date_start);
 					let EVMonth = new Date(el.acf.evento_date_start).getMonth() + 1;
 					let paddedMonth = EVMonth<=9 ? ('0'+EVMonth).slice(-2) : EVMonth;
@@ -135,7 +171,7 @@ const LoadItInTheDiv = (itemID, divType) => {
 						<div class="caw-listing-item">
 							<time class="time-tabcontent">`+EVdate.getDate()+`.`+paddedMonth+`</time>
 							<h2 class="title-tabcontent">`+el.title.rendered+`</h2>
-							<span class="info-tabcontent">`+el.acf.evento_location.name+`</span>
+							<span class="info-tabcontent">`+EVPlace+`</span>
 							<div class="content-tabcontent">`+el.content.rendered+`</div>
 						</div>
 					`;
@@ -153,4 +189,7 @@ const LoadItInTheDiv = (itemID, divType) => {
 	setTimeout(() => {
 		TabDiv.classList.add('open',divType);
 	},500);
+	setTimeout(() => {
+		TabContainer.classList.add('visible');
+	},1000);
 }
