@@ -185,7 +185,7 @@ div#page {
     max-width: calc(100vw - 250px);
     height: 100%;
     overflow-x: hidden;
-    background: #ffffffDD;
+    background: #ffffffB0;
     border-right: 15px solid var(--main-color);
     transition: width 500ms ease-in-out;
 }

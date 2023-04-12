@@ -1,8 +1,7 @@
-let artistList = getPostsFromWp('https://localhost/cremona-artweek/wp-json/wp/v2/artisti');
-var CAWgeoJSON = [];
-let map = '';
+
 
 // THE MAP BOX
+let map = '';
 const generateMapbox = () => {
 	mapboxgl.accessToken = 'pk.eyJ1IjoibWV1cm8iLCJhIjoiY2xmcjA2ZDczMDEwYTQzcWZwZXk4dmpvdSJ9.YHkGCdl-D6YkWDJbNGOBEQ';
 	map = new mapboxgl.Map({
@@ -17,62 +16,10 @@ const generateMapbox = () => {
 
 }
 
-
-
-
-
 document.addEventListener('DOMContentLoaded', () => {
-artistList.then( 
-		ARTdata => {
-			var features = [];
-			var geoJSON = {};
-			geoJSON.type = 'FeatureCollection'
-			Object.values(ARTdata).forEach(el => {
-				console.debug( {el} );
-				var art = {};
-				art.type = "Feature";
-				art.properties = {}
-				art.properties.type = el.type;
-				art.properties.title = el.title.rendered;
-				art.properties.description = el.acf.evento_note;
-				art.properties.post_id = el.id;
-				art.geometry = {};
-				art.geometry.type = "Point"
-				art.geometry.coordinates = [el.acf.evento_location.lng,el.acf.evento_location.lat];
-
-				features.push(art);
-			});
-
-			geoJSON.features = features;
-			CAWgeoJSON = geoJSON;
-			// console.debug(CAWgeoJSON)
-
-		}
-).then(generateMapbox());
-
+	generateMapbox();
 
 	map.on('load', () => {
-		// JSON EXAMPLE @
-		// https://docs.mapbox.com/mapbox-gl-js/example/popup-on-hover/
-		// console.debug(CAWgeoJSON);
-
-		map.addSource('places', {
-			'type': 'geojson',
-			'data': CAWgeoJSON
-		}) 
-
-		map.addLayer({
-			'id': 'places',
-			'type': 'circle',
-			'source': 'places',
-			'paint': {
-				'circle-color': '#fff',
-				'circle-radius': 10,
-				'circle-stroke-width': 2,
-				'circle-stroke-color': '#f00'
-			}
-		})
-
 		const popup = new mapboxgl.Popup({ 
 			anchor: 'left', 
 			offset: [20, 10], 
@@ -82,11 +29,11 @@ artistList.then(
 		})
 
 		let readmorelink;
-		map.on('mouseenter', 'places', (event) => {
+		map.on('mouseenter', 'caw-2023-artisti', (event) => {
 			map.getCanvas().style.cursor = 'pointer';
 			// If the user clicked on one of your markers, get its information.
 			const features = map.queryRenderedFeatures(event.point, {
-				layers: ['places'] // replace with your layer name
+				layers: ['caw-2023-artisti'] // replace with your layer name
 			});
 			if (!features.length) {
 				return;
@@ -100,21 +47,26 @@ artistList.then(
 			*/
 			popup.setLngLat(feature.geometry.coordinates)
 			.setHTML(
-				`<p><a onclick="LoadItInTheDiv(${feature.properties.post_id},'${feature.properties.type}','HalfDiv');">${feature.properties.title}, ${feature.properties.description}<br><small>more info</a></small></p>`
+				`<p><a onclick="LoadItInTheDiv(${feature.properties.post_id},'artisti','HalfDiv');">${feature.properties.title}, ${feature.properties.description}<br><small>more info</a></small></p>`
 			)
 			.addTo(map);
 		});
 
-		map.on('mouseleave', 'places', () => {
+		map.on('mouseleave', 'caw-2023-artisti', () => {
 			map.getCanvas().style.cursor = '';
 			//popup.remove();
 		});
 
-		map.on('click', 'places', () => {
+		map.on('click', 'caw-2023-artisti', () => {
 			LoadItInTheDiv(readmorelink,'artisti','HalfDiv');
 		});
+
+		// Change the cursor to a pointer when the mouse is over the places layer.
+		// map.on('mouseenter', 'caw-2023-artisti', () => {
+		// 	map.getCanvas().style.cursor = 'pointer';
+		// });
 		 
-	})
+	});
 
 });
 
@@ -149,7 +101,7 @@ document.querySelector('.close-tabcontainer').addEventListener('click', () => {
 })
 
 
-async function getPostsFromWp(urlRequest) {
+async function getPostsFromWp() {
 	try {
 		const response = await fetch( urlRequest )
 		const data = await response.json()
@@ -181,7 +133,7 @@ const LoadItInTheDiv = (itemID, postType, divType) => {
 	let TabContent = '';
 	
 	
-	const resultFromWP = getPostsFromWp(urlRequest);
+	const resultFromWP = getPostsFromWp();
 	resultFromWP.then( 
 		CAWdata => {
 			console.debug( typeof( CAWdata ) , CAWdata );
