@@ -95,10 +95,9 @@ artistList.then(
 			const feature = features[0];
 			console.debug({feature})
 			readmorelink = feature.properties.post_id;
-			/* 
-			Create a popup, specify its options 
-			and properties, and add it to the map.
-			*/
+			// Create a popup, specify its options 
+			// and properties, and add it to the map.
+			
 			popup.setLngLat(feature.geometry.coordinates)
 			.setHTML(
 				`<p><a onclick="LoadItInTheDiv(${feature.properties.post_id},'${feature.properties.type}','HalfDiv');">${feature.properties.title}, ${feature.properties.description}<br><small>more info</a></small></p>`

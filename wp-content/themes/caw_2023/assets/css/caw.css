@@ -70,7 +70,7 @@ div#page {
 		z-index: 2;
 		height: 100%;
 		width: 265px;
-		background: #ffffffAA;
+		background: #ffffffB0;
 		padding: 0px 15px;
 		box-sizing: border-box;
 		border-right: 15px solid var(--main-color);
@@ -216,7 +216,7 @@ div#page {
 }
 
 #caw-content.open { 
-	width: 500px;
+	width: 50vw;
 }
 #caw-content.full.open { 
 	width: 100vw;
@@ -229,7 +229,7 @@ div#page {
 	opacity: 0;
 	transition: opacity 150ms ease-in-out;
 }
-#caw-tabcontainer.visible { opacity: 1 };
+#caw-tabcontainer.visible { opacity: 1; }
 #caw-tabcontainer .title-tabcontent,
 #caw-tabcontainer .time-tabcontent {
 	font-family: var(--main-font);
