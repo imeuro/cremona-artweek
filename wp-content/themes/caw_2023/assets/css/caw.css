@@ -227,7 +227,7 @@ div#page {
 	font-family: var(--secondary-font);
 	font-size: 1em;
 	opacity: 0;
-	transition: opacity 250ms ease-in-out;
+	transition: opacity 150ms ease-in-out;
 }
 #caw-tabcontainer.visible { opacity: 1 };
 #caw-tabcontainer .title-tabcontent,

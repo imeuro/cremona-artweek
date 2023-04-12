@@ -114,7 +114,7 @@ async function getPostsFromWp() {
 
 let resultFromWP = [];
 const LoadItInTheDiv = (itemID, postType, divType) => {
-	TabDiv.classList.remove('open',divType);
+	TabDiv.classList = ''
 	TabContainer.classList.remove('visible');
 	Array.from(MenuDiv.children).forEach((el) => {
 		el.firstChild.classList.remove('current');
