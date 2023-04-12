@@ -1,5 +1,5 @@
-const Baseurl = ['localhost','meuro.dev'].includes(window.location.hostname) ? '/cremona-artweek' : '/';
-let artistList = getPostsFromWp(Baseurl+'wp-json/wp/v2/artisti');
+const Baseurl = ['localhost','meuro.dev'].includes(window.location.hostname) ? '/cremona-artweek' : '';
+let artistList = getPostsFromWp(Baseurl+'/wp-json/wp/v2/artisti');
 var CAWgeoJSON = [];
 let map = '';
 
