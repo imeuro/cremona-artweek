@@ -1,4 +1,5 @@
-let artistList = getPostsFromWp('https://localhost/cremona-artweek/wp-json/wp/v2/artisti');
+const Baseurl = ['localhost','meuro.dev'].includes(window.location.hostname) ? '/cremona-artweek' : '/';
+let artistList = getPostsFromWp(Baseurl+'wp-json/wp/v2/artisti');
 var CAWgeoJSON = [];
 let map = '';
 
@@ -121,7 +122,6 @@ artistList.then(
 
 
 // THE PAGE TAB
-const Baseurl = ['localhost','meuro.dev'].includes(window.location.hostname) ? '/cremona-artweek' : '/';
 const menuDivName = 'primary-menu';
 const MenuDiv = document.getElementById(menuDivName);
 const TabDivName = 'caw-content';
