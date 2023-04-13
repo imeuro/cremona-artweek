@@ -209,13 +209,13 @@ const LoadItInTheDiv = (itemID, postType, divType) => {
 				});
 
 				Object.values(CAWdata).forEach(el => {
-					//console.debug(el);
+					// console.debug(el);
 					let EVPlace = el.acf.evento_location.name ? el.acf.evento_location.name : el.acf.evento_location.street_name+', '+el.acf.evento_location.street_number;
 					let EVdate = new Date(el.acf.evento_date_start);
 					let EVMonth = new Date(el.acf.evento_date_start).getMonth() + 1;
 					let paddedMonth = EVMonth<=9 ? ('0'+EVMonth).slice(-2) : EVMonth;
 					TabContent += `
-						<div class="caw-listing-item">
+						<div class="caw-listing-item" id="${el.slug}">
 							<time class="time-tabcontent">`+EVdate.getDate()+`.`+paddedMonth+`</time>
 							<h2 class="title-tabcontent">`+el.title.rendered+`</h2>
 							<span class="info-tabcontent">`+EVPlace+`</span>

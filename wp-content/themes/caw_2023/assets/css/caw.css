@@ -169,6 +169,7 @@ div#page {
     background: transparent;
     box-shadow: none;
     padding: 0;
+    cursor: pointer;
 }
 .caw-popup .mapboxgl-popup-tip {
 	border: none;
