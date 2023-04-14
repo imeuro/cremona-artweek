@@ -176,7 +176,7 @@ div#page {
 .caw-popup .mapboxgl-popup-tip {
 	border: none;
 }
-.mapboxgl-ctrl-bottom-right .mapboxgl-ctrl {
+.mapboxgl-control-container .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl {
     margin-right: 40px;
 }
 
