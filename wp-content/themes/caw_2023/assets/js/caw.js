@@ -145,6 +145,11 @@ Array.from(MenuDiv.children).forEach((el) => {
 document.querySelector('.close-tabcontainer').addEventListener('click', () => {
 	TabDiv.classList = '';
 	TabContainer.classList.remove('visible');
+	map.flyTo({
+		center: [10.015,45.135],
+		essential: true,
+		zoom:12.5
+	});
 })
 
 
@@ -198,6 +203,11 @@ const LoadItInTheDiv = (itemID, postType, divType) => {
 						<div class="content-tabcontent">`+CAWdata.content.rendered+`</div>
 					</div>
 				`;
+				map.flyTo({
+					center: [(CAWdata.acf.evento_location.lng - 0.0045),CAWdata.acf.evento_location.lat],
+					essential: true,
+					zoom:16
+				});
 			}
 
 			else if (itemID == 12 || itemID == 0) { // LISTING "EVENTI" (by nearest start date):
@@ -231,6 +241,7 @@ const LoadItInTheDiv = (itemID, postType, divType) => {
 			}
 			//console.info(TabContent, divType);
 			TabContainer.innerHTML = TabContent;
+
 		}
 	);
 	setTimeout(() => {

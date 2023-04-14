@@ -1,8 +1,8 @@
 :root {
 	--main-font: 'OPSPlacard-Regular';
 	--secondary-font: Arial, 'Helvetica', sans-serif;
-	--main-color: #f00;
-	--backgorund-color: #f00;
+	--main-color: #e41512;
+	--backgorund-color: #e41512;
 }
 
 @font-face {
@@ -21,10 +21,11 @@ body {
 	font-family: var(--main-font);
 }
 
-a, 
+a,
+a:focus,
 a:visited,
 a:active { 
-	color: #e53935;
+	color: var(--main-color);
 	transition: color 250ms ease-in-out;
 }
 a:hover { color: #e57373 }
@@ -99,19 +100,20 @@ div#page {
 .site-header .main-navigation ul {
 	font-family: Arial;
 	flex-flow: column wrap;
-	border-top: 3px solid var(--main-color);
+	border-top: 2.5px solid var(--main-color);
 	padding-top: 20px;
+	margin-top: 50px;
 }
 .site-header .main-navigation a {
     font-size: 1rem;
 }
 
 .site-title a {
-    background: url(../graphics/CRC_2023.svg) no-repeat left center;
+    background: url(../graphics/CRC_Final.svg) no-repeat left center;
     display: block;
     max-width: 250px;
     width: 90vw;
-    height: 140px;
+    height: 215px;
     margin-bottom: 0;
 }
 
@@ -135,7 +137,7 @@ div#page {
     right: 0;
     left: initial;
     z-index: 2;
-    background: #f00;
+    background: var(--main-color);
 }
 .lettering span:after {
 	content: attr(data-letter);

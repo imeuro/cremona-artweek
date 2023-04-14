@@ -39,8 +39,6 @@
 				<?php
 			endif;
 			?>
-
-			<p class="caw-event-description"><span>27.05</span><span>3.06</span></p>
 		</div><!-- .site-branding -->
 
 		<nav id="site-navigation" class="main-navigation">
