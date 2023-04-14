@@ -205,7 +205,7 @@ const LoadItInTheDiv = (itemID, postType, divType) => {
 					</div>
 				`;
 				map.flyTo({
-					center: [(CAWdata.acf.evento_location.lng - 0.0045),CAWdata.acf.evento_location.lat],
+					center: [(CAWdata.acf.evento_location.lng - 0.0035),CAWdata.acf.evento_location.lat],
 					essential: true,
 					zoom:16,
 					duration: 2000

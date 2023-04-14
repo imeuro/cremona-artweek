@@ -222,7 +222,7 @@ div#page {
 }
 
 #caw-content.open { 
-	width: 50vw;
+	width: calc(50vw - 120px);
 }
 #caw-content.full.open { 
 	width: 100vw;
