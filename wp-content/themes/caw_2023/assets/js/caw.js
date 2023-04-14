@@ -149,7 +149,7 @@ document.querySelector('.close-tabcontainer').addEventListener('click', () => {
 		center: [10.015,45.135],
 		essential: true,
 		zoom:12.5,
-		duration: 2000
+		duration: 1000
 	});
 })
 
@@ -208,7 +208,7 @@ const LoadItInTheDiv = (itemID, postType, divType) => {
 					center: [(CAWdata.acf.evento_location.lng - 0.0045),CAWdata.acf.evento_location.lat],
 					essential: true,
 					zoom:16,
-					duration: 3000
+					duration: 2000
 				});
 			}
 
