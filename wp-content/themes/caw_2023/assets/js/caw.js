@@ -14,7 +14,7 @@ const generateMapbox = () => {
 		// cooperativeGestures: true,
 	});
 
-	map.addControl(new mapboxgl.NavigationControl());
+	map.addControl(new mapboxgl.NavigationControl(),'bottom-right');
 
 }
 
@@ -76,7 +76,7 @@ artistList.then(
 
 		const popup = new mapboxgl.Popup({ 
 			anchor: 'left', 
-			offset: [20, 10], 
+			offset: [20, 5], 
 			className: 'caw-popup' ,
 			closeButton: false,
 			maxWidth: '400px'
@@ -100,7 +100,7 @@ artistList.then(
 			
 			popup.setLngLat(feature.geometry.coordinates)
 			.setHTML(
-				`<p><a onclick="LoadItInTheDiv(${feature.properties.post_id},'${feature.properties.type}','HalfDiv');">${feature.properties.title}, ${feature.properties.description}<br><small>more info</a></small></p>`
+				`<p><a onclick="LoadItInTheDiv(${feature.properties.post_id},'${feature.properties.type}','HalfDiv');">${feature.properties.title}</a></p>`
 			)
 			.addTo(map);
 		});
@@ -148,7 +148,8 @@ document.querySelector('.close-tabcontainer').addEventListener('click', () => {
 	map.flyTo({
 		center: [10.015,45.135],
 		essential: true,
-		zoom:12.5
+		zoom:12.5,
+		duration: 2000
 	});
 })
 
@@ -206,7 +207,8 @@ const LoadItInTheDiv = (itemID, postType, divType) => {
 				map.flyTo({
 					center: [(CAWdata.acf.evento_location.lng - 0.0045),CAWdata.acf.evento_location.lat],
 					essential: true,
-					zoom:16
+					zoom:16,
+					duration: 3000
 				});
 			}
 
@@ -225,7 +227,7 @@ const LoadItInTheDiv = (itemID, postType, divType) => {
 					let EVMonth = new Date(el.acf.evento_date_start).getMonth() + 1;
 					let paddedMonth = EVMonth<=9 ? ('0'+EVMonth).slice(-2) : EVMonth;
 					TabContent += `
-						<div class="caw-listing-item" id="${el.slug}">
+						<div class="caw-listing-item" id="${el.slug}" data-position-lng="${el.acf.evento_location.lng}" data-position-lat="${el.acf.evento_location.lat}">
 							<time class="time-tabcontent">`+EVdate.getDate()+`.`+paddedMonth+`</time>
 							<h2 class="title-tabcontent">`+el.title.rendered+`</h2>
 							<span class="info-tabcontent">`+EVPlace+`</span>
