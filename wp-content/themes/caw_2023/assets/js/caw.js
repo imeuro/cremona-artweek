@@ -37,6 +37,8 @@ artistList.then(
 				art.properties.title = el.title.rendered;
 				art.properties.description = el.acf.evento_note;
 				art.properties.post_id = el.id;
+				art.properties.location_name = el.acf.evento_location.name;
+				art.properties.location_address = el.acf.evento_location.street_name+', '+el.acf.evento_location.street_number;
 				art.geometry = {};
 				art.geometry.type = "Point"
 				art.geometry.coordinates = [el.acf.evento_location.lng,el.acf.evento_location.lat];
@@ -95,12 +97,13 @@ artistList.then(
 			const feature = features[0];
 			console.debug({feature})
 			readmorelink = feature.properties.post_id;
+			let EVPlace = feature.properties.location_name ? feature.properties.location_name : feature.properties.location_address;
 			// Create a popup, specify its options 
 			// and properties, and add it to the map.
 			
 			popup.setLngLat(feature.geometry.coordinates)
 			.setHTML(
-				`<p><a onclick="LoadItInTheDiv(${feature.properties.post_id},'${feature.properties.type}','HalfDiv');">${feature.properties.title}</a></p>`
+				`<p><a onclick="LoadItInTheDiv(${feature.properties.post_id},'${feature.properties.type}','HalfDiv');">${feature.properties.title}<br><small>${EVPlace}</small></a></p>`
 			)
 			.addTo(map);
 		});
@@ -219,6 +222,11 @@ const LoadItInTheDiv = (itemID, postType, divType) => {
 				      y = new Date(y.acf.evento_date_start);
 				    return x - y;
 				});
+
+				// testatina x listing eventi extra:
+				if (itemID == 12) {
+					TabContent += ` <h2 class="title-tabcontent heading-line">Calendario Eventi</h2>`;
+				}
 
 				Object.values(CAWdata).forEach(el => {
 					// console.debug(el);

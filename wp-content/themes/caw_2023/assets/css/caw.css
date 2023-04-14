@@ -176,8 +176,16 @@ div#page {
 .caw-popup .mapboxgl-popup-tip {
 	border: none;
 }
-.mapboxgl-control-container .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl {
+.mapboxgl-control-container .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl.mapboxgl-ctrl-group {
     margin-right: 40px;
+    box-shadow: none;
+}
+.mapboxgl-control-container .mapboxgl-ctrl-group button,
+.mapboxgl-control-container .mapboxgl-ctrl-group button:first-child,
+.mapboxgl-control-container .mapboxgl-ctrl-group button:last-child {
+    border: none;
+    border-radius: 0;
+    /* background: #f00; */
 }
 
 
@@ -201,6 +209,11 @@ div#page {
     width: 50px;
     height: 50px;
     cursor: pointer;
+	transition: transform 250ms ease-in-out;
+}
+#caw-content .close-tabcontainer:hover {
+    transform-origin: center;
+    transform: scale(0.75);
 }
 #caw-content .close-tabcontainer:before,
 #caw-content .close-tabcontainer:after {
@@ -228,7 +241,7 @@ div#page {
 	width: 100vw;
 }
 #caw-tabcontainer {
-	padding: 0 40px;
+	padding: 0 55px;
 	color: var(--main-color);
 	font-family: var(--secondary-font);
 	font-size: 1em;
@@ -245,6 +258,10 @@ div#page {
 	font-weight: 400;
 	margin: 25px 0;
 	padding: 0;
+}
+#caw-tabcontainer .title-tabcontent.heading-line {
+    border-bottom: 2.5px solid var(--main-color);
+    padding-bottom: 35px;
 }
 #caw-tabcontainer .content-tabcontent img {
     max-height: 300px;
