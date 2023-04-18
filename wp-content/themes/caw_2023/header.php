@@ -51,7 +51,13 @@
 				)
 			);
 			?>
+
+			<ul id="lang-switcher" class="menu">
+				<li><a href="<?php echo pll_home_url('it'); ?>" hreflang="it-IT" lang="it-IT">IT</a></li>
+				<li><a href="<?php echo pll_home_url('en'); ?>" hreflang="en-US" lang="en-US">EN</a></li>
+			</ul>
 		</nav><!-- #site-navigation -->
+
 		<div class="lettering lettering-left">
 			<span data-letter="A"></span>
 			<span data-letter="B"></span>

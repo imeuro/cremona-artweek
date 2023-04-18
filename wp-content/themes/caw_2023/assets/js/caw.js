@@ -131,6 +131,15 @@ const TabDiv = document.getElementById(TabDivName);
 const TabContainerName = 'caw-tabcontainer';
 const TabContainer = document.getElementById(TabContainerName);
 
+document.querySelector('.menu-toggle').addEventListener('click',()=>{
+	document.getElementById('masthead').classList.toggle('hidden');
+})
+
+let langswitch = document.getElementById('lang-switcher');
+var fragment = document.createDocumentFragment();
+fragment.appendChild(langswitch);
+MenuDiv.parentNode.appendChild(fragment);
+
 Array.from(MenuDiv.children).forEach((el) => {
 	let itemID = el.firstChild.dataset.postid;
 	let divType = el.classList.contains('fullDiv')?'full':'normal';
@@ -148,6 +157,7 @@ Array.from(MenuDiv.children).forEach((el) => {
 document.querySelector('.close-tabcontainer').addEventListener('click', () => {
 	TabDiv.classList = '';
 	TabContainer.classList.remove('visible');
+	document.getElementById('masthead').classList.remove('compact');
 	map.flyTo({
 		center: [10.015,45.135],
 		essential: true,
@@ -256,6 +266,7 @@ const LoadItInTheDiv = (itemID, postType, divType) => {
 	);
 	setTimeout(() => {
 		TabDiv.classList.add('open',divType);
+		document.getElementById('masthead').classList.add('compact');
 	},500);
 	setTimeout(() => {
 		TabContainer.classList.add('visible');

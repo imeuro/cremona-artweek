@@ -151,6 +151,12 @@ function my_acf_init() {
 add_action('acf/init', 'my_acf_init');
 
 // NAVIGATION
+function register_my_menu() {
+register_nav_menu('lang-switcher', 'Lang Switcher' );
+}
+add_action( 'init', 'register_my_menu' );
+
+
 add_filter('nav_menu_link_attributes', 'menu_post_ids');
 function menu_post_ids($val){
  $postid = url_to_postid( $val['href'] );
