@@ -1,5 +1,5 @@
 const Baseurl = ['localhost','meuro.dev'].includes(window.location.hostname) ? '/cremona-artweek' : '';
-let artistList = getPostsFromWp(Baseurl+'/wp-json/wp/v2/artisti');
+let artistList = getPostsFromWp(Baseurl+'/wp-json/wp/v2/artisti?per_page=99');
 var CAWgeoJSON = [];
 BaseCoords = window.innerWidth<600 ? [10.025,45.145] : [10.015,45.135]
 let map = '';
@@ -12,7 +12,7 @@ const generateMapbox = () => {
 		container: 'caw-mapbox', // container ID
 		style: 'mapbox://styles/meuro/clg4t7v1e004p01mpehknvnkd', // style URL
 		center: BaseCoords, // starting position [lng, lat]
-		zoom: 12.5, // starting zoom
+		zoom: 13, // starting zoom
 		// cooperativeGestures: true,
 	});
 	map.addControl(new mapboxgl.NavigationControl(),'bottom-right');
@@ -22,68 +22,88 @@ const generateMapbox = () => {
 		// JSON EXAMPLE @
 		// https://docs.mapbox.com/mapbox-gl-js/example/popup-on-hover/
 		// console.debug(CAWgeoJSON);
+		map.loadImage(
+		Baseurl+'/wp-content/themes/caw_2023/assets/graphics/caw-marker.png',
+		(error, image) => {
+			if (error) throw error;
+			 
+			// Add the image to the map style.
+			map.addImage('cawpointer', image);
 
-		map.addSource('places', {
-			'type': 'geojson',
-			'data': CAWgeoJSON
-		}) 
 
-		map.addLayer({
-			'id': 'places',
-			'type': 'circle',
-			'source': 'places',
-			'paint': {
-				'circle-color': '#fff',
-				'circle-radius': 10,
-				'circle-stroke-width': 2,
-				'circle-stroke-color': '#f00'
-			}
-		})
+			map.addSource('places', {
+				'type': 'geojson',
+				'data': CAWgeoJSON
+			}) 
 
-		const popup = new mapboxgl.Popup({ 
-			anchor: 'left', 
-			offset: [20, 5], 
-			className: 'caw-popup' ,
-			closeButton: false,
-			maxWidth: '400px'
-		})
+			map.addLayer({
+				'id': 'places',
+				//'type': 'circle',
+				'type': 'symbol',
+				'source': 'places',
+				'layout': {
+					'icon-image': 'cawpointer',
+					'icon-size': .75,
+					'icon-allow-overlap': true,
+					'icon-ignore-placement': true,
+					'text-allow-overlap': true,
+					'text-ignore-placement': true,
+					'text-optional': true,
+					'text-field': ['get', 'description'],
+					'text-variable-anchor': ['center'],
+					'text-radial-offset': 0,
+					'text-justify': 'auto',
+					'text-size': 14,
+				},
+				'paint': {
+					'text-color': '#e41512',
+				}
+			})
 
-		let readmorelink;
-		map.on('mouseenter', 'places', (event) => {
-			map.getCanvas().style.cursor = 'pointer';
-			// If the user clicked on one of your markers, get its information.
-			const features = map.queryRenderedFeatures(event.point, {
-				layers: ['places'] // replace with your layer name
+			const popup = new mapboxgl.Popup({ 
+				anchor: 'left', 
+				offset: [20, 5], 
+				className: 'caw-popup' ,
+				closeButton: false,
+				maxWidth: '400px'
+			})
+
+			let readmorelink;
+			map.on('mouseenter', 'places', (event) => {
+				map.getCanvas().style.cursor = 'pointer';
+				// If the user clicked on one of your markers, get its information.
+				const features = map.queryRenderedFeatures(event.point, {
+					layers: ['places'] // replace with your layer name
+				});
+				if (!features.length) {
+					return;
+				}
+				const feature = features[0];
+				console.debug({feature})
+				readmorelink = feature.properties.post_id;
+				let EVPlace = feature.properties.location_name ? feature.properties.location_name : feature.properties.location_address;
+				// Create a popup, specify its options 
+				// and properties, and add it to the map.
+				
+				popup.setLngLat(feature.geometry.coordinates)
+				.setHTML(
+					`<a onclick="LoadItInTheDiv(${feature.properties.post_id},'${feature.properties.type}','HalfDiv');">
+						<span class="event-number">${feature.properties.location_number}</span>
+						<p>${feature.properties.title}<br><small>${EVPlace}</p>
+					</a>`
+				)
+				.addTo(map);
 			});
-			if (!features.length) {
-				return;
-			}
-			const feature = features[0];
-			console.debug({feature})
-			readmorelink = feature.properties.post_id;
-			let EVPlace = feature.properties.location_name ? feature.properties.location_name : feature.properties.location_address;
-			// Create a popup, specify its options 
-			// and properties, and add it to the map.
-			
-			popup.setLngLat(feature.geometry.coordinates)
-			.setHTML(
-				`<span class="">
-					${feature.properties.location_number}
-				</span>
-				<p>
-					<a onclick="LoadItInTheDiv(${feature.properties.post_id},'${feature.properties.type}','HalfDiv');">${feature.properties.title}<br><small>${EVPlace}</small></a>
-				</p>`
-			)
-			.addTo(map);
-		});
 
-		map.on('mouseleave', 'places', () => {
-			map.getCanvas().style.cursor = '';
-			//popup.remove();
-		});
+			map.on('mouseleave', 'places', () => {
+				map.getCanvas().style.cursor = '';
+				//popup.remove();
+			});
 
-		map.on('click', 'places', () => {
-			LoadItInTheDiv(readmorelink,'artisti','HalfDiv');
+			map.on('click', 'places', () => {
+				LoadItInTheDiv(readmorelink,'artisti','HalfDiv');
+			});
+
 		});
 		 
 	});
@@ -108,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					art.properties = {}
 					art.properties.type = el.type;
 					art.properties.title = el.title.rendered;
-					art.properties.description = el.acf.evento_note;
+					art.properties.description = el.acf.evento_num;
 					art.properties.post_id = el.id;
 					art.properties.location_name = el.acf.evento_location.name;
 					art.properties.location_address = el.acf.evento_location.street_name+', '+el.acf.evento_location.street_number;
@@ -122,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 				geoJSON.features = features;
 				CAWgeoJSON = geoJSON;
-				// console.debug(CAWgeoJSON)
+				console.debug(CAWgeoJSON)
 				generateMapbox();
 			}
 	);
@@ -173,7 +193,7 @@ document.querySelector('.close-tabcontainer').addEventListener('click', () => {
 	map.flyTo({
 		center: BaseCoords,
 		essential: true,
-		zoom:12.5,
+		zoom:13,
 		duration: 1000
 	});
 })

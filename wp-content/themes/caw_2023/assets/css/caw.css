@@ -164,7 +164,7 @@ div#page {
     display: block;
     width: 225px;
     height: 215px;
-    margin: 10px auto 10px 30px;
+    margin: 10px auto 10px 15px;
 }
 
 .lettering {
@@ -285,7 +285,7 @@ button.menu-toggle:after {
 		height: auto;
 		background: transparent;
 	}
-	.site-title a { margin: 30px 0 0 0; }
+	.site-title a { margin: 14px 0 0 0; }
 	.lettering { left: 244px; }
 	.lettering.lettering-left { display: flex; }
 }
@@ -307,6 +307,20 @@ button.menu-toggle:after {
     box-shadow: none;
     padding: 0;
     cursor: pointer;
+}
+.caw-popup .mapboxgl-popup-content .event-number {
+    position: absolute;
+    left: -32px;
+    top: 29px;
+    font-size: 0.725em;
+    line-height: 24px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--main-color);
+    color: #fff;
+    text-align: center;
+    font-family: arial, sans-serif;
 }
 .caw-popup .mapboxgl-popup-tip {
 	border: none;
