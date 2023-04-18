@@ -67,7 +67,12 @@ const generateMapbox = () => {
 			
 			popup.setLngLat(feature.geometry.coordinates)
 			.setHTML(
-				`<p><a onclick="LoadItInTheDiv(${feature.properties.post_id},'${feature.properties.type}','HalfDiv');">${feature.properties.title}<br><small>${EVPlace}</small></a></p>`
+				`<span class="">
+					${feature.properties.location_number}
+				</span>
+				<p>
+					<a onclick="LoadItInTheDiv(${feature.properties.post_id},'${feature.properties.type}','HalfDiv');">${feature.properties.title}<br><small>${EVPlace}</small></a>
+				</p>`
 			)
 			.addTo(map);
 		});
@@ -107,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					art.properties.post_id = el.id;
 					art.properties.location_name = el.acf.evento_location.name;
 					art.properties.location_address = el.acf.evento_location.street_name+', '+el.acf.evento_location.street_number;
+					art.properties.location_number = el.acf.evento_num;
 					art.geometry = {};
 					art.geometry.type = "Point"
 					art.geometry.coordinates = [el.acf.evento_location.lng,el.acf.evento_location.lat];

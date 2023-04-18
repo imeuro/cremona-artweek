@@ -381,8 +381,8 @@ button.menu-toggle:after {
 	}
 	#caw-content {
 		top: 0;
-		left: 250px;
-		max-width: calc(100vw - 250px);
+		left: 245px;
+		max-width: calc(100vw - 245px);
 		border-top: none;
 		border-right: 20px solid var(--main-color);
 		transition: width 500ms ease-in-out;
