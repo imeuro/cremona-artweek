@@ -131,10 +131,11 @@ const TabDiv = document.getElementById(TabDivName);
 const TabContainerName = 'caw-tabcontainer';
 const TabContainer = document.getElementById(TabContainerName);
 
+// hide header if menu is open
 document.querySelector('.menu-toggle').addEventListener('click',()=>{
 	document.getElementById('masthead').classList.toggle('hidden');
 })
-
+// move language switcher inside main menu
 let langswitch = document.getElementById('lang-switcher');
 var fragment = document.createDocumentFragment();
 fragment.appendChild(langswitch);
@@ -147,6 +148,9 @@ Array.from(MenuDiv.children).forEach((el) => {
 		e.preventDefault();
 		LoadItInTheDiv(itemID, '',divType);
 		el.firstChild.classList.add('current');
+		// close menu
+		document.getElementById('site-navigation').classList.remove('toggled');
+		document.getElementById('masthead').classList = 'site-header compact';
 	}, false)
 
 

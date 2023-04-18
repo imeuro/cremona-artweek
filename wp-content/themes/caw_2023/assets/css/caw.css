@@ -339,7 +339,7 @@ button.menu-toggle:after {
 #caw-content .close-tabcontainer {
 	position: absolute;
     top: 5px;
-    right: 5px;
+    right: 17px;
     width: 50px;
     height: 50px;
     cursor: pointer;
@@ -373,7 +373,7 @@ button.menu-toggle:after {
     top: 52px;
 }
 #caw-content.full.open { 
-	width: 100vw;
+	width: calc(100vw - 20px);
 }
 @media screen and (min-width: 37.5em) {
 	#caw-mapbox {
