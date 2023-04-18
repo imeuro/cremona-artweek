@@ -1,57 +1,21 @@
 const Baseurl = ['localhost','meuro.dev'].includes(window.location.hostname) ? '/cremona-artweek' : '';
 let artistList = getPostsFromWp(Baseurl+'/wp-json/wp/v2/artisti');
 var CAWgeoJSON = [];
+BaseCoords = window.innerWidth<600 ? [10.025,45.145] : [10.015,45.135]
 let map = '';
 
 // THE MAP BOX
 const generateMapbox = () => {
 	mapboxgl.accessToken = 'pk.eyJ1IjoibWV1cm8iLCJhIjoiY2xmcjA2ZDczMDEwYTQzcWZwZXk4dmpvdSJ9.YHkGCdl-D6YkWDJbNGOBEQ';
+	
 	map = new mapboxgl.Map({
 		container: 'caw-mapbox', // container ID
 		style: 'mapbox://styles/meuro/clg4t7v1e004p01mpehknvnkd', // style URL
-		center: [10.015,45.135], // starting position [lng, lat]
+		center: BaseCoords, // starting position [lng, lat]
 		zoom: 12.5, // starting zoom
 		// cooperativeGestures: true,
 	});
-
 	map.addControl(new mapboxgl.NavigationControl(),'bottom-right');
-
-}
-
-
-
-
-
-document.addEventListener('DOMContentLoaded', () => {
-artistList.then( 
-		ARTdata => {
-			var features = [];
-			var geoJSON = {};
-			geoJSON.type = 'FeatureCollection'
-			Object.values(ARTdata).forEach(el => {
-				console.debug( {el} );
-				var art = {};
-				art.type = "Feature";
-				art.properties = {}
-				art.properties.type = el.type;
-				art.properties.title = el.title.rendered;
-				art.properties.description = el.acf.evento_note;
-				art.properties.post_id = el.id;
-				art.properties.location_name = el.acf.evento_location.name;
-				art.properties.location_address = el.acf.evento_location.street_name+', '+el.acf.evento_location.street_number;
-				art.geometry = {};
-				art.geometry.type = "Point"
-				art.geometry.coordinates = [el.acf.evento_location.lng,el.acf.evento_location.lat];
-
-				features.push(art);
-			});
-
-			geoJSON.features = features;
-			CAWgeoJSON = geoJSON;
-			// console.debug(CAWgeoJSON)
-
-		}
-).then(generateMapbox());
 
 
 	map.on('load', () => {
@@ -117,7 +81,45 @@ artistList.then(
 			LoadItInTheDiv(readmorelink,'artisti','HalfDiv');
 		});
 		 
-	})
+	});
+
+
+}
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+	artistList.then( 
+			ARTdata => {
+				var features = [];
+				var geoJSON = {};
+				geoJSON.type = 'FeatureCollection'
+				Object.values(ARTdata).forEach(el => {
+					console.debug( {el} );
+					var art = {};
+					art.type = "Feature";
+					art.properties = {}
+					art.properties.type = el.type;
+					art.properties.title = el.title.rendered;
+					art.properties.description = el.acf.evento_note;
+					art.properties.post_id = el.id;
+					art.properties.location_name = el.acf.evento_location.name;
+					art.properties.location_address = el.acf.evento_location.street_name+', '+el.acf.evento_location.street_number;
+					art.geometry = {};
+					art.geometry.type = "Point"
+					art.geometry.coordinates = [el.acf.evento_location.lng,el.acf.evento_location.lat];
+
+					features.push(art);
+				});
+
+				geoJSON.features = features;
+				CAWgeoJSON = geoJSON;
+				// console.debug(CAWgeoJSON)
+				generateMapbox();
+			}
+	);
 
 });
 
@@ -163,7 +165,7 @@ document.querySelector('.close-tabcontainer').addEventListener('click', () => {
 	TabContainer.classList.remove('visible');
 	document.getElementById('masthead').classList.remove('compact');
 	map.flyTo({
-		center: [10.015,45.135],
+		center: BaseCoords,
 		essential: true,
 		zoom:12.5,
 		duration: 1000
@@ -221,8 +223,9 @@ const LoadItInTheDiv = (itemID, postType, divType) => {
 						<div class="content-tabcontent">`+CAWdata.content.rendered+`</div>
 					</div>
 				`;
+				let ShiftMap = window.innerWidth<600 ? 0 : 0.00375;
 				map.flyTo({
-					center: [(CAWdata.acf.evento_location.lng - 0.00375),CAWdata.acf.evento_location.lat],
+					center: [(CAWdata.acf.evento_location.lng - ShiftMap),CAWdata.acf.evento_location.lat],
 					essential: true,
 					zoom:16,
 					duration: 2000
