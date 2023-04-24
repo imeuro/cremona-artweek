@@ -411,7 +411,7 @@ button.menu-toggle:after {
 
 
 #caw-tabcontainer {
-	padding: 50px 30px;
+	padding: 50px 15px;
 	color: var(--main-color);
 	font-family: var(--secondary-font);
 	font-size: 1em;
@@ -426,7 +426,7 @@ button.menu-toggle:after {
 	line-height: 1em;
 	text-transform: uppercase;
 	font-weight: 400;
-	margin: 25px 0;
+	margin: 10px 0 25px 0;
 	padding: 0;
 }
 #caw-tabcontainer .title-tabcontent.heading-line {
@@ -440,7 +440,7 @@ button.menu-toggle:after {
 }
 
 #caw-tabcontainer .caw-listing-item {
-    margin: 30px 0 40px 0;
+    margin: 10px 0 60px 0;
     display: flex;
     flex-flow: column wrap;
     align-content: flex-start;
@@ -457,6 +457,19 @@ button.menu-toggle:after {
     margin: 5px 0;
 }
 
+#caw-tabcontainer .wp-block-table {
+	color: transparent;
+	border: none;
+}
+.wp-block-table td {
+	padding: 0;
+	margin: 0;
+	border: none;
+}
+#caw-tabcontainer .wp-block-table img {
+	margin: 10px 25px 10px 0;
+}
+
 @media all and (min-width: 37.5em) {
-	#caw-tabcontainer { padding: 0 55px; }
+	#caw-tabcontainer { padding: 0 35px; }
 }

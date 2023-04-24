@@ -159,9 +159,17 @@ const TabDiv = document.getElementById(TabDivName);
 const TabContainerName = 'caw-tabcontainer';
 const TabContainer = document.getElementById(TabContainerName);
 
-// hide header if menu is open
+// hide header, close caw-content and reset map if menu is open
 document.querySelector('.menu-toggle').addEventListener('click',()=>{
-	document.getElementById('masthead').classList.toggle('hidden');
+	document.getElementById('masthead').classList.toggle('hidden')
+	document.getElementById('masthead').classList.remove('compact');
+	TabDiv.classList = '';
+	map.flyTo({
+		center: BaseCoords,
+		essential: true,
+		zoom:13,
+		duration: 1000
+	});
 })
 // move language switcher inside main menu
 let langswitch = document.getElementById('lang-switcher');
@@ -221,7 +229,9 @@ const LoadItInTheDiv = (itemID, postType, divType) => {
 	if (itemID == 0) { // archivio artisti by nearest in time
 		urlRequest = Baseurl+'/wp-json/wp/v2/artisti'
 	} else if (itemID == 12) { // archivio eventi by nearest in time
-		urlRequest = Baseurl+'/wp-json/wp/v2/eventi'
+		urlRequest = Baseurl+'/wp-json/wp/v2/eventi?lang=23'
+	} else if (itemID == 76) { // [eng] archivio eventi by nearest in time
+		urlRequest = Baseurl+'/wp-json/wp/v2/eventi?lang=24'
 	} else {
 		postType = (postType == '') ? 'pages' : postType;
 		urlRequest = Baseurl+'/wp-json/wp/v2/'+postType+"/"+itemID;
@@ -258,7 +268,7 @@ const LoadItInTheDiv = (itemID, postType, divType) => {
 				});
 			}
 
-			else if (itemID == 12 || itemID == 0) { // LISTING "EVENTI" (by nearest start date):
+			else if (itemID == 12 || itemID == 76 || itemID == 0) { // LISTING "EVENTI" (by nearest start date):
 				// sort by the acf.evento_date_start field
 				CAWdata.sort((x, y) => {
 				     x = new Date(x.acf.evento_date_start),
