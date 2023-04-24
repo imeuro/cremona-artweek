@@ -280,6 +280,9 @@ const LoadItInTheDiv = (itemID, postType, divType) => {
 				if (itemID == 12) {
 					TabContent += ` <h2 class="title-tabcontent heading-line">Calendario Eventi</h2>`;
 				}
+				if (itemID == 76) {
+					TabContent += ` <h2 class="title-tabcontent heading-line">Events Calendar</h2>`;
+				}
 
 				Object.values(CAWdata).forEach(el => {
 					// console.debug(el);
