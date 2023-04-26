@@ -12,7 +12,7 @@ const generateMapbox = () => {
 		container: 'caw-mapbox', // container ID
 		style: 'mapbox://styles/meuro/clg4t7v1e004p01mpehknvnkd', // style URL
 		center: BaseCoords, // starting position [lng, lat]
-		zoom: 13, // starting zoom
+		zoom: 14, // starting zoom
 		glyphs: 'mapbox://fonts/meuro/OPS%20Placard%20Regular/0-255.pbf',
 		// cooperativeGestures: true,
 	});
@@ -172,7 +172,7 @@ document.querySelector('.menu-toggle').addEventListener('click',()=>{
 	map.flyTo({
 		center: BaseCoords,
 		essential: true,
-		zoom:13,
+		zoom:14,
 		duration: 1000
 	});
 })
@@ -206,7 +206,7 @@ document.querySelector('.close-tabcontainer').addEventListener('click', () => {
 	map.flyTo({
 		center: BaseCoords,
 		essential: true,
-		zoom:13,
+		zoom:14,
 		duration: 1000
 	});
 })
@@ -272,7 +272,7 @@ const LoadItInTheDiv = (itemID, postType, divType) => {
 				map.flyTo({
 					center: [(CAWdata.acf.evento_location.lng - ShiftMap),CAWdata.acf.evento_location.lat],
 					essential: true,
-					zoom:16,
+					zoom:17,
 					duration: 2000
 				});
 			}
