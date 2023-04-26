@@ -64,7 +64,7 @@ div#page {
 	transition: height 250ms ease-in-out;
 }
 .home .site-header.compact { 
-	height: 52px;
+	height: 55px;
 	overflow: hidden;
 }
 .home .site-header.hidden {
@@ -144,7 +144,7 @@ div#page {
     font-size: 1.5em;
     padding: 10px;
     margin-bottom: 0px;
-    border-bottom: 2px solid var(--main-color);
+    border-bottom: 3px solid var(--main-color);
 }
 
 .site-header .main-navigation ul#lang-switcher {
@@ -299,7 +299,7 @@ button.menu-toggle:after {
 		height: auto;
 		background: transparent;
 	}
-	.site-title a { margin: 14px 0 0 0; }
+	.site-title a { margin: -4px 0 0 0; }
 	.lettering { left: 244px; }
 	.lettering.lettering-left { display: flex; }
 }
@@ -326,6 +326,7 @@ button.menu-toggle:after {
 .caw-popup .mapboxgl-popup-content small {
 	font-family: Arial, sans-serif;
 	font-size: .6em;
+	text-transform: initial;
 }
 .caw-popup .mapboxgl-popup-content .event-number {
     position: absolute;
@@ -404,7 +405,7 @@ button.menu-toggle:after {
 
 #caw-content.open {
     width: calc(100vw - 20px);
-    top: 52px;
+    top: 55px;
 }
 #caw-content.full.open { 
 	width: calc(100vw - 20px);
@@ -443,7 +444,7 @@ button.menu-toggle:after {
 #caw-tabcontainer .title-tabcontent,
 #caw-tabcontainer .time-tabcontent {
 	font-family: var(--main-font);
-	font-size: 2.36em;
+	font-size: 2.32em;
 	line-height: 1em;
 	text-transform: uppercase;
 	font-weight: 400;
@@ -456,7 +457,7 @@ button.menu-toggle:after {
 }
 #caw-tabcontainer .content-tabcontent p {
 	font-size: 1.063em;
-    line-height: 1.75em;
+    line-height: 1.4em;
 }
 #caw-tabcontainer .content-tabcontent img {
     max-height: 300px;

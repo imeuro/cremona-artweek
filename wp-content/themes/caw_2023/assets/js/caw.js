@@ -54,7 +54,7 @@ const generateMapbox = () => {
 					'text-variable-anchor': ['center'],
 					'text-radial-offset': 0,
 					'text-justify': 'auto',
-					'text-size': 14,
+					'text-size': 16,
 					'text-font': ['OPS Placard Regular'],
 				},
 
