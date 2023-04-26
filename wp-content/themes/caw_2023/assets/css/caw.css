@@ -1,8 +1,8 @@
 :root {
 	--main-font: 'OPSPlacard-Regular';
 	--secondary-font: Arial, 'Helvetica', sans-serif;
-	--main-color: #e41512;
-	--backgorund-color: #e41512;
+	--main-color: #ff0400;
+	--backgorund-color: #ff0400;
 }
 
 @font-face {
@@ -15,6 +15,7 @@
 
 body {
 	font-family: var(--secondary-font);
+	font-size: 16px;
 }
 .entry-header,
 .site-header {
@@ -22,13 +23,13 @@ body {
 }
 
 a,
+a:hover,
 a:focus,
 a:visited,
 a:active { 
 	color: var(--main-color);
 	transition: color 250ms ease-in-out;
 }
-a:hover { color: #e57373 }
 
 body {
 	background-color: #f6f6f6;
@@ -154,9 +155,15 @@ div#page {
     justify-content: flex-start;
     padding-top: 60px;
 }
+.site-header .main-navigation.toggled ul#lang-switcher{
+		position: fixed;
+		bottom: 15px;
+}
+
 .site-header .main-navigation ul#lang-switcher a {
 	padding-right: 15px;
 	border: none;
+	text-transform: uppercase;
 }
 
 .site-title a {
@@ -208,7 +215,8 @@ div#page {
 	z-index: 1;
 	width: 100vw;
 }
-.menu-main-container {
+.menu-main-container,
+.menu-main-eng-container {
     position: absolute;
     top: 100vh;
     left: 0;
@@ -218,7 +226,8 @@ div#page {
     background: #FFFFFFB0;
     transition: top 250ms ease-in-out;
 }
-.toggled .menu-main-container {
+.toggled .menu-main-container,
+.toggled .menu-main-eng-container {
 	top: 0;
 }
 
@@ -232,54 +241,59 @@ div#page {
     padding: 0px;
     box-sizing: content-box;
     border: none;
-    border-top: 2px solid var(--main-color);
+    border-top: 3px solid var(--main-color);
     border-radius: 0;
     background: transparent;
     text-indent: -9999px;
 }
 button.menu-toggle:before, button.menu-toggle:after {
-    top: 10px;
+    top: 7px;
     right: 0;
     content: "";
     display: block;
     position: absolute;
     width: 35px;
-    height: 2px;
+    height: 3px;
     background: var(--main-color);
     text-indent: -9999px;
     transition: all 50ms ease-in-out;
 }
 button.menu-toggle:after {
-    top: 22px;
+    top: 17px;
 }
 #site-navigation.toggled button.menu-toggle { border-color:transparent; }
 #site-navigation.toggled button.menu-toggle:before, #site-navigation.toggled button.menu-toggle:after {
-    transform: rotate(45deg)  translate(-2px, -4px);
+    transform: rotate(45deg)  translate(0, 0);
 }
 #site-navigation.toggled button.menu-toggle:after {
-    transform: rotate(-45deg) translate(13px, -10px);
+    transform: rotate(-45deg) translate(7px, -7px);
 }
 
 @media all and (min-width: 37.5em) {
 	.site-header .main-navigation ul {
-		margin-top: 50px;
 		padding-top: 20px;
+	}
+	.site-header .main-navigation ul#lang-switcher{
+		position: fixed;
+		bottom: 15px;
 	}
 	.site-header .main-navigation a {
 		font-size: 1rem;
 		padding: 0;
 		margin: 0;
-		border-bottom: none;
+		border-bottom: 2px solid transparent;
+		display: inline;
 	}
+	.site-header .main-navigation a:hover,
 	#primary-menu .current {
 		border-bottom: 2px solid var(--main-color);
-		display: inline;
 	}
 	#site-navigation {
 		position: initial;
 		width: 100%;
 	}
-	.menu-main-container {
+	.menu-main-container,
+	.menu-main-eng-container {
 		position: initial;
 		width: 100%;
 		height: auto;
@@ -297,6 +311,7 @@ button.menu-toggle:after {
 .caw-popup {
 	font-family: var(--main-font);
     font-size: 1.675em;
+    line-height: 1em;
     text-transform: uppercase;
     color: var(--main-color);
 }
@@ -306,21 +321,26 @@ button.menu-toggle:after {
     background: transparent;
     box-shadow: none;
     padding: 0;
-    cursor: pointer;
+    cursor: grab;
+}
+.caw-popup .mapboxgl-popup-content small {
+	font-family: Arial, sans-serif;
+	font-size: .6em;
 }
 .caw-popup .mapboxgl-popup-content .event-number {
     position: absolute;
     left: -32px;
     top: 29px;
-    font-size: 0.725em;
-    line-height: 24px;
     width: 24px;
     height: 24px;
     border-radius: 50%;
     background: var(--main-color);
     color: #fff;
     text-align: center;
-    font-family: arial, sans-serif;
+    font-family: var(--main-font);
+	font-size: 0.725em;
+    line-height: 24px;
+	cursor: pointer;
 }
 .caw-popup .mapboxgl-popup-tip {
 	border: none;
@@ -373,7 +393,7 @@ button.menu-toggle:after {
     width: 30px;
     height: 30px;
     border: none;
-    border-left: 2px solid var(--main-color);
+    border-left: 3px solid var(--main-color);
     transform: rotate(45deg);
 }
 #caw-content .close-tabcontainer:after {
@@ -412,6 +432,7 @@ button.menu-toggle:after {
 
 #caw-tabcontainer {
 	padding: 50px 15px;
+	margin-bottom: 75px;
 	color: var(--main-color);
 	font-family: var(--secondary-font);
 	font-size: 1em;
@@ -422,16 +443,20 @@ button.menu-toggle:after {
 #caw-tabcontainer .title-tabcontent,
 #caw-tabcontainer .time-tabcontent {
 	font-family: var(--main-font);
-	font-size: 2.25em;
+	font-size: 2.36em;
 	line-height: 1em;
 	text-transform: uppercase;
 	font-weight: 400;
-	margin: 10px 0 25px 0;
+	margin: 8.4px 0 25px 0;
 	padding: 0;
 }
 #caw-tabcontainer .title-tabcontent.heading-line {
     border-bottom: 2.5px solid var(--main-color);
     padding-bottom: 35px;
+}
+#caw-tabcontainer .content-tabcontent p {
+	font-size: 1.063em;
+    line-height: 1.75em;
 }
 #caw-tabcontainer .content-tabcontent img {
     max-height: 300px;
@@ -453,6 +478,7 @@ button.menu-toggle:after {
     margin: 0;
     line-height: 1em;
 }
+#caw-tabcontainer .caw-listing-item .title-tabcontent { line-height:1.7em; }
 #caw-tabcontainer .caw-listing .content-tabcontent p {
     margin: 5px 0;
 }

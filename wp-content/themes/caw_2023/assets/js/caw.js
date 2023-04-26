@@ -54,6 +54,7 @@ const generateMapbox = () => {
 					'text-radial-offset': 0,
 					'text-justify': 'auto',
 					'text-size': 14,
+					//'text-font': ['Orbitron Regular','OPS Placard Regular'],
 				},
 				'paint': {
 					'text-color': '#e41512',
@@ -87,10 +88,11 @@ const generateMapbox = () => {
 				
 				popup.setLngLat(feature.geometry.coordinates)
 				.setHTML(
-					`<a onclick="LoadItInTheDiv(${feature.properties.post_id},'${feature.properties.type}','HalfDiv');">
+					`<a onclick="LoadItInTheDiv(${readmorelink},'${feature.properties.type}','HalfDiv');">
 						<span class="event-number">${feature.properties.location_number}</span>
-						<p>${feature.properties.title}<br><small>${EVPlace}</p>
-					</a>`
+					</a>
+					<p>${feature.properties.title}<br><small>${EVPlace}</p>
+					`
 				)
 				.addTo(map);
 			});
@@ -100,9 +102,9 @@ const generateMapbox = () => {
 				//popup.remove();
 			});
 
-			map.on('click', 'places', () => {
-				LoadItInTheDiv(readmorelink,'artisti','HalfDiv');
-			});
+			// map.on('click', 'places', () => {
+			// 	LoadItInTheDiv(readmorelink,'artisti','HalfDiv');
+			// });
 
 		});
 		 
@@ -248,12 +250,16 @@ const LoadItInTheDiv = (itemID, postType, divType) => {
 
 			if (postType == 'artisti') {
 				let EVPlace = CAWdata.acf.evento_location.name ? CAWdata.acf.evento_location.name : CAWdata.acf.evento_location.street_name+', '+CAWdata.acf.evento_location.street_number;
-				let EVdate = new Date(CAWdata.acf.evento_date_start);
+				let EVdate = CAWdata.acf.evento_date_start!='' ? new Date(CAWdata.acf.evento_date_start).getDate() : 'TBA';
 				let EVMonth = new Date(CAWdata.acf.evento_date_start).getMonth() + 1;
-				let paddedMonth = EVMonth<=9 ? ('0'+EVMonth).slice(-2) : EVMonth;
+				let paddedMonth = '';
+				if (CAWdata.acf.evento_date_start!='') {
+					paddedMonth = EVMonth<=9 ? ('0'+EVMonth).slice(-2) : EVMonth;
+				}
+
 				TabContent += `
 					<div class="caw-listing-item">
-						<time class="time-tabcontent">`+EVdate.getDate()+`.`+paddedMonth+`</time>
+						<time class="time-tabcontent">`+EVdate+`.`+paddedMonth+`</time>
 						<h2 class="title-tabcontent">`+CAWdata.title.rendered+`</h2>
 						<span class="info-tabcontent">`+EVPlace+`</span>
 						<div class="content-tabcontent">`+CAWdata.content.rendered+`</div>
@@ -287,12 +293,15 @@ const LoadItInTheDiv = (itemID, postType, divType) => {
 				Object.values(CAWdata).forEach(el => {
 					// console.debug(el);
 					let EVPlace = el.acf.evento_location.name ? el.acf.evento_location.name : el.acf.evento_location.street_name+', '+el.acf.evento_location.street_number;
-					let EVdate = new Date(el.acf.evento_date_start);
+					let EVdate = el.acf.evento_date_start!='' ? new Date(el.acf.evento_date_start).getDate() : 'TBA';
 					let EVMonth = new Date(el.acf.evento_date_start).getMonth() + 1;
-					let paddedMonth = EVMonth<=9 ? ('0'+EVMonth).slice(-2) : EVMonth;
+					let paddedMonth = '';
+					if (el.acf.evento_date_start!='') {
+						paddedMonth = EVMonth<=9 ? ('0'+EVMonth).slice(-2) : EVMonth;
+					}
 					TabContent += `
 						<div class="caw-listing-item" id="${el.slug}" data-position-lng="${el.acf.evento_location.lng}" data-position-lat="${el.acf.evento_location.lat}">
-							<time class="time-tabcontent">`+EVdate.getDate()+`.`+paddedMonth+`</time>
+							<time class="time-tabcontent">`+EVdate+`.`+paddedMonth+`</time>
 							<h2 class="title-tabcontent">`+el.title.rendered+`</h2>
 							<span class="info-tabcontent">`+EVPlace+`</span>
 							<div class="content-tabcontent">`+el.content.rendered+`</div>

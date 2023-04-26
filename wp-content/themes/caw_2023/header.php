@@ -53,8 +53,10 @@
 			?>
 
 			<ul id="lang-switcher" class="menu">
-				<li><a href="<?php echo pll_home_url('it'); ?>" hreflang="it-IT" lang="it-IT">IT</a></li>
-				<li><a href="<?php echo pll_home_url('en'); ?>" hreflang="en-US" lang="en-US">EN</a></li>
+				<?php pll_the_languages(array(
+					'display_names_as' 	=> 'slug',
+					'hide_current'		=> 1
+				)); ?>
 			</ul>
 		</nav><!-- #site-navigation -->
 
