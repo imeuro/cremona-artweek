@@ -1,8 +1,8 @@
 :root {
 	--main-font: 'OPSPlacard-Regular';
 	--secondary-font: Arial, 'Helvetica', sans-serif;
-	--main-color: #ff0400;
-	--backgorund-color: #ff0400;
+	--main-color: #ff0000;
+	--backgorund-color: #ff0000;
 }
 
 @font-face {
@@ -275,7 +275,7 @@ button.menu-toggle:after {
 	}
 	.site-header .main-navigation ul#lang-switcher{
 		position: fixed;
-		bottom: 15px;
+		bottom: 35px;
 	}
 	.site-header .main-navigation a {
 		font-size: 1rem;
