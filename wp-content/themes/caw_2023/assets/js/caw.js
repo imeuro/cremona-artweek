@@ -13,6 +13,7 @@ const generateMapbox = () => {
 		style: 'mapbox://styles/meuro/clg4t7v1e004p01mpehknvnkd', // style URL
 		center: BaseCoords, // starting position [lng, lat]
 		zoom: 13, // starting zoom
+		glyphs: 'mapbox://fonts/meuro/OPS%20Placard%20Regular/0-255.pbf',
 		// cooperativeGestures: true,
 	});
 	map.addControl(new mapboxgl.NavigationControl(),'bottom-right');
@@ -38,9 +39,9 @@ const generateMapbox = () => {
 
 			map.addLayer({
 				'id': 'places',
-				//'type': 'circle',
 				'type': 'symbol',
 				'source': 'places',
+				// 'glyphs': 'https://api.mapbox.com/fonts/v1/meuro/OPS%20Placard%20Regular/0-255.pbf',
 				'layout': {
 					'icon-image': 'cawpointer',
 					'icon-size': .75,
@@ -54,8 +55,9 @@ const generateMapbox = () => {
 					'text-radial-offset': 0,
 					'text-justify': 'auto',
 					'text-size': 14,
-					//'text-font': ['Orbitron Regular','OPS Placard Regular'],
+					'text-font': ['OPS Placard Regular'],
 				},
+
 				'paint': {
 					'text-color': '#e41512',
 				}
@@ -66,7 +68,8 @@ const generateMapbox = () => {
 				offset: [20, 5], 
 				className: 'caw-popup' ,
 				closeButton: false,
-				maxWidth: '400px'
+				maxWidth: '400px',
+				// glyphs: 'https://api.mapbox.com/fonts/v1/meuro/OPS%20Placard%20Regular/0-255.pbf',
 			})
 
 			let readmorelink;
