@@ -450,6 +450,7 @@ button.menu-toggle:after {
 	font-weight: 400;
 	margin: 8.4px 0 25px 0;
 	padding: 0;
+	letter-spacing: .0.18em;
 }
 #caw-tabcontainer .title-tabcontent.heading-line {
     border-bottom: 2.5px solid var(--main-color);
