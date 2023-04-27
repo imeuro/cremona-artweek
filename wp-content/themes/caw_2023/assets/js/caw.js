@@ -1,7 +1,7 @@
 const Baseurl = ['localhost','meuro.dev'].includes(window.location.hostname) ? '/cremona-artweek' : '';
 let artistList = getPostsFromWp(Baseurl+'/wp-json/wp/v2/artisti?per_page=99');
 var CAWgeoJSON = [];
-BaseCoords = window.innerWidth<600 ? [10.025,45.145] : [10.015,45.135]
+BaseCoords = window.innerWidth<600 ? [10.024,45.139] : [10.015,45.130]
 let map = '';
 let ShiftMap = window.innerWidth<600 ? 0 : 0.0015;
 
