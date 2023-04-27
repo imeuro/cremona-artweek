@@ -485,6 +485,7 @@ button.menu-toggle:after {
     margin: 0;
     line-height: 1em;
 }
+#caw-tabcontainer .caw-listing-item .time-tabcontent  { margin-bottom: 0; }
 #caw-tabcontainer .caw-listing-item .title-tabcontent { margin-bottom: 0.5em; }
 #caw-tabcontainer .caw-listing .content-tabcontent p { margin: 5px 0; }
 
