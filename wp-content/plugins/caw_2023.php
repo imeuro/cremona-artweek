@@ -197,6 +197,7 @@ add_action( 'init', 'register_my_menu' );
 add_filter('nav_menu_link_attributes', 'menu_post_ids', 90000, 1);
 function menu_post_ids($val){
  $postid = url_to_postid( $val['href'] );
+ $lang = strpos($val['href'], '/en/') ? 'en' : 'it';
  if ( $postid === 0 && strpos($val['href'], '/en/') ) { 
  // facciamolo andare a calci..
  	$firstpart = pll_home_url('it').'en/';
@@ -205,6 +206,7 @@ function menu_post_ids($val){
  	$postid = $postidARR->ID;
  }
  $val['data-postid'] = $postid;
+ $val['data-lang'] = $lang;
  return $val;
 }
 

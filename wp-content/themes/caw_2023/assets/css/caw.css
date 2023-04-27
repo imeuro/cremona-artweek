@@ -64,7 +64,7 @@ div#page {
 	transition: height 250ms ease-in-out;
 }
 .home .site-header.compact { 
-	height: 55px;
+	height: 54px;
 	overflow: hidden;
 }
 .home .site-header.hidden {
@@ -125,6 +125,7 @@ div#page {
 }
 /* /END the grid */
 
+
 .site-header .caw-event-description {
     display: flex;
     align-items: center;
@@ -144,8 +145,8 @@ div#page {
     font-size: 1.5em;
     padding: 10px;
     margin-bottom: 0px;
-    border-bottom: 3px solid var(--main-color);
 }
+.site-header .main-navigation a:hover { text-decoration: underline; }
 
 .site-header .main-navigation ul#lang-switcher {
     border-top: none;
@@ -287,6 +288,7 @@ button.menu-toggle:after {
 	.site-header .main-navigation a:hover,
 	#primary-menu .current {
 		border-bottom: 2px solid var(--main-color);
+		text-decoration: none;
 	}
 	#site-navigation {
 		position: initial;
@@ -322,6 +324,7 @@ button.menu-toggle:after {
     box-shadow: none;
     padding: 0;
     cursor: grab;
+    line-height: 0.75em;
 }
 .caw-popup .mapboxgl-popup-content small {
 	font-family: Arial, sans-serif;
@@ -369,11 +372,10 @@ button.menu-toggle:after {
     overflow-x: hidden;
     background: #ffffffB0;
     transition: top 500ms ease-in-out;
-    border-top: 3px solid var(--main-color);
 }
 #caw-content .close-tabcontainer {
 	position: absolute;
-    top: 5px;
+    top: 50px;
     right: 17px;
     width: 50px;
     height: 50px;
@@ -405,7 +407,7 @@ button.menu-toggle:after {
 
 #caw-content.open {
     width: calc(100vw - 20px);
-    top: 55px;
+    top: 53px;
 }
 #caw-content.full.open { 
 	width: calc(100vw - 20px);
@@ -427,6 +429,8 @@ button.menu-toggle:after {
 		width: calc(50vw - 120px);
 		top: 0;
 	}
+
+	#caw-content .close-tabcontainer { top: 5px; }
 }
 
 
@@ -453,7 +457,7 @@ button.menu-toggle:after {
 	letter-spacing: 0.018em;
 }
 #caw-tabcontainer .title-tabcontent.heading-line {
-    border-bottom: 2.5px solid var(--main-color);
+    border-bottom: 3px solid var(--main-color);
     padding-bottom: 35px;
 }
 #caw-tabcontainer .content-tabcontent p {
@@ -474,16 +478,15 @@ button.menu-toggle:after {
     justify-content: space-around;
     line-height: 1em;
 }
+#caw-tabcontainer .caw-listing-item.listing-artisti { cursor:pointer };
 #caw-tabcontainer .caw-listing-item .title-tabcontent,
 #caw-tabcontainer .caw-listing-item .time-tabcontent  {
     padding: 0;
     margin: 0;
     line-height: 1em;
 }
-#caw-tabcontainer .caw-listing-item .title-tabcontent { line-height:1.7em; }
-#caw-tabcontainer .caw-listing .content-tabcontent p {
-    margin: 5px 0;
-}
+#caw-tabcontainer .caw-listing-item .title-tabcontent { margin-bottom: 0.5em; }
+#caw-tabcontainer .caw-listing .content-tabcontent p { margin: 5px 0; }
 
 #caw-tabcontainer .wp-block-table {
 	color: transparent;
@@ -500,4 +503,87 @@ button.menu-toggle:after {
 
 @media all and (min-width: 37.5em) {
 	#caw-tabcontainer { padding: 0 35px; }
+}
+
+
+
+
+/* loading anim */
+.loading-div {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+}
+.loading-div:after {
+    content: "Loading content";
+    font-family: var(--main-font);
+    font-size: 1em;
+    text-transform: uppercase;
+    padding: 0 15px;
+}
+.loading-anim {
+   height: 40px;
+   width: 40px;
+   border-radius: 50%;
+   background-color: var(--main-color);
+   -webkit-animation: single1animation 4s infinite linear;
+   animation: single1animation 4s infinite linear; 
+}
+
+
+@-webkit-keyframes single1animation {
+   0%, 9%, 100% {
+      -webkit-transform: scale(0);
+      transform: scale(0);
+   }
+   10%, 19%, 90%, 99% {
+      -webkit-transform: scale(.2);
+      transform: scale(.2);
+   }
+   20%, 29%, 80%, 89% {
+      -webkit-transform: scale(.4);
+      transform: scale(.4);
+   }
+   30%, 39%, 70%, 79% {
+      -webkit-transform: scale(.6);
+      transform: scale(.6);
+   }
+   40%, 49%, 60%, 69% {
+      -webkit-transform: scale(.8);
+      transform: scale(.8);
+   }
+   50%, 59% {
+      -webkit-transform: scale(1);
+      transform: scale(1);
+   }
+}
+
+@keyframes single1animation {
+   0%, 9%, 100% {
+      -webkit-transform: scale(0);
+      transform: scale(0);
+   }
+   10%, 19%, 90%, 99% {
+      -webkit-transform: scale(.2);
+      transform: scale(.2);
+   }
+   20%, 29%, 80%, 89% {
+      -webkit-transform: scale(.4);
+      transform: scale(.4);
+   }
+   30%, 39%, 70%, 79% {
+      -webkit-transform: scale(.6);
+      transform: scale(.6);
+   }
+   40%, 49%, 60%, 69% {
+      -webkit-transform: scale(.8);
+      transform: scale(.8);
+   }
+   50%, 59% {
+   -webkit-transform: scale(1);
+   transform: scale(1);
+   }
 }

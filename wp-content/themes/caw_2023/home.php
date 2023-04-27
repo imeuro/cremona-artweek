@@ -13,7 +13,9 @@ get_header();
 			<div id='caw-mapbox'></div>
 			<div id="caw-content">
 				<div class="close-tabcontainer"></div>
-				<div id="caw-tabcontainer">Loading content...</div>
+				<div id="caw-tabcontainer">
+					<div class="loading-div"><div class="loading-anim"></div></div>
+				</div>
 			</div>
 
 		<?php

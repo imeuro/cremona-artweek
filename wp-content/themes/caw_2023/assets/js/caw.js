@@ -3,6 +3,7 @@ let artistList = getPostsFromWp(Baseurl+'/wp-json/wp/v2/artisti?per_page=99');
 var CAWgeoJSON = [];
 BaseCoords = window.innerWidth<600 ? [10.025,45.145] : [10.015,45.135]
 let map = '';
+let ShiftMap = window.innerWidth<600 ? 0 : 0.0015;
 
 // THE MAP BOX
 const generateMapbox = () => {
@@ -17,7 +18,18 @@ const generateMapbox = () => {
 		// cooperativeGestures: true,
 	});
 	map.addControl(new mapboxgl.NavigationControl(),'bottom-right');
-
+	// Add geolocate control to the map.
+	map.addControl(
+		new mapboxgl.GeolocateControl({
+			positionOptions: {
+				enableHighAccuracy: true
+			},
+			// When active the map will receive updates to the device's location as it changes.
+			trackUserLocation: true,
+			// Draw an arrow next to the location dot to indicate which direction the device is heading.
+			showUserHeading: true
+		}),'bottom-right'
+	);
 
 	map.on('load', () => {
 		// JSON EXAMPLE @
@@ -44,7 +56,7 @@ const generateMapbox = () => {
 				// 'glyphs': 'https://api.mapbox.com/fonts/v1/meuro/OPS%20Placard%20Regular/0-255.pbf',
 				'layout': {
 					'icon-image': 'cawpointer',
-					'icon-size': .75,
+					'icon-size': .85,
 					'icon-allow-overlap': true,
 					'icon-ignore-placement': true,
 					'text-allow-overlap': true,
@@ -54,22 +66,22 @@ const generateMapbox = () => {
 					'text-variable-anchor': ['center'],
 					'text-radial-offset': 0,
 					'text-justify': 'auto',
-					'text-size': 16,
+					'text-size': 18,
+					//'text-weight': 900,
 					'text-font': ['OPS Placard Regular'],
 				},
 
 				'paint': {
-					'text-color': '#e41512',
+					'text-color': '#ffffff',
 				}
 			})
 
 			const popup = new mapboxgl.Popup({ 
 				anchor: 'left', 
-				offset: [20, 5], 
+				offset: [20, 13], 
 				className: 'caw-popup' ,
 				closeButton: false,
 				maxWidth: '400px',
-				// glyphs: 'https://api.mapbox.com/fonts/v1/meuro/OPS%20Placard%20Regular/0-255.pbf',
 			})
 
 			let readmorelink;
@@ -91,23 +103,21 @@ const generateMapbox = () => {
 				
 				popup.setLngLat(feature.geometry.coordinates)
 				.setHTML(
-					`<a onclick="LoadItInTheDiv(${readmorelink},'${feature.properties.type}','HalfDiv');">
-						<span class="event-number">${feature.properties.location_number}</span>
-					</a>
-					<p>${feature.properties.title}<br><small>${EVPlace}</p>
+					`<p>${feature.properties.title}<br><small>${EVPlace}</small></p>
 					`
+					// <span class="event-number">${feature.properties.location_number}</span>
 				)
 				.addTo(map);
 			});
 
 			map.on('mouseleave', 'places', () => {
 				map.getCanvas().style.cursor = '';
-				//popup.remove();
+				popup.remove();
 			});
 
-			// map.on('click', 'places', () => {
-			// 	LoadItInTheDiv(readmorelink,'artisti','HalfDiv');
-			// });
+			map.on('click', 'places', () => {
+			 	LoadItInTheDiv(readmorelink,'artisti','HalfDiv');
+			});
 
 		});
 		 
@@ -184,10 +194,11 @@ MenuDiv.parentNode.appendChild(fragment);
 
 Array.from(MenuDiv.children).forEach((el) => {
 	let itemID = el.firstChild.dataset.postid;
+	let lang = el.firstChild.dataset.lang;
 	let divType = el.classList.contains('fullDiv')?'full':'normal';
 	el.firstChild.addEventListener('click', (e) => {
 		e.preventDefault();
-		LoadItInTheDiv(itemID, '',divType);
+		LoadItInTheDiv(itemID, '',divType,lang);
 		el.firstChild.classList.add('current');
 		// close menu
 		document.getElementById('site-navigation').classList.remove('toggled');
@@ -224,7 +235,7 @@ async function getPostsFromWp(urlRequest) {
 
 
 let resultFromWP = [];
-const LoadItInTheDiv = (itemID, postType, divType) => {
+const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 	TabDiv.classList = ''
 	TabContainer.classList.remove('visible');
 	Array.from(MenuDiv.children).forEach((el) => {
@@ -232,11 +243,11 @@ const LoadItInTheDiv = (itemID, postType, divType) => {
 	});
 
 	if (itemID == 0) { // archivio artisti by nearest in time
-		urlRequest = Baseurl+'/wp-json/wp/v2/artisti'
+		urlRequest = Baseurl+'/wp-json/wp/v2/artisti?lang=23&per_page=99'
 	} else if (itemID == 12) { // archivio eventi by nearest in time
-		urlRequest = Baseurl+'/wp-json/wp/v2/eventi?lang=23'
+		urlRequest = Baseurl+'/wp-json/wp/v2/eventi?lang=23&per_page=99'
 	} else if (itemID == 76) { // [eng] archivio eventi by nearest in time
-		urlRequest = Baseurl+'/wp-json/wp/v2/eventi?lang=24'
+		urlRequest = Baseurl+'/wp-json/wp/v2/eventi?lang=24&per_page=99'
 	} else {
 		postType = (postType == '') ? 'pages' : postType;
 		urlRequest = Baseurl+'/wp-json/wp/v2/'+postType+"/"+itemID;
@@ -268,7 +279,6 @@ const LoadItInTheDiv = (itemID, postType, divType) => {
 						<div class="content-tabcontent">`+CAWdata.content.rendered+`</div>
 					</div>
 				`;
-				let ShiftMap = window.innerWidth<600 ? 0 : 0.00375;
 				map.flyTo({
 					center: [(CAWdata.acf.evento_location.lng - ShiftMap),CAWdata.acf.evento_location.lat],
 					essential: true,
@@ -287,10 +297,10 @@ const LoadItInTheDiv = (itemID, postType, divType) => {
 
 				// testatina x listing eventi extra:
 				if (itemID == 12) {
-					TabContent += ` <h2 class="title-tabcontent heading-line">Calendario Eventi</h2>`;
+					TabContent += ` <h2 class="title-tabcontent heading-line">Eventi</h2>`;
 				}
 				if (itemID == 76) {
-					TabContent += ` <h2 class="title-tabcontent heading-line">Events Calendar</h2>`;
+					TabContent += ` <h2 class="title-tabcontent heading-line">Events</h2>`;
 				}
 
 				Object.values(CAWdata).forEach(el => {
@@ -303,23 +313,22 @@ const LoadItInTheDiv = (itemID, postType, divType) => {
 						paddedMonth = EVMonth<=9 ? ('0'+EVMonth).slice(-2) : EVMonth;
 					}
 					TabContent += `
-						<div class="caw-listing-item" id="${el.slug}" data-position-lng="${el.acf.evento_location.lng}" data-position-lat="${el.acf.evento_location.lat}">
-							<time class="time-tabcontent">`+EVdate+`.`+paddedMonth+`</time>
-							<h2 class="title-tabcontent">`+el.title.rendered+`</h2>
-							<span class="info-tabcontent">`+EVPlace+`</span>
-							<div class="content-tabcontent">`+el.content.rendered+`</div>
+						<div class="caw-listing-item caw listing-artisti" id="${el.slug}" data-position-lng="${el.acf.evento_location.lng}" data-position-lat="${el.acf.evento_location.lat}">
+							<time class="time-tabcontent">${EVdate}.${paddedMonth}</time>
+							<h2 class="title-tabcontent">${el.acf.evento_num}. ${el.title.rendered}</h2>
+							<span class="info-tabcontent">${EVPlace}</span>
+							<div class="content-tabcontent">${el.content.rendered}</div>
 						</div>
 					`;
 				})
 			} else { // SIMPLE POSTS/PAGES:
 					TabContent += `
-						<h2 class="title-tabcontent">`+CAWdata.title.rendered+`</h2>
+						<h2 class="title-tabcontent heading-line">`+CAWdata.title.rendered+`</h2>
 						<div class="content-tabcontent">`+CAWdata.content.rendered+`</div>
 					`;
 			}
 			//console.info(TabContent, divType);
 			TabContainer.innerHTML = TabContent;
-
 		}
 	);
 	setTimeout(() => {
