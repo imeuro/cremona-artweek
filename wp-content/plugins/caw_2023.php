@@ -9,24 +9,24 @@ Author URI: http://meuro.dev/
 */
 
 
-// Change dashboard Posts to News
+// Change dashboard Posts to Location
 add_action( 'init', 'cp_change_post_object' );
 function cp_change_post_object() {
     $get_post_type = get_post_type_object('post');
     $labels = $get_post_type->labels;
-        $labels->name = 'News';
-        $labels->singular_name = 'News';
-        $labels->add_new = 'Add News';
-        $labels->add_new_item = 'Add News';
-        $labels->edit_item = 'Edit News';
-        $labels->new_item = 'News';
-        $labels->view_item = 'View News';
-        $labels->search_items = 'Search News';
-        $labels->not_found = 'No News found';
-        $labels->not_found_in_trash = 'No News found in Trash';
-        $labels->all_items = 'All News';
-        $labels->menu_name = 'News';
-        $labels->name_admin_bar = 'News';
+        $labels->name = 'Artisti';
+        $labels->singular_name = 'Artista';
+        $labels->add_new = 'Aggiungi Artista';
+        $labels->add_new_item = 'Aggiungi Artista';
+        $labels->edit_item = 'Modifica Artista';
+        $labels->new_item = 'Artista';
+        $labels->view_item = 'Visualizza Artista';
+        $labels->search_items = 'Cerca Artisti';
+        $labels->not_found = 'No Artisti found';
+        $labels->not_found_in_trash = 'No Artisti found in Trash';
+        $labels->all_items = 'Tutti gli Artisti';
+        $labels->menu_name = 'Artisti';
+        $labels->name_admin_bar = 'Artisti';
 }
 
 
@@ -69,6 +69,64 @@ add_action( 'init', 'add_custom_taxonomies', 0 );
 
 
 // Register Custom Post Type
+function locations_post_type() {
+
+	$labels = array(
+		'name'                  => _x( 'Locations', 'Post Type General Name', 'text_domain' ),
+		'singular_name'         => _x( 'Location', 'Post Type Singular Name', 'text_domain' ),
+		'menu_name'             => __( 'Locations', 'text_domain' ),
+		'name_admin_bar'        => __( 'Location', 'text_domain' ),
+		'archives'              => __( 'Archivio Locations', 'text_domain' ),
+		'attributes'            => __( 'Attributi Location', 'text_domain' ),
+		'parent_item_colon'     => __( 'Parent Item:', 'text_domain' ),
+		'all_items'             => __( 'Tutte le Locations', 'text_domain' ),
+		'add_new_item'          => __( 'Aggiungi Location', 'text_domain' ),
+		'add_new'               => __( 'Aggiungi Location', 'text_domain' ),
+		'new_item'              => __( 'Nuova Location', 'text_domain' ),
+		'edit_item'             => __( 'Edit Location', 'text_domain' ),
+		'update_item'           => __( 'Aggiorna Location', 'text_domain' ),
+		'view_item'             => __( 'Visualizza Location', 'text_domain' ),
+		'view_items'            => __( 'Visualizza Location', 'text_domain' ),
+		'search_items'          => __( 'Cerca Location', 'text_domain' ),
+		'not_found'             => __( 'Non trovato', 'text_domain' ),
+		'not_found_in_trash'    => __( 'Non trovato in Trash', 'text_domain' ),
+		'featured_image'        => __( 'Featured Image', 'text_domain' ),
+		'set_featured_image'    => __( 'Set featured image', 'text_domain' ),
+		'remove_featured_image' => __( 'Remove featured image', 'text_domain' ),
+		'use_featured_image'    => __( 'Use as featured image', 'text_domain' ),
+		'insert_into_item'      => __( 'Insert into item', 'text_domain' ),
+		'uploaded_to_this_item' => __( 'Uploaded to this item', 'text_domain' ),
+		'items_list'            => __( 'Items list', 'text_domain' ),
+		'items_list_navigation' => __( 'Items list navigation', 'text_domain' ),
+		'filter_items_list'     => __( 'Filter items list', 'text_domain' ),
+	);
+	$args = array(
+		'label'                 => __( 'Location', 'text_domain' ),
+		'description'           => __( 'Post Type Location Description', 'text_domain' ),
+		'labels'                => $labels,
+		'supports'              => array( 'title', 'editor', 'custom-fields' ),
+		'taxonomies'            => array( 'lang' ),
+		'hierarchical'          => false,
+		'public'                => true,
+		'show_ui'               => true,
+		'show_in_menu'          => true,
+		'menu_position'         => 5,
+		'show_in_admin_bar'     => true,
+		'show_in_nav_menus'     => true,
+		'can_export'            => true,
+		'has_archive'           => true,
+		'exclude_from_search'   => false,
+		'publicly_queryable'    => true,
+		'capability_type'       => 'page',
+		'show_in_rest'          => true,
+	);
+	register_post_type( 'Locations', $args );
+
+}
+add_action( 'init', 'locations_post_type', 0 );
+
+// Register Custom Post Type
+/*
 function artisti_post_type() {
 
 	$labels = array(
@@ -124,6 +182,7 @@ function artisti_post_type() {
 
 }
 add_action( 'init', 'artisti_post_type', 0 );
+*/
 
 // Register Custom Post Type
 function events_post_type() {
@@ -159,7 +218,7 @@ function events_post_type() {
 	);
 	$args = array(
 		'label'                 => __( 'Evento', 'text_domain' ),
-		'description'           => __( 'Post Type EventiDescription', 'text_domain' ),
+		'description'           => __( 'Post Type Eventi Description', 'text_domain' ),
 		'labels'                => $labels,
 		'supports'              => array( 'title', 'editor', 'custom-fields' ),
 		'taxonomies'            => array( 'lang' ),

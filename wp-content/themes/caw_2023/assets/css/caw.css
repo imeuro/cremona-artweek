@@ -458,7 +458,7 @@ button.menu-toggle:after {
 }
 #caw-tabcontainer .title-tabcontent.heading-line {
     border-bottom: 3px solid var(--main-color);
-    padding-bottom: 35px;
+    padding: 0 30px 35px 0;
 }
 #caw-tabcontainer .content-tabcontent p {
 	font-size: 1.063em;
@@ -471,18 +471,16 @@ button.menu-toggle:after {
 }
 
 #caw-tabcontainer .caw-listing-item {
-    margin: 10px 0 60px 0;
+    margin: 0 0 60px 0;
     display: flex;
     flex-flow: column wrap;
     align-content: flex-start;
     justify-content: space-around;
     line-height: 1em;
 }
-#caw-tabcontainer .caw-listing-item.listing-artisti { cursor:pointer };
 #caw-tabcontainer .caw-listing-item .title-tabcontent,
 #caw-tabcontainer .caw-listing-item .time-tabcontent  {
     padding: 0;
-    margin: 0;
     line-height: 1em;
 }
 #caw-tabcontainer .caw-listing-item .time-tabcontent  { margin-bottom: 0; }
