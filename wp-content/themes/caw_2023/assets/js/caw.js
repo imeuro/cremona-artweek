@@ -137,39 +137,7 @@ const generateMapbox = () => {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-/*
-	artistList.then( 
-			ARTdata => {
-				var features = [];
-				var geoJSON = {};
-				geoJSON.type = 'FeatureCollection'
-				Object.values(ARTdata).forEach(el => {
-					console.debug( {el} );
-					var art = {};
-					art.type = "Feature";
-					art.properties = {}
-					art.properties.type = el.type;
-					art.properties.title = el.title.rendered;
-					art.properties.description = el.acf.evento_num;
-					art.properties.post_id = el.id;
-					art.properties.location_ids = el.acf.location;
-					// art.properties.location_name = el.acf.evento_location.name;
-					// art.properties.location_address = el.acf.evento_location.street_name+', '+el.acf.evento_location.street_number;
-					// art.properties.location_number = el.acf.evento_num;
-					art.geometry = {};
-					art.geometry.type = "Point"
-					// art.geometry.coordinates = [el.acf.evento_location.lng,el.acf.evento_location.lat];
 
-					features.push(art);
-				});
-
-				geoJSON.features = features;
-				CAWgeoJSON = geoJSON;
-				console.debug(CAWgeoJSON)
-				//generateMapbox();
-			}
-	);
-*/
 	locationsList.then( 
 			ARTdata => {
 				var features = [];
@@ -259,20 +227,9 @@ Array.from(MenuDiv.children).forEach((el) => {
 })
 
 
-// THE PAGE TAB
-document.querySelector('.close-tabcontainer').addEventListener('click', () => {
-	TabDiv.classList = '';
-	TabContainer.classList.remove('visible');
-	document.getElementById('masthead').classList.remove('compact');
-	map.flyTo({
-		center: BaseCoords,
-		essential: true,
-		zoom:14,
-		duration: 1000
-	});
-})
 
 
+// HELPER FUNCTIONS 
 async function getPostsFromWp(urlRequest) {
 	try {
 		const response = await fetch( urlRequest )
@@ -283,8 +240,23 @@ async function getPostsFromWp(urlRequest) {
 	}
 }
 
+function setLocalStorageWithExpiry(key, value, ttl) {
+	const now = new Date()
 
+	// `item` is an object which contains the original value
+	// as well as the time when it's supposed to expire
+	const item = {
+		value: value,
+		expiry: now.getTime() + ttl,
+	}
+	localStorage.setItem(key, JSON.stringify(item))
+}
+
+
+// THE PAGE TAB
 let resultFromWP = [];
+let TabContent = '';
+
 const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 	TabDiv.classList = '';
 	TabContainer.classList.remove('visible');
@@ -293,7 +265,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 	});
 
 	if (itemID == 0) { // archivio artisti by nearest in time
-		urlRequest = WPREST_Base+'/posts?per_page=99'
+		urlRequest = WPREST_Base+'/posts?orderby=title&order=asc&per_page=99'
 	} else if (itemID == 12) { // archivio eventi by nearest in time
 		urlRequest = WPREST_Base+'/eventi?lang=23&per_page=99'
 	} else if (itemID == 76) { // [eng] archivio eventi by nearest in time
@@ -308,17 +280,18 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 		TabContainer.innerHTML = '<div class="loading-div"><div class="loading-anim"></div></div>';
 	},100)
 
-	let TabContent = '';
 	
 	
+	// GET THE CONTENT FROM WP
 	const resultFromWP = getPostsFromWp(urlRequest);
 	resultFromWP.then( 
 		CAWdata => {
-			console.debug( typeof( CAWdata ) , CAWdata );
+			console.debug( CAWdata.length , CAWdata );
 
 			if (itemID == 12 || itemID == 76) { 
 				// LISTING "EVENTI" (by nearest start date):
 				// sort by the acf.evento_date_start field
+
 				CAWdata.sort((x, y) => {
 				     x = new Date(x.acf.evento_date_start),
 				      y = new Date(y.acf.evento_date_start);
@@ -347,40 +320,90 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						</div>
 					`;
 				});
-
+				TabContainer.innerHTML = TabContent;
 			}
 			else if (itemID == 0) {
-			// LISTING "ARTISTI" (totally random :D ):
+			// LISTING "ARTISTI" ( ordered by name alphabetically ):
 			// TODO: ENG VERSION!!!
-				Object.values(CAWdata).forEach(el => {
-					// console.debug(el);
-					const EVPlace_id = el.acf.location;
-					const EVPlace_data = getPostsFromWp(WPREST_Base+'/locations/?include='+EVPlace_id);
-					EVPlace_data.then( EVPdata => {
-						console.debug({EVPdata});
-						TabContent += `
-							<div class="caw-listing-item caw listing-artisti" id="${el.slug}" data-position-lng="${EVPdata[0].acf.location.lng}" data-position-lat="${EVPdata[0].acf.location.lat}">`;
-						TabContent += `
-							<h2 class="title-tabcontent">${el.title.rendered}</h2>`;
-						EVPdata.forEach((el) => {
-							TabContent += `<a class="info-tabcontent" href="javascript:map.flyTo({center: [(${el.acf.location.lng} - ${ShiftMap}),${el.acf.location.lat}],essential: true,zoom:17,duration: 2000});"><small>${el.acf.location_id}. ${el.title.rendered} »</small></a>`;
-						});
-						TabContent += `
-								<div class="content-tabcontent">${el.content.rendered}</div>
-							</div>
-						`;
-						TabContainer.innerHTML = TabContent;
+			// TODO: LOCALSTORAGE expiry date!!
+
+				var Art_todo = 0;
+				var Art_done = 0;
+				const CAWARTdata = localStorage.getItem('CAWARTdata');
+				console.debug('CAWARTdata',CAWARTdata);
+
+				// partendo da CAWDATA (o CAWlocalDATA), poi mi compongo TabContent
+				const composeTabContent = () => {
+					Object.values(CAWdata).forEach(el => {
+							TabContent += `
+								<div class="caw-listing-item caw listing-artisti" id="${el.slug}">`;
+							TabContent += `
+								<h2 class="title-tabcontent">${el.title.rendered}</h2>`;
+							Array.from(el.location).forEach(e => {
+								TabContent += `<a class="info-tabcontent" data-position-lng="${e.lng}" data-position-lat="${e.lat}" href="javascript:map.flyTo({center: [(${e.lng} - ${ShiftMap}),${e.lat}],essential: true,zoom:17,duration: 2000});"><small>${e.id}. ${e.name} »</small></a>`;
+							})
+							TabContent += `
+									<div class="content-tabcontent">${el.content.rendered}</div>
+								</div>
+							`;
+							Art_done++;
+							if (Art_done == CAWdata.length) {
+								console.debug('All artists processed.');
+								TabContainer.innerHTML = TabContent;
+								localStorage.setItem('CAWARTdata', JSON.stringify(CAWdata));
+							}
 					});
-				})
+				}
+
+
+
+				if (!CAWARTdata || CAWARTdata=='') {
+					//recupero dati mancanti con una serie di fetch posts
+					Object.values(CAWdata).forEach(el => {
+						console.debug(el.title.rendered);
+						const EVPlace_id = el.acf.location;
+						const EVPlace_data = getPostsFromWp(WPREST_Base+'/locations/?include='+EVPlace_id);
+						EVPlace_data.then( EVPdata => {
+							console.debug({EVPdata});
+							let i = 0;
+							//console.debug(Art_todo,CAWdata[Art_todo]);
+							CAWdata[Art_todo]['location'] = [];
+							EVPdata.forEach((el) => {
+								EVlocation = {
+									'name' : el.title.rendered,
+									'id' : el.acf.location_id,
+									'lng' : el.acf.location.lng,
+									'lat' : el.acf.location.lat
+								}
+								CAWdata[Art_todo]['location'][i] = EVlocation;
+								i++;
+							});
+							console.debug(Art_todo,CAWdata[Art_todo]);
+							Art_todo++;
+							if (Art_todo == CAWdata.length) {
+								console.debug('All data rescued .');
+								composeTabContent();
+							}
+							
+						});
+						
+					});
+				} else {
+					CAWdata = JSON.parse(CAWARTdata);
+					console.debug(CAWdata);
+					composeTabContent();
+				}
+
 			} 
 			else { // SIMPLE POSTS/PAGES:
-					TabContent += `
-						<h2 class="title-tabcontent heading-line">`+CAWdata.title.rendered+`</h2>
-						<div class="content-tabcontent">`+CAWdata.content.rendered+`</div>
-					`;
+				TabContent += `
+					<h2 class="title-tabcontent heading-line">`+CAWdata.title.rendered+`</h2>
+					<div class="content-tabcontent">`+CAWdata.content.rendered+`</div>
+				`;
+				TabContainer.innerHTML = TabContent;
 			}
 			//console.info(TabContent, divType);
-			TabContainer.innerHTML = TabContent;
+			
 		}
 	);
 	setTimeout(() => {
@@ -391,3 +414,15 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 		TabContainer.classList.add('visible');
 	},1000);
 }
+
+document.querySelector('.close-tabcontainer').addEventListener('click', () => {
+	TabDiv.classList = '';
+	TabContainer.classList.remove('visible');
+	document.getElementById('masthead').classList.remove('compact');
+	map.flyTo({
+		center: BaseCoords,
+		essential: true,
+		zoom:14,
+		duration: 1000
+	});
+})
