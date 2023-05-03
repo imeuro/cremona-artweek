@@ -155,10 +155,18 @@ div#page {
     align-items: center;
     justify-content: flex-start;
     padding-top: 60px;
+    width: calc(100% - 30px);
 }
 .site-header .main-navigation.toggled ul#lang-switcher{
 		position: fixed;
 		bottom: 15px;
+}
+
+.site-header .main-navigation ul#lang-switcher li {
+    flex: 0 1 auto;
+}
+.site-header .main-navigation ul#lang-switcher li.lang-item {
+    flex: 1 0 auto;
 }
 
 .site-header .main-navigation ul#lang-switcher a {
@@ -277,6 +285,7 @@ button.menu-toggle:after {
 	.site-header .main-navigation ul#lang-switcher{
 		position: fixed;
 		bottom: 35px;
+		width: 210px;
 	}
 	.site-header .main-navigation a {
 		font-size: 1rem;

@@ -57,6 +57,16 @@
 					'display_names_as' 	=> 'slug',
 					'hide_current'		=> 1
 				)); ?>
+				<li class="social social-FB">
+					<a href="https://www.instagram.com/cremona_artweek/" target="_blank">
+						<img src="<?php echo get_template_directory_uri(); ?>/assets/graphics/ico-social-fb.svg" width="32" height="32" alt="" />
+					</a>
+				</li>
+				<li class="social social-IG">
+					<a href="https://www.instagram.com/cremona_artweek/" target="_blank">
+						<img src="<?php echo get_template_directory_uri(); ?>/assets/graphics/ico-social-iggg.svg" width="32" height="32" alt="" />
+					</a>
+				</li>
 			</ul>
 		</nav><!-- #site-navigation -->
 
