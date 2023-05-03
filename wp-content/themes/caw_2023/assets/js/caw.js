@@ -288,7 +288,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 		CAWdata => {
 			console.debug( CAWdata.length , CAWdata );
 			TabContent = '';
-			
+
 			if (itemID == 12 || itemID == 76) { 
 				// LISTING "EVENTI" (by nearest start date):
 				// sort by the acf.evento_date_start field
@@ -323,7 +323,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 				});
 				TabContainer.innerHTML = TabContent;
 			}
-			else if (itemID == 0) {
+			else if (itemID == 498 || itemID == 500) {
 			// LISTING "ARTISTI" ( ordered by name alphabetically ):
 			// TODO: ENG VERSION!!!
 			// TODO: LOCALSTORAGE expiry date!!
