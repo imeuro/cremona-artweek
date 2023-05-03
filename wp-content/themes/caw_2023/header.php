@@ -59,12 +59,12 @@
 				)); ?>
 				<li class="social social-FB">
 					<a href="https://www.instagram.com/cremona_artweek/" target="_blank">
-						<img src="<?php echo get_template_directory_uri(); ?>/assets/graphics/ico-social-fb.svg" width="32" height="32" alt="" />
+						<img src="<?php echo get_template_directory_uri(); ?>/assets/graphics/ico-social-fb.svg" width="25" height="25" alt="cremona_artweek - Facebook" />
 					</a>
 				</li>
 				<li class="social social-IG">
 					<a href="https://www.instagram.com/cremona_artweek/" target="_blank">
-						<img src="<?php echo get_template_directory_uri(); ?>/assets/graphics/ico-social-iggg.svg" width="32" height="32" alt="" />
+						<img src="<?php echo get_template_directory_uri(); ?>/assets/graphics/ico-social-iggg.svg" width="25" height="25" alt="@cremona_artweek - Instagram" />
 					</a>
 				</li>
 			</ul>
