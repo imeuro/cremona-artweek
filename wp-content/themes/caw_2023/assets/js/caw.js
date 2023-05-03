@@ -287,7 +287,8 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 	resultFromWP.then( 
 		CAWdata => {
 			console.debug( CAWdata.length , CAWdata );
-
+			TabContent = '';
+			
 			if (itemID == 12 || itemID == 76) { 
 				// LISTING "EVENTI" (by nearest start date):
 				// sort by the acf.evento_date_start field
