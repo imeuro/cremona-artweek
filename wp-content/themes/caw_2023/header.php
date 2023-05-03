@@ -20,7 +20,7 @@
 	<?php wp_head(); ?>
 </head>
 
-<body <?php body_class(); ?>>
+<body <?php body_class(); ?> data-lang="<?php echo pll_current_language(); ?>">
 <?php wp_body_open(); ?>
 <div id="page" class="site">
 	<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'caw_2023' ); ?></a>
@@ -58,7 +58,7 @@
 					'hide_current'		=> 1
 				)); ?>
 				<li class="social social-FB">
-					<a href="https://www.instagram.com/cremona_artweek/" target="_blank">
+					<a href="https://www.facebook.com/Cremona-Contemporanea-Art-Week-109247388808156" target="_blank">
 						<img src="<?php echo get_template_directory_uri(); ?>/assets/graphics/ico-social-fb.svg" width="25" height="25" alt="cremona_artweek - Facebook" />
 					</a>
 				</li>

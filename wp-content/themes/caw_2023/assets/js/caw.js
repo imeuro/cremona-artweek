@@ -1,5 +1,6 @@
 const Baseurl = ['localhost','meuro.dev'].includes(window.location.hostname) ? '/cremona-artweek' : '';
 const WPREST_Base = Baseurl+'/wp-json/wp/v2';
+const current_lang = document.body.dataset.lang;
 let locationsList = getPostsFromWp(WPREST_Base+'/locations?per_page=99');
 var CAWgeoJSON = [];
 BaseCoords = window.innerWidth<600 ? [10.024,45.139] : [10.015,45.132]
@@ -54,7 +55,6 @@ const generateMapbox = () => {
 				'id': 'places',
 				'type': 'symbol',
 				'source': 'places',
-				// 'glyphs': 'https://api.mapbox.com/fonts/v1/meuro/OPS%20Placard%20Regular/0-255.pbf',
 				'layout': {
 					'icon-image': 'cawpointer',
 					'icon-size': .85,
@@ -68,7 +68,6 @@ const generateMapbox = () => {
 					'text-radial-offset': 0,
 					'text-justify': 'auto',
 					'text-size': 18,
-					//'text-weight': 900,
 					'text-font': ['OPS Placard Regular'],
 				},
 
@@ -119,7 +118,7 @@ const generateMapbox = () => {
 			});
 
 			map.on('click', 'places', () => {
-			 	LoadItInTheDiv(readmorelink,'locations','HalfDiv');
+			 	LoadItInTheDiv(readmorelink,'locations','HalfDiv',current_lang);
 			 	map.flyTo({
 					center: [(coords[0] - ShiftMap),coords[1]],
 					essential: true,
@@ -153,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					art.properties.title = el.title.rendered;
 					art.properties.description = el.content.rendered;
 					art.properties.post_id = el.id;
+					art.properties.testo_eng = el.acf.testo_eng;
 					art.properties.location_id = el.acf.location_id;
 					art.properties.location_name = el.acf.location.name;
 					art.properties.location_address = el.acf.location.street_name+', '+el.acf.location.street_number;
@@ -266,12 +266,10 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 		el.firstChild.classList.remove('current');
 	});
 
-	if (itemID == 0) { // archivio artisti by nearest in time
+	if (itemID == 498 || itemID == 500) { // archivio artisti by nearest in time
 		urlRequest = WPREST_Base+'/posts?orderby=title&order=asc&per_page=99'
-	} else if (itemID == 12) { // archivio eventi by nearest in time
-		urlRequest = WPREST_Base+'/eventi?lang=23&per_page=99'
-	} else if (itemID == 76) { // [eng] archivio eventi by nearest in time
-		urlRequest = WPREST_Base+'/eventi?lang=24&per_page=99'
+	} else if (itemID == 12 || itemID == 76) { // [eng] archivio eventi by nearest in time
+		urlRequest = WPREST_Base+'/eventi?per_page=99'
 	} else {
 		postType = (postType == '') ? 'pages' : postType;
 		urlRequest = WPREST_Base+'/'+postType+"/"+itemID;
@@ -332,29 +330,32 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 
 				var Art_todo = 0;
 				var Art_done = 0;
+
 				const CAWARTdata = localStorage.getItem('CAWARTdata');
 				console.debug('CAWARTdata',CAWARTdata);
 
 				// partendo da CAWDATA (o CAWlocalDATA), poi mi compongo TabContent
 				const composeTabContent = () => {
 					Object.values(CAWdata).forEach(el => {
-							TabContent += `
-								<div class="caw-listing-item caw listing-artisti" id="${el.slug}">`;
-							TabContent += `
-								<h2 class="title-tabcontent">${el.title.rendered}</h2>`;
-							Array.from(el.location).forEach(e => {
-								TabContent += `<a class="info-tabcontent" data-position-lng="${e.lng}" data-position-lat="${e.lat}" href="javascript:map.flyTo({center: [(${e.lng} - ${ShiftMap}),${e.lat}],essential: true,zoom:17,duration: 2000});"><small>${e.id}. ${e.name} »</small></a>`;
-							})
-							TabContent += `
-									<div class="content-tabcontent">${el.content.rendered}</div>
-								</div>
-							`;
-							Art_done++;
-							if (Art_done == CAWdata.length) {
-								console.debug('All artists processed.');
-								TabContainer.innerHTML = TabContent;
-								localStorage.setItem('CAWARTdata', JSON.stringify(CAWdata));
-							}
+						const content_tabcontent = (itemID == 500 && el.acf.testo_eng) ? '<p>'+el.acf.testo_eng+'</p>' : el.content.rendered;
+
+						TabContent += `
+							<div class="caw-listing-item caw listing-artisti" id="${el.slug}">`;
+						TabContent += `
+							<h2 class="title-tabcontent">${el.title.rendered}</h2>`;
+						Array.from(el.location).forEach(e => {
+							TabContent += `<a class="info-tabcontent" data-position-lng="${e.lng}" data-position-lat="${e.lat}" href="javascript:map.flyTo({center: [(${e.lng} - ${ShiftMap}),${e.lat}],essential: true,zoom:17,duration: 2000});"><small>${e.id}. ${e.name} »</small></a>`;
+						})
+						TabContent += `
+								<div class="content-tabcontent">${content_tabcontent}</div>
+							</div>
+						`;
+						Art_done++;
+						if (Art_done == CAWdata.length) {
+							console.debug('All artists processed.');
+							TabContainer.innerHTML = TabContent;
+							localStorage.setItem('CAWARTdata', JSON.stringify(CAWdata));
+						}
 					});
 				}
 
@@ -399,9 +400,10 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 
 			} 
 			else { // SIMPLE POSTS/PAGES:
+				const content_tabcontent = (current_lang == 'en' && CAWdata.acf.testo_eng) ? CAWdata.acf.testo_eng : CAWdata.content.rendered;
 				TabContent += `
-					<h2 class="title-tabcontent heading-line">`+CAWdata.title.rendered+`</h2>
-					<div class="content-tabcontent">`+CAWdata.content.rendered+`</div>
+					<h2 class="title-tabcontent heading-line">${CAWdata.title.rendered}</h2>
+					<div class="content-tabcontent">${content_tabcontent}</div>
 				`;
 				TabContainer.innerHTML = TabContent;
 			}
