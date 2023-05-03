@@ -208,6 +208,8 @@ var fragment = document.createDocumentFragment();
 fragment.appendChild(langswitch);
 MenuDiv.parentNode.appendChild(fragment);
 
+MenuDiv.addEventListener('contextmenu', event => event.preventDefault());
+
 Array.from(MenuDiv.children).forEach((el) => {
 	let itemID = el.firstChild.dataset.postid;
 	let lang = el.firstChild.dataset.lang;
