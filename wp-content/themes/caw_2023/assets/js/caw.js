@@ -97,11 +97,11 @@ const generateMapbox = () => {
 					return;
 				}
 				const feature = features[0];
-				console.debug({feature})
+				//console.debug({feature})
 				readmorelink = feature.properties.post_id;
 				coords = feature.geometry.coordinates;
-				// let EVPlace = feature.properties.location_name ? feature.properties.location_name : feature.properties.location_address;
 				let EVPlace = feature.properties.location_address;
+
 				// Create a popup, specify its options 
 				// and properties, and add it to the map.
 				
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				let i = 1;
 				geoJSON.type = 'FeatureCollection';
 				Object.values(ARTdata).forEach(el => {
-					console.debug( {el} );
+					// console.debug( {el} );
 					var art = {};
 					art.type = "Feature";
 					art.properties = {}
@@ -176,6 +176,41 @@ document.addEventListener('DOMContentLoaded', () => {
 // THE MAP BOX ENDS HERE
 // __________________________
 
+
+
+// HELPER FUNCTIONS 
+// __________________________
+
+async function getPostsFromWp( urlRequest ) {
+	try {
+		const response = await fetch( urlRequest )
+		const data = await response.json()
+		return data
+	} catch ( e ) {
+		console.error( e )
+	}
+}
+
+function setLocalStorageWithExpiry( key, value, ttl ) {
+	const now = new Date()
+
+	// `item` is an object which contains the original value
+	// as well as the time when it's supposed to expire
+	const item = {
+		value: value,
+		expiry: now.getTime() + ttl,
+	}
+	localStorage.setItem(key, JSON.stringify(item))
+}
+
+function location_public2private( id ) {
+	
+}
+
+
+
+// HELPER FUNCTIONS ENDS HERE
+// __________________________
 
 
 // THE PAGES
@@ -231,31 +266,6 @@ Array.from(MenuDiv.children).forEach((el) => {
 
 
 
-
-// HELPER FUNCTIONS 
-async function getPostsFromWp(urlRequest) {
-	try {
-		const response = await fetch( urlRequest )
-		const data = await response.json()
-		return data
-	} catch ( e ) {
-		console.error( e )
-	}
-}
-
-function setLocalStorageWithExpiry(key, value, ttl) {
-	const now = new Date()
-
-	// `item` is an object which contains the original value
-	// as well as the time when it's supposed to expire
-	const item = {
-		value: value,
-		expiry: now.getTime() + ttl,
-	}
-	localStorage.setItem(key, JSON.stringify(item))
-}
-
-
 // THE PAGE TAB
 let resultFromWP = [];
 let TabContent = '';
@@ -287,11 +297,11 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 	const resultFromWP = getPostsFromWp(urlRequest);
 	resultFromWP.then( 
 		CAWdata => {
-			console.debug( CAWdata.length , CAWdata );
+			console.debug( 'CAWdata:' , CAWdata );
 			TabContent = '';
 
 			if (itemID == 12 || itemID == 76) { 
-				// LISTING "EVENTI" (by nearest start date):
+				// 👉 LISTING "EVENTI" (by nearest start date):
 				// sort by the acf.evento_date_start field
 
 				CAWdata.sort((x, y) => {
@@ -325,13 +335,13 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 				TabContainer.innerHTML = TabContent;
 			}
 			else if (itemID == 498 || itemID == 500) {
-				// LISTING "ARTISTI" ( ordered by name alphabetically ):
+				// 👉 LISTING "ARTISTI" ( ordered by name alphabetically ):
 				// TODO: LOCALSTORAGE w/ expiry date!!
 
 				var Art_todo = 0;
 				var Art_done = 0;
 
-				// SAVE DATA TO LOCALSTORAGE:
+				// 📌 SAVE DATA TO LOCALSTORAGE:
 				const CAWARTdata = '';
 				// CAWARTdata = localStorage.getItem('CAWARTdata');
 				// console.debug('CAWARTdata',CAWARTdata);
@@ -346,7 +356,6 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						TabContent += `
 							<h2 class="title-tabcontent">${el.title.rendered}</h2>`;
 						Array.from(el.location).forEach(e => {
-							console.debug(e);
 							TabContent += `<a class="info-tabcontent" data-position-lng="${e.lng}" data-position-lat="${e.lat}" href="javascript:LoadItInTheDiv(${e.post_id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${e.lng} - ${ShiftMap}),${e.lat}],essential: true,zoom:17,duration: 2000});"><small>${e.id}. ${e.name} »</small></a>`;
 						})
 						//TabContent += `<div class="content-tabcontent">${content_tabcontent}</div>`;
@@ -366,11 +375,11 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 				if (!CAWARTdata || CAWARTdata=='') {
 					//recupero dati mancanti con una serie di fetch posts
 					Object.values(CAWdata).forEach(el => {
-						console.debug(el.title.rendered);
+
 						const EVPlace_id = el.acf.location;
 						const EVPlace_data = getPostsFromWp(WPREST_Base+'/locations/?include='+EVPlace_id);
 						EVPlace_data.then( EVPdata => {
-							console.debug({EVPdata});
+							// console.debug({EVPdata});
 							let i = 0;
 							//console.debug(Art_todo,CAWdata[Art_todo]);
 							CAWdata[Art_todo]['location'] = [];
@@ -385,10 +394,10 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 								CAWdata[Art_todo]['location'][i] = EVlocation;
 								i++;
 							});
-							console.debug(Art_todo,CAWdata[Art_todo]);
+							// console.debug(Art_todo,CAWdata[Art_todo]);
 							Art_todo++;
 							if (Art_todo == CAWdata.length) {
-								console.debug('All data rescued .');
+								console.debug('All data rescued.');
 								composeTabContent();
 							}
 							
@@ -404,9 +413,9 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 			} 
 			else { // LOCATIONS & SIMPLE POSTS/PAGES:
 				const content_tabcontent = (current_lang == 'en' && CAWdata.acf.testo_eng) ? CAWdata.acf.testo_eng : CAWdata.content.rendered;
-				console.debug(CAWdata);
+				//console.debug(CAWdata);
 				if (CAWdata.acf.location_id) {
-					// LOCATIONS
+					// 👉 LOCATIONS
 					// query all posts with acf 'location_id' == CAWdata.acf.location_id
 					const ARThere_data = getPostsFromWp(WPREST_Base+'/posts/?_fields=acf.location,acf.testo_eng,title,content&per_page=99');
 					let i = 0;
@@ -415,14 +424,14 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						heredata.forEach((el) => {
 							if (el.acf.location.includes(CAWdata.id)) {
 								art_display[i]={};
-								console.debug(CAWdata.id,el);
+								// console.debug(CAWdata.id,el);
 								art_display[i].title = el.title.rendered;
 								art_display[i].content = current_lang == 'en' ? el.acf.testo_eng : el.content.rendered;
 								i++;
 							}
 						});
 					}).then(() => {
-						console.debug(art_display.length, art_display);
+						console.debug(art_display.length+' artists displaying here', art_display);
 						TabContent += `
 							<h2 class="title-tabcontent heading-line">${CAWdata.acf.location_id}. ${CAWdata.title.rendered}</h2>
 							<p class="small-tabcontent">
@@ -453,7 +462,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					});
 					
 				} else { 
-					// SIMPLE POSTS/PAGES:
+					// 👉 SIMPLE POSTS/PAGES:
 					TabContent += `
 						<h2 class="title-tabcontent heading-line">${CAWdata.title.rendered}</h2>
 						<div class="content-tabcontent">${content_tabcontent}</div>
@@ -463,7 +472,6 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 				}
 				
 			}
-			//console.info(TabContent, divType);
 			
 		}
 	);
