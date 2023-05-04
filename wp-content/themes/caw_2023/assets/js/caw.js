@@ -418,7 +418,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 				if (CAWdata.acf.location_id) {
 					// 👉 LOCATIONS
 					// query all posts with acf 'location_id' == CAWdata.acf.location_id
-					const ARThere_data = getPostsFromWp(WPREST_Base+'/posts/?_fields=acf.location,acf.testo_eng,title,content&per_page=99');
+					const ARThere_data = getPostsFromWp(WPREST_Base+'/posts/?_fields=acf.location,acf.testo_eng,slug,title,content&per_page=99');
 					let i = 0;
 					let art_display=[];
 					ARThere_data.then( heredata => {
@@ -426,6 +426,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 							if (el.acf.location.includes(CAWdata.id)) {
 								art_display[i]={};
 								// console.debug(CAWdata.id,el);
+								art_display[i].slug = el.slug;
 								art_display[i].title = el.title.rendered;
 								art_display[i].content = current_lang == 'en' ? el.acf.testo_eng : el.content.rendered;
 								i++;
@@ -440,7 +441,8 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 								<small>9:00 / 21:00</small>
 								<small>`;
 						for (let i = 0; i < art_display.length; i++) {
-							TabContent += art_display[i].title;
+							TabContent += `
+								<a href="javascript:;" title="info su ${art_display[i].title}" onclick="document.getElementById('artist-${art_display[i].slug}').scrollIntoView({behavior: 'smooth'});">${art_display[i].title}</a>`
 							if (i < art_display.length-1) {
 								TabContent += ', ';
 							}
@@ -450,8 +452,8 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 							<div class="content-tabcontent">${content_tabcontent}</div>`;
 							for (let i = 0; i < art_display.length; i++) {
 							TabContent += `
-								<div class="content-tabcontent content-artdisplay">
-									<h3>${art_display[i].title}</h3>
+								<div class="content-tabcontent content-artdisplay" id="artist-${art_display[i].slug}">
+									<h2>${art_display[i].title}</h3>
 									<div>${art_display[i].content}</div>
 								</div>`;
 							}
