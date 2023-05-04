@@ -408,7 +408,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 				if (CAWdata.acf.location_id) {
 					// LOCATIONS
 					TabContent += `
-						<h2 class="title-tabcontent heading-line">${CAWdata.title.rendered}</h2>
+						<h2 class="title-tabcontent heading-line">${CAWdata.acf.location_id}. ${CAWdata.title.rendered}</h2>
 						<p class="small-tabcontent">
 							<small>${CAWdata.acf.location.street_name}, ${CAWdata.acf.location.street_number}</small>
 							<small>9:00 / 21:00</small>
