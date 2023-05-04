@@ -278,7 +278,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 	});
 
 	if (itemID == 498 || itemID == 500) { // archivio artisti by nearest in time
-		urlRequest = WPREST_Base+'/posts?orderby=date&order=asc&per_page=99'
+		urlRequest = WPREST_Base+'/posts?orderby=date&order=desc&per_page=99'
 	} else if (itemID == 12 || itemID == 76) { // [eng] archivio eventi by nearest in time
 		urlRequest = WPREST_Base+'/eventi?per_page=99'
 	} else {
