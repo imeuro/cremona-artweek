@@ -58,13 +58,13 @@ div#page {
 	top: 0;
 	left: 0;
 	width: 100vw;
-	height: 250px;
+	height: 240px;
 	z-index: 10;
 	background: #ffffffB0;
 	transition: height 250ms ease-in-out;
 }
 .home .site-header.compact { 
-	height: 54px;
+	height: 48px;
 	overflow: hidden;
 }
 .home .site-header.hidden {
@@ -174,13 +174,13 @@ div#page {
 	border: none;
 	text-transform: uppercase;
 }
-
+.site-title { margin: 0 }
 .site-title a {
     background: url(../graphics/CRC_Final.svg) no-repeat left center;
     display: block;
     width: 225px;
     height: 215px;
-    margin: 10px auto 10px 15px;
+    margin: 10px auto 10px 10px;
 }
 
 .lettering {
@@ -243,7 +243,7 @@ div#page {
 #site-navigation button.menu-toggle {
     position: fixed;
     right: 45px;
-    top: 18px;
+    top: 14px;
     z-index: 10;
     width: 35px;
     height: 50px;
@@ -288,7 +288,7 @@ button.menu-toggle:after {
 		width: 210px;
 	}
 	.site-header .main-navigation a {
-		font-size: 1rem;
+		font-size: 1.063em;
 		padding: 0;
 		margin: 0;
 		border-bottom: 2px solid transparent;
@@ -310,7 +310,7 @@ button.menu-toggle:after {
 		height: auto;
 		background: transparent;
 	}
-	.site-title a { margin: -4px 0 0 0; }
+	.site-title a { margin: 13px 0 0 -3px; }
 	.lettering { left: 244px; }
 	.lettering.lettering-left { display: flex; }
 }
@@ -384,7 +384,7 @@ button.menu-toggle:after {
 }
 #caw-content .close-tabcontainer {
 	position: absolute;
-    top: 50px;
+    top: 23px;
     right: 17px;
     width: 50px;
     height: 50px;
@@ -400,23 +400,23 @@ button.menu-toggle:after {
 	content: "";
     display: block;
     position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 30px;
-    height: 30px;
+	top: 18px;
+    left: 17px;
+    width: 40px;
+    height: 40px;
     border: none;
     border-left: 3px solid var(--main-color);
     transform: rotate(45deg);
 }
 #caw-content .close-tabcontainer:after {
     transform: rotate(-45deg);
-    top: 1px;
-    left: 20px;
+	top: -8px;
+    left: 17px;
 }
 
 #caw-content.open {
     width: calc(100vw - 20px);
-    top: 53px;
+    top: 48px;
 }
 #caw-content.full.open { 
 	width: calc(100vw - 20px);
@@ -445,7 +445,7 @@ button.menu-toggle:after {
 
 
 #caw-tabcontainer {
-	padding: 50px 15px;
+	padding: 20px 15px;
 	margin-bottom: 75px;
 	color: var(--main-color);
 	font-family: var(--secondary-font);
@@ -467,7 +467,8 @@ button.menu-toggle:after {
 }
 #caw-tabcontainer .title-tabcontent.heading-line {
     border-bottom: 3px solid var(--main-color);
-    padding: 0 30px 35px 0;
+    padding: 0 52px 35px 0;
+    white-space: break-spaces;
 }
 #caw-tabcontainer .content-tabcontent p {
 	font-size: 1.063em;
@@ -510,7 +511,7 @@ button.menu-toggle:after {
 }
 
 @media all and (min-width: 37.5em) {
-	#caw-tabcontainer { padding: 0 35px; }
+	#caw-tabcontainer { padding: 0 20px 0 40px; }
 }
 
 
