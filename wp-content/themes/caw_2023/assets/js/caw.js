@@ -325,15 +325,16 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 				TabContainer.innerHTML = TabContent;
 			}
 			else if (itemID == 498 || itemID == 500) {
-			// LISTING "ARTISTI" ( ordered by name alphabetically ):
-			// TODO: ENG VERSION!!!
-			// TODO: LOCALSTORAGE expiry date!!
+				// LISTING "ARTISTI" ( ordered by name alphabetically ):
+				// TODO: LOCALSTORAGE w/ expiry date!!
 
 				var Art_todo = 0;
 				var Art_done = 0;
 
-				const CAWARTdata = localStorage.getItem('CAWARTdata');
-				console.debug('CAWARTdata',CAWARTdata);
+				// SAVE DATA TO LOCALSTORAGE:
+				const CAWARTdata = '';
+				// CAWARTdata = localStorage.getItem('CAWARTdata');
+				// console.debug('CAWARTdata',CAWARTdata);
 
 				// partendo da CAWDATA (o CAWlocalDATA), poi mi compongo TabContent
 				const composeTabContent = () => {
@@ -345,12 +346,12 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						TabContent += `
 							<h2 class="title-tabcontent">${el.title.rendered}</h2>`;
 						Array.from(el.location).forEach(e => {
-							TabContent += `<a class="info-tabcontent" data-position-lng="${e.lng}" data-position-lat="${e.lat}" href="javascript:map.flyTo({center: [(${e.lng} - ${ShiftMap}),${e.lat}],essential: true,zoom:17,duration: 2000});"><small>${e.id}. ${e.name} »</small></a>`;
+							console.debug(e);
+							TabContent += `<a class="info-tabcontent" data-position-lng="${e.lng}" data-position-lat="${e.lat}" href="javascript:LoadItInTheDiv(${e.post_id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${e.lng} - ${ShiftMap}),${e.lat}],essential: true,zoom:17,duration: 2000});"><small>${e.id}. ${e.name} »</small></a>`;
 						})
-						TabContent += `
-								<div class="content-tabcontent">${content_tabcontent}</div>
-							</div>
-						`;
+						//TabContent += `<div class="content-tabcontent">${content_tabcontent}</div>`;
+						TabContent += `	</div>`;
+						
 						Art_done++;
 						if (Art_done == CAWdata.length) {
 							console.debug('All artists processed.');
@@ -376,6 +377,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 							EVPdata.forEach((el) => {
 								EVlocation = {
 									'name' : el.title.rendered,
+									'post_id': el.id,
 									'id' : el.acf.location_id,
 									'lng' : el.acf.location.lng,
 									'lat' : el.acf.location.lat
@@ -400,12 +402,28 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 				}
 
 			} 
-			else { // SIMPLE POSTS/PAGES:
+			else { // LOCATIONS & SIMPLE POSTS/PAGES:
 				const content_tabcontent = (current_lang == 'en' && CAWdata.acf.testo_eng) ? CAWdata.acf.testo_eng : CAWdata.content.rendered;
-				TabContent += `
-					<h2 class="title-tabcontent heading-line">${CAWdata.title.rendered}</h2>
-					<div class="content-tabcontent">${content_tabcontent}</div>
-				`;
+				console.debug(CAWdata);
+				if (CAWdata.acf.location_id) {
+					// LOCATIONS
+					TabContent += `
+						<h2 class="title-tabcontent heading-line">${CAWdata.title.rendered}</h2>
+						<p class="small-tabcontent">
+							<small>${CAWdata.acf.location.street_name}, ${CAWdata.acf.location.street_number}</small>
+							<small>9:00 / 21:00</small>
+							<small>Nome Cognome, Nome Cognome, Nome Cognome</small>
+						</p>
+						<div class="content-tabcontent">${content_tabcontent}</div>
+					`;
+				} else { 
+					// SIMPLE POSTS/PAGES:
+					TabContent += `
+						<h2 class="title-tabcontent heading-line">${CAWdata.title.rendered}</h2>
+						<div class="content-tabcontent">${content_tabcontent}</div>
+					`;
+
+				}
 				TabContainer.innerHTML = TabContent;
 			}
 			//console.info(TabContent, divType);

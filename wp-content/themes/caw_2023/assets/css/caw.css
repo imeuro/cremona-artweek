@@ -470,6 +470,10 @@ button.menu-toggle:after {
     padding: 0 52px 35px 0;
     white-space: break-spaces;
 }
+#caw-tabcontainer .small-tabcontent small {
+	display: block;
+    line-height: 1.25em;
+}
 #caw-tabcontainer .content-tabcontent p {
 	font-size: 1.063em;
     line-height: 1.4em;
