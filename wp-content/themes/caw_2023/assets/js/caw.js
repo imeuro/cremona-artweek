@@ -342,7 +342,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 				var Art_done = 0;
 
 				// 📌 SAVE DATA TO LOCALSTORAGE:
-				const CAWARTdata = '';
+				let CAWARTdata = '';
 				// CAWARTdata = localStorage.getItem('CAWARTdata');
 				// console.debug('CAWARTdata',CAWARTdata);
 
@@ -365,7 +365,8 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						if (Art_done == CAWdata.length) {
 							console.debug('All artists processed.');
 							TabContainer.innerHTML = TabContent;
-							localStorage.setItem('CAWARTdata', JSON.stringify(CAWdata));
+							// localStorage.setItem('CAWARTdata', JSON.stringify(CAWdata));
+							localStorage.setItem('CAWARTdata', '');
 						}
 					});
 				}
