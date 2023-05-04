@@ -70,49 +70,10 @@ function caw_2023_setup() {
 		)
 	);
 
-	// Set up the WordPress core custom background feature.
-	add_theme_support(
-		'custom-background',
-		apply_filters(
-			'caw_2023_custom_background_args',
-			array(
-				'default-color' => 'ffffff',
-				'default-image' => '',
-			)
-		)
-	);
 
-	// Add theme support for selective refresh for widgets.
-	add_theme_support( 'customize-selective-refresh-widgets' );
-
-	/**
-	 * Add support for core custom logo.
-	 *
-	 * @link https://codex.wordpress.org/Theme_Logo
-	 */
-	add_theme_support(
-		'custom-logo',
-		array(
-			'height'      => 250,
-			'width'       => 250,
-			'flex-width'  => true,
-			'flex-height' => true,
-		)
-	);
 }
 add_action( 'after_setup_theme', 'caw_2023_setup' );
 
-/**
- * Set the content width in pixels, based on the theme's design and stylesheet.
- *
- * Priority 0 to make it available to lower priority callbacks.
- *
- * @global int $content_width
- */
-function caw_2023_content_width() {
-	$GLOBALS['content_width'] = apply_filters( 'caw_2023_content_width', 640 );
-}
-add_action( 'after_setup_theme', 'caw_2023_content_width', 0 );
 
 /**
  * Register widget area.
@@ -137,32 +98,35 @@ add_action( 'widgets_init', 'caw_2023_widgets_init' );
 /**
  * Enqueue scripts and styles.
  */
+function add_async_forscript($url)
+{
+    if (strpos($url, '#asyncload')===false)
+        return $url;
+    else if (is_admin())
+        return str_replace('#asyncload', '', $url);
+    else
+        return str_replace('#asyncload', '', $url)."' async='async"; 
+}
+add_filter('clean_url', 'add_async_forscript', 11, 1);
+
 function caw_2023_scripts() {
 	wp_enqueue_style( 'caw_2023-style', get_stylesheet_uri(), array(), _S_VERSION );
 	wp_style_add_data( 'caw_2023-style', 'rtl', 'replace' );
     wp_enqueue_style( 'caw_2023-style-custom', get_template_directory_uri() . '/assets/css/caw.css', array(), _S_VERSION );
 
-	wp_enqueue_script( 'caw_2023-navigation', get_template_directory_uri() . '/assets/js/navigation.js', array(), _S_VERSION, true );
-	wp_enqueue_script( 'caw_2023-general', get_template_directory_uri() . '/assets/js/caw.js', array(), _S_VERSION, true );
+	wp_enqueue_script( 'caw_2023-navigation', get_template_directory_uri() . '/assets/js/navigation.js#asyncload', array(), _S_VERSION, true );
+	wp_enqueue_script( 'caw_2023-general', get_template_directory_uri() . '/assets/js/caw.js', array('caw_2023-mapboxx'), _S_VERSION, true );
 
-	// if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
-	// 	// wp_enqueue_script( 'comment-reply' );
-	// }
 }
 add_action( 'wp_enqueue_scripts', 'caw_2023_scripts' );
 
 
 // mapbox libraries
 function caw_mapbox_assets() {
-	wp_enqueue_script( 'caw_2023-mapboxx', 'https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.js', array(), _S_VERSION, true );
+	wp_enqueue_script( 'caw_2023-mapboxx', 'https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.js#asyncload', array(), _S_VERSION, true );
 	wp_enqueue_style( 'caw_2023-mapboxx', 'https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.css', array(), _S_VERSION );
 }
 add_action( 'wp_enqueue_scripts', 'caw_mapbox_assets' );
-
-/**
- * Implement the Custom Header feature.
- */
-require get_template_directory() . '/inc/custom-header.php';
 
 /**
  * Custom template tags for this theme.
@@ -174,15 +138,5 @@ require get_template_directory() . '/inc/template-tags.php';
  */
 require get_template_directory() . '/inc/template-functions.php';
 
-/**
- * Customizer additions.
- */
-require get_template_directory() . '/inc/customizer.php';
 
-/**
- * Load Jetpack compatibility file.
- */
-if ( defined( 'JETPACK__VERSION' ) ) {
-	require get_template_directory() . '/inc/jetpack.php';
-}
 
