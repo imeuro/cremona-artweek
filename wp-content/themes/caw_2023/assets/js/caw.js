@@ -3,7 +3,8 @@ const WPREST_Base = Baseurl+'/wp-json/wp/v2';
 const current_lang = document.body.dataset.lang;
 let locationsList = getPostsFromWp(WPREST_Base+'/locations?per_page=99');
 var CAWgeoJSON = [];
-BaseCoords = window.innerWidth<600 ? [10.024,45.139] : [10.015,45.132]
+let BaseCoords = window.innerWidth<600 ? [10.021,45.139] : [10.020, 45.134];
+let BaseZoom = window.innerWidth<600 ? 12.85 : 14.15;
 let map = '';
 let ShiftMap = window.innerWidth<600 ? 0 : 0.0015;
 
@@ -15,7 +16,7 @@ const generateMapbox = () => {
 		container: 'caw-mapbox', // container ID
 		style: 'mapbox://styles/meuro/clg4t7v1e004p01mpehknvnkd', // style URL
 		center: BaseCoords, // starting position [lng, lat]
-		zoom: 14, // starting zoom
+		zoom: BaseZoom, // starting zoom
 		glyphs: 'mapbox://fonts/meuro/OPS%20Placard%20Regular/0-255.pbf',
 		// cooperativeGestures: true,
 	});
@@ -198,7 +199,7 @@ document.querySelector('.menu-toggle').addEventListener('click',()=>{
 	map.flyTo({
 		center: BaseCoords,
 		essential: true,
-		zoom:14,
+		zoom:BaseZoom,
 		duration: 1000
 	});
 })
@@ -427,7 +428,7 @@ document.querySelector('.close-tabcontainer').addEventListener('click', () => {
 	map.flyTo({
 		center: BaseCoords,
 		essential: true,
-		zoom:14,
+		zoom:BaseZoom,
 		duration: 1000
 	});
 })
