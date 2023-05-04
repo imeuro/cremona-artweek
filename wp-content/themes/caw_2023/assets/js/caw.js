@@ -407,24 +407,61 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 				console.debug(CAWdata);
 				if (CAWdata.acf.location_id) {
 					// LOCATIONS
-					TabContent += `
-						<h2 class="title-tabcontent heading-line">${CAWdata.acf.location_id}. ${CAWdata.title.rendered}</h2>
-						<p class="small-tabcontent">
-							<small>${CAWdata.acf.location.street_name}, ${CAWdata.acf.location.street_number}</small>
-							<small>9:00 / 21:00</small>
-							<small>Nome Cognome, Nome Cognome, Nome Cognome</small>
-						</p>
-						<div class="content-tabcontent">${content_tabcontent}</div>
-					`;
+					// query all posts with acf 'location_id' == CAWdata.acf.location_id
+					const ARThere_data = getPostsFromWp(WPREST_Base+'/posts/?_fields=acf.location,acf.testo_eng,title,content&per_page=99');
+					let i = 0;
+					let art_display=[];
+					ARThere_data.then( heredata => {
+						heredata.forEach((el) => {
+							if (el.acf.location.includes(CAWdata.id)) {
+								art_display[i]={};
+								console.debug(CAWdata.id,el);
+								art_display[i].title = el.title.rendered;
+								art_display[i].content = current_lang == 'en' ? el.acf.testo_eng : el.content.rendered;
+								i++;
+							}
+						});
+					}).then(() => {
+						console.debug(art_display.length, art_display);
+						TabContent += `
+							<h2 class="title-tabcontent heading-line">${CAWdata.acf.location_id}. ${CAWdata.title.rendered}</h2>
+							<p class="small-tabcontent">
+								<small>${CAWdata.acf.location.street_name}, ${CAWdata.acf.location.street_number}</small>
+								<small>9:00 / 21:00</small>
+								<small>`;
+						for (let i = 0; i < art_display.length; i++) {
+							TabContent += art_display[i].title;
+							if (i < art_display.length-1) {
+								TabContent += ', ';
+							}
+						}
+						TabContent += `</small>
+							</p>
+							<div class="content-tabcontent">${content_tabcontent}</div>`;
+							for (let i = 0; i < art_display.length; i++) {
+							TabContent += `
+								<div class="content-tabcontent content-artdisplay">
+									<h3>${art_display[i].title}</h3>
+									<div>${art_display[i].content}</div>
+								</div>`;
+							}
+							`<div class="content-tabcontent content-artdisplay">
+								${content_tabcontent}
+							</div>
+						`;
+						TabContainer.innerHTML = TabContent;
+					});
+					
 				} else { 
 					// SIMPLE POSTS/PAGES:
 					TabContent += `
 						<h2 class="title-tabcontent heading-line">${CAWdata.title.rendered}</h2>
 						<div class="content-tabcontent">${content_tabcontent}</div>
 					`;
+					TabContainer.innerHTML = TabContent;
 
 				}
-				TabContainer.innerHTML = TabContent;
+				
 			}
 			//console.info(TabContent, divType);
 			
