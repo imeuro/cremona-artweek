@@ -19,12 +19,10 @@
 
 	<link rel="preload" href="<?php echo get_template_directory_uri(); ?>/assets/fonts/OPSPlacard-Regular.woff2" as="font" type="font/woff2" crossorigin>
 	<link rel="preconnect" href="https://api.mapbox.com" />
-	<link rel="preload" href="https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.css" as="style" />
-	<link rel="preload" href="https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.js" as="script" />
 
 	<?php wp_head(); ?>
 
-	<link rel="preload" fetchpriority="high" as="image" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/CRC_Final.svg" type="image/svg">
+	<link rel="preload" fetchpriority="high" as="image" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/CRC_Final.svg" type="image/svg+xml">
 
 </head>
 
