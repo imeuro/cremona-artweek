@@ -361,7 +361,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 				TabContainer.innerHTML = TabContent;
 			}
 			else if (itemID == 498 || itemID == 500) {
-				// 👉 LISTING "ARTISTI" ( ordered by name alphabetically ):
+				// 👉 LISTING "ARTISTI" ( manually ordered by surname alphabetically ):
 				// TODO: LOCALSTORAGE w/ expiry date!!
 
 				var Art_todo = 0;
@@ -382,7 +382,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 							<div class="caw-listing-item caw listing-artisti" id="${el.slug}">`;
 						TabContent += `
 							<h2 class="title-tabcontent">${el.title.rendered}</h2>`;
-						Array.from(el.location).forEach(e => {
+						Array.from(el.location_details).forEach(e => {
 							TabContent += `<a class="info-tabcontent" data-position-lng="${e.lng}" data-position-lat="${e.lat}" href="javascript:LoadItInTheDiv(${e.post_id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${e.lng} - ${ShiftMap}),${e.lat}],essential: true,zoom:17,duration: 2000});"><small>${e.id}. ${e.name} »</small></a>`;
 						})
 						//TabContent += `<div class="content-tabcontent">${content_tabcontent}</div>`;
@@ -393,7 +393,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 							console.debug('All artists processed.');
 							TabContainer.innerHTML = TabContent;
 							// localStorage.setItem('CAWARTdata', JSON.stringify(CAWdata));
-							localStorage.setItem('CAWARTdata', '');
+							// localStorage.setItem('CAWARTdata', '');
 						}
 					});
 				}
@@ -401,25 +401,63 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 
 
 				if (!CAWARTdata || CAWARTdata=='') {
-					//recupero dati mancanti con una serie di fetch posts
+					//recupero i dati della location (ho solo l'ID del post type location)
+					const EVPlace_data = getPostsFromWp(WPREST_Base+'/locations/?_fields=acf.location_id,acf.location,id,slug,title&per_page=99');
+					EVPlace_data.then( EVPdata => {
+						console.debug('trovo listone locations (EVPdata): ',EVPdata);
+						//for (let k = 0; k < CAWdata.length; k++) {
+						for (let k = 0; k < CAWdata.length; k++) {
+							const EVPlace_id = CAWdata[k].acf.location;
+							console.debug('cerco locations for '+CAWdata[k].title.rendered+' con id: '+EVPlace_id);
+							// per ogni EVPlace_id devo trovare in EVPdata i dati della location e poi li integro in CAWDATA[k]
+							CAWdata[k].location_details=[];
+							let ld = 0;
+							Object.values(EVPlace_id).forEach(el => {
+								console.debug(el);
+								Object.values(EVPdata).forEach(e => {
+									console.debug(e);
+									if (e.id === el) {
+										// trovato!
+										console.debug('trovato');
+										let EVlocation = {
+											'name' : e.title.rendered,
+											'post_id': e.id,
+											'id' : e.acf.location_id,
+											'lng' : e.acf.location.lng,
+											'lat' : e.acf.location.lat
+										}
+										CAWdata[k].location_details[ld] = EVlocation;
+										console.debug(CAWdata[k]);
+										ld++;
+									}
+
+								});
+							});
+
+
+						}						
+					}).then(()=>{ composeTabContent(); })
+
+
+					/*
 					Object.values(CAWdata).forEach(el => {
 
 						const EVPlace_id = el.acf.location;
 						const EVPlace_data = getPostsFromWp(WPREST_Base+'/locations/?include='+EVPlace_id);
 						EVPlace_data.then( EVPdata => {
-							// console.debug({EVPdata});
 							let i = 0;
 							//console.debug(Art_todo,CAWdata[Art_todo]);
 							CAWdata[Art_todo]['location'] = [];
-							EVPdata.forEach((el) => {
+							EVPdata.forEach((elem) => {
 								EVlocation = {
-									'name' : el.title.rendered,
-									'post_id': el.id,
-									'id' : el.acf.location_id,
-									'lng' : el.acf.location.lng,
-									'lat' : el.acf.location.lat
+									'name' : elem.title.rendered,
+									'post_id': elem.id,
+									'id' : elem.acf.location_id,
+									'lng' : elem.acf.location.lng,
+									'lat' : elem.acf.location.lat
 								}
 								CAWdata[Art_todo]['location'][i] = EVlocation;
+								console.debug('locations for '+el.title.rendered+' : ' ,EVlocation.name);
 								i++;
 							});
 							// console.debug(Art_todo,CAWdata[Art_todo]);
@@ -432,6 +470,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						});
 						
 					});
+					*/
 				} else {
 					CAWdata = JSON.parse(CAWARTdata);
 					console.debug(CAWdata);
