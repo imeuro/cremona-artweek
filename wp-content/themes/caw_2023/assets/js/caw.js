@@ -369,6 +369,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 
 				// 📌 SAVE DATA TO LOCALSTORAGE:
 				let CAWARTdata = '';
+				CAWARTdata = localStorage.removeItem('CAWARTdata');
 				// CAWARTdata = localStorage.getItem('CAWARTdata');
 				// console.debug('CAWARTdata',CAWARTdata);
 
