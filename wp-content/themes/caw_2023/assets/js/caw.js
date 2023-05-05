@@ -338,7 +338,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					if (el.acf.evento_date_end!='') {
 						EVend_paddedMonth = EVend_Month<=9 ? ('0'+EVend_Month).slice(-2) : EVend_Month;
 					}
-					let EVend_date = EVstart_date!=EVend_day ? EVend_day + '.' + EVend_paddedMonth : '';
+					let EVend_date = EVstart_date!=EVend_day ? EVend_day + '.' + EVend_paddedMonth + ' ' : '';
 
 					let engtitle = el.acf.testo_eng.substring(
 					    el.acf.testo_eng.indexOf("<h3>") + 4, 
@@ -351,7 +351,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 
 					TabContent += `
 						<div class="caw-listing-item caw listing-artisti" id="${el.slug}" data-position-lng="${el.acf.evento_location.lng}" data-position-lat="${el.acf.evento_location.lat}">
-							<time class="time-tabcontent">${EVstart_date}.${EVstart_paddedMonth} ${EVstart_time}-${EVend_date} ${EVend_time}</time>
+							<time class="time-tabcontent">${EVstart_date}.${EVstart_paddedMonth} ${EVstart_time}-${EVend_date}${EVend_time}</time>
 							<h2 class="title-tabcontent">${event_title}</h2>
 							<small class="info-tabcontent">${el.acf.evento_location.street_name}, ${el.acf.evento_location.street_number}</small>
 							<div class="content-tabcontent">${event_content}</div>
