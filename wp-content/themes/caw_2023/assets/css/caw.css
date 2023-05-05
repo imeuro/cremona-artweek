@@ -474,9 +474,10 @@ button.menu-toggle:after {
 }
 #caw-tabcontainer .small-tabcontent span {
 	display: block;
-    line-height: 1.25em;
+    line-height: 1.4em;
 }
 #caw-tabcontainer a {
+	line-height: 1.4em;
 	border-bottom: 2px solid var(--main-color);
     text-decoration: none;
 }
