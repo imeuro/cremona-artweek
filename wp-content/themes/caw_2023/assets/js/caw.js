@@ -385,7 +385,6 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						Array.from(el.location_details).forEach(e => {
 							TabContent += `<a class="info-tabcontent" data-position-lng="${e.lng}" data-position-lat="${e.lat}" href="javascript:LoadItInTheDiv(${e.post_id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${e.lng} - ${ShiftMap}),${e.lat}],essential: true,zoom:17,duration: 2000});"><small>${e.id}. ${e.name} »</small></a>`;
 						})
-						//TabContent += `<div class="content-tabcontent">${content_tabcontent}</div>`;
 						TabContent += `	</div>`;
 						
 						Art_done++;
@@ -411,66 +410,31 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 							console.debug('cerco locations for '+CAWdata[k].title.rendered+' con id: '+EVPlace_id);
 							// per ogni EVPlace_id devo trovare in EVPdata i dati della location e poi li integro in CAWDATA[k]
 							CAWdata[k].location_details=[];
+							let f = 0;
 							let ld = 0;
 							Object.values(EVPlace_id).forEach(el => {
-								console.debug(el);
-								Object.values(EVPdata).forEach(e => {
-									console.debug(e);
-									if (e.id === el) {
-										// trovato!
-										console.debug('trovato');
+								//console.debug(el);
+								for (var ld =0; ld < EVPdata.length; ld++) {
+									//console.debug(e);
+									if (EVPdata[ld].id === el) {
+										// console.debug('trovato');
 										let EVlocation = {
-											'name' : e.title.rendered,
-											'post_id': e.id,
-											'id' : e.acf.location_id,
-											'lng' : e.acf.location.lng,
-											'lat' : e.acf.location.lat
+											'name' : EVPdata[ld].title.rendered,
+											'post_id': EVPdata[ld].id,
+											'id' : EVPdata[ld].acf.location_id,
+											'lng' : EVPdata[ld].acf.location.lng,
+											'lat' : EVPdata[ld].acf.location.lat
 										}
-										CAWdata[k].location_details[ld] = EVlocation;
-										console.debug(CAWdata[k]);
-										ld++;
+										CAWdata[k].location_details[f] = EVlocation;
+										f++;
+										break;
 									}
-
-								});
+								}
 							});
-
-
+							// console.debug(CAWdata[k]);
 						}						
 					}).then(()=>{ composeTabContent(); })
 
-
-					/*
-					Object.values(CAWdata).forEach(el => {
-
-						const EVPlace_id = el.acf.location;
-						const EVPlace_data = getPostsFromWp(WPREST_Base+'/locations/?include='+EVPlace_id);
-						EVPlace_data.then( EVPdata => {
-							let i = 0;
-							//console.debug(Art_todo,CAWdata[Art_todo]);
-							CAWdata[Art_todo]['location'] = [];
-							EVPdata.forEach((elem) => {
-								EVlocation = {
-									'name' : elem.title.rendered,
-									'post_id': elem.id,
-									'id' : elem.acf.location_id,
-									'lng' : elem.acf.location.lng,
-									'lat' : elem.acf.location.lat
-								}
-								CAWdata[Art_todo]['location'][i] = EVlocation;
-								console.debug('locations for '+el.title.rendered+' : ' ,EVlocation.name);
-								i++;
-							});
-							// console.debug(Art_todo,CAWdata[Art_todo]);
-							Art_todo++;
-							if (Art_todo == CAWdata.length) {
-								console.debug('All data rescued.');
-								composeTabContent();
-							}
-							
-						});
-						
-					});
-					*/
 				} else {
 					CAWdata = JSON.parse(CAWARTdata);
 					console.debug(CAWdata);

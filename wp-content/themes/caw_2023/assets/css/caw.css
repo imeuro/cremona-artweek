@@ -487,7 +487,7 @@ button.menu-toggle:after {
 }
 
 #caw-tabcontainer .caw-listing-item {
-    margin: 0 0 60px 0;
+    margin: 0 0 25px 0;
     display: flex;
     flex-flow: column wrap;
     align-content: flex-start;
