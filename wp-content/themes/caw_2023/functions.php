@@ -102,18 +102,20 @@ function add_async_forscript($url)
 {
     if (strpos($url, '#asyncload')===false)
         return $url;
-    else if (is_admin())
-        return str_replace('#asyncload', '', $url);
     else
-        return str_replace('#asyncload', '', $url)."' async='async"; 
-    if (strpos($url, '#deferload')===false)
-        return $url;
-    else if (is_admin())
-        return str_replace('#deferload', '', $url);
-    else
-        return str_replace('#deferload', '', $url)."' defer"; 
+        return str_replace('#asyncload', '', $url)."' async='async";
 }
 add_filter('clean_url', 'add_async_forscript', 11, 1);
+
+function add_defer_forscript($url)
+{    
+    if (strpos($url, '#deferload')===false)
+        return $url;
+    else
+    	//return $url;
+        return str_replace("#deferload'", "'", $url)."' defer='defer"; 
+}
+add_filter('clean_url', 'add_defer_forscript', 11, 1);
 
 function caw_2023_scripts() {
 	wp_enqueue_style( 'caw_2023-style', get_stylesheet_uri(), array(), _S_VERSION );
