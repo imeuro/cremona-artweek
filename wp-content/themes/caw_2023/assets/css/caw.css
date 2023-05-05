@@ -472,9 +472,16 @@ button.menu-toggle:after {
     margin-bottom: 23px;
     white-space: break-spaces;
 }
-#caw-tabcontainer .small-tabcontent small {
+#caw-tabcontainer .small-tabcontent span {
 	display: block;
     line-height: 1.25em;
+}
+#caw-tabcontainer a {
+	border-bottom: 2px solid var(--main-color);
+    text-decoration: none;
+}
+#caw-tabcontainer a:hover {
+	border-bottom: 2px solid transparent;
 }
 #caw-tabcontainer .content-tabcontent p {
 	font-size: 1.063em;
