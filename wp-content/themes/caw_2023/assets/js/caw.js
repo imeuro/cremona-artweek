@@ -317,18 +317,43 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					TabContent += ` <h2 class="title-tabcontent heading-line">Events</h2>`;
 				}
 				Object.values(CAWdata).forEach(el => {
-					let EVdate = el.acf.evento_date_start!='' ? new Date(el.acf.evento_date_start).getDate() : 'TBA';
-					let EVMonth = new Date(el.acf.evento_date_start).getMonth() + 1;
-					let paddedMonth = '';
+					// event start
+					let EVstart = new Date(el.acf.evento_date_start);
+					let EVstart_date = el.acf.evento_date_start!='' ? EVstart.getDate() : 'TBA';
+					let EVstart_Month = EVstart.getMonth() + 1;
+					let EVstart_paddedMinutes = EVstart.getMinutes()<=9 ? ('0'+EVstart.getMinutes()).slice(-2) : EVstart.getMinutes();
+					let EVstart_time = EVstart.getHours() + ':' + EVstart_paddedMinutes;
+					let EVstart_paddedMonth = '';
 					if (el.acf.evento_date_start!='') {
-						paddedMonth = EVMonth<=9 ? ('0'+EVMonth).slice(-2) : EVMonth;
+						EVstart_paddedMonth = EVstart_Month<=9 ? ('0'+EVstart_Month).slice(-2) : EVstart_Month;
+					}	
+					// event end				
+					let EVend = new Date(el.acf.evento_date_end);
+					console.debug(EVend);
+					let EVend_day = el.acf.evento_date_end!='' ? EVend.getDate() : '';
+					let EVend_Month = EVend.getMonth() + 1;
+					let EVend_paddedMinutes = EVend.getMinutes()<=9 ? ('0'+EVend.getMinutes()).slice(-2) : EVend.getMinutes();
+					let EVend_time = EVend.getHours() + ':' + EVend_paddedMinutes;
+					let EVend_paddedMonth = '';
+					if (el.acf.evento_date_end!='') {
+						EVend_paddedMonth = EVend_Month<=9 ? ('0'+EVend_Month).slice(-2) : EVend_Month;
 					}
+					let EVend_date = EVstart_date!=EVend_day ? EVend_day + '.' + EVend_paddedMonth : '';
+
+					let engtitle = el.acf.testo_eng.substring(
+					    el.acf.testo_eng.indexOf("<h3>") + 4, 
+					    el.acf.testo_eng.lastIndexOf("</h3>")
+					);
+
+
+					let event_content = current_lang == 'en' ? el.acf.testo_eng : el.content.rendered;
+					let EVtitle = current_lang == 'en' ? engtitle : el.title.rendered;
 					TabContent += `
 						<div class="caw-listing-item caw listing-artisti" id="${el.slug}" data-position-lng="${el.acf.evento_location.lng}" data-position-lat="${el.acf.evento_location.lat}">
-							<time class="time-tabcontent">${EVdate}.${paddedMonth}</time>
-							<h2 class="title-tabcontent">${el.title.rendered}</h2>
-							<small class="info-tabcontent">${el.acf.evento_location.name} - ${el.acf.evento_location.street_name}, ${el.acf.evento_location.street_number}</small>
-							<div class="content-tabcontent">${el.content.rendered}</div>
+							<time class="time-tabcontent">${EVstart_date}.${EVstart_paddedMonth} ${EVstart_time} - ${EVend_date} ${EVend_time}</time>
+							<h2 class="title-tabcontent">${EVtitle}</h2>
+							<small class="info-tabcontent">${el.acf.evento_location.street_name}, ${el.acf.evento_location.street_number}</small>
+							<div class="content-tabcontent">${event_content}</div>
 						</div>
 					`;
 				});
