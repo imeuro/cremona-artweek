@@ -344,14 +344,15 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					    el.acf.testo_eng.indexOf("<h3>") + 4, 
 					    el.acf.testo_eng.lastIndexOf("</h3>")
 					);
+					let engtext = el.acf.testo_eng.replace(engtitle,'');
 
+					let event_content = current_lang == 'en' ? engtext : el.content.rendered;
+					let event_title = current_lang == 'en' ? engtitle : el.title.rendered;
 
-					let event_content = current_lang == 'en' ? el.acf.testo_eng : el.content.rendered;
-					let EVtitle = current_lang == 'en' ? engtitle : el.title.rendered;
 					TabContent += `
 						<div class="caw-listing-item caw listing-artisti" id="${el.slug}" data-position-lng="${el.acf.evento_location.lng}" data-position-lat="${el.acf.evento_location.lat}">
-							<time class="time-tabcontent">${EVstart_date}.${EVstart_paddedMonth} ${EVstart_time} - ${EVend_date} ${EVend_time}</time>
-							<h2 class="title-tabcontent">${EVtitle}</h2>
+							<time class="time-tabcontent">${EVstart_date}.${EVstart_paddedMonth} ${EVstart_time}-${EVend_date} ${EVend_time}</time>
+							<h2 class="title-tabcontent">${event_title}</h2>
 							<small class="info-tabcontent">${el.acf.evento_location.street_name}, ${el.acf.evento_location.street_number}</small>
 							<div class="content-tabcontent">${event_content}</div>
 						</div>
