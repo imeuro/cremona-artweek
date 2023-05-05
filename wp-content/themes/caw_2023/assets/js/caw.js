@@ -7,6 +7,7 @@ let BaseCoords = window.innerWidth<600 ? [10.021,45.139] : [10.020, 45.134];
 let BaseZoom = window.innerWidth<600 ? 12.85 : 14.15;
 let map = '';
 let ShiftMap = window.innerWidth<600 ? 0 : 0.0015;
+let art_display=[];
 
 // THE MAP BOX
 const generateMapbox = () => {
@@ -79,7 +80,7 @@ const generateMapbox = () => {
 
 			const popup = new mapboxgl.Popup({ 
 				anchor: 'left',
-				offset: [20, 13],
+				offset: [20, 11],
 				className: 'caw-popup',
 				closeButton: false,
 				maxWidth: '400px',
@@ -97,20 +98,34 @@ const generateMapbox = () => {
 					return;
 				}
 				const feature = features[0];
-				//console.debug({feature})
+				console.debug({feature});
 				readmorelink = feature.properties.post_id;
+				
 				coords = feature.geometry.coordinates;
-				let EVPlace = feature.properties.location_address;
+				// let EVPlace = feature.properties.location_address;
 
 				// Create a popup, specify its options 
 				// and properties, and add it to the map.
-				
-				popup.setLngLat(feature.geometry.coordinates)
-				.setHTML(
-					`<p>${feature.properties.title}<br><small>${EVPlace}</small></p>
-					`
-				)
-				.addTo(map);
+				const setPopupContent = () => {
+					console.debug('art_display',art_display);
+					let artists = '';
+					if (window.innerWidth>600) {
+						for (var i = 0; i < art_display.length; i++) {
+							artists += art_display[i].title;
+							if (i < art_display.length-1) {
+								artists += '<br/>';
+							}
+						}
+						popup.setLngLat(feature.geometry.coordinates)
+						.setHTML(
+							`<p>${feature.properties.title}<br><small style="line-height:8px; display:inline.block">${artists}</small></p>
+							`
+						)
+						.addTo(map);
+						console.debug({artists})
+					}
+				}
+				get_artists_for_location_id ( feature, readmorelink, setPopupContent );
 			});
 
 			map.on('mouseleave', 'places', () => {
@@ -191,6 +206,63 @@ async function getPostsFromWp( urlRequest ) {
 	}
 }
 
+function get_locations_for_artists_in_list ( CAWdata, callback ) {
+	//recupera i dati delle location (ho solo l'ID del post type location in CAWdata)
+	const EVPlace_data = getPostsFromWp(WPREST_Base+'/locations/?_fields=acf.location_id,acf.location,id,slug,title&per_page=99');
+		EVPlace_data.then( EVPdata => {
+			console.debug('trovo listone locations (EVPdata): ',EVPdata);
+			//for (let k = 0; k < CAWdata.length; k++) {
+			for (let k = 0; k < CAWdata.length; k++) {
+				const EVPlace_id = CAWdata[k].acf.location;
+				console.debug('cerco locations for '+CAWdata[k].title.rendered+' con id: '+EVPlace_id);
+				// per ogni EVPlace_id devo trovare in EVPdata i dati della location e poi li integro in CAWDATA[k]
+				CAWdata[k].location_details=[];
+				let f = 0;
+				let ld = 0;
+				Object.values(EVPlace_id).forEach(el => {
+					//console.debug(el);
+					for (var ld =0; ld < EVPdata.length; ld++) {
+						//console.debug(e);
+						if (EVPdata[ld].id === el) {
+							// console.debug('trovato');
+							let EVlocation = {
+								'name' : EVPdata[ld].title.rendered,
+								'post_id': EVPdata[ld].id,
+								'id' : EVPdata[ld].acf.location_id,
+								'lng' : EVPdata[ld].acf.location.lng,
+								'lat' : EVPdata[ld].acf.location.lat
+							}
+							CAWdata[k].location_details[f] = EVlocation;
+							f++;
+							break;
+						}
+					}
+				});
+				console.debug(CAWdata[k]);
+			}						
+		}).then( callback );
+}
+
+function get_artists_for_location_id ( CAWdata, id, callback ) {
+	// query all posts (Artists) with acf 'location_id' == CAWdata.acf.location_id
+	console.debug(id);
+	art_display=[];
+	const ARThere_data = getPostsFromWp(WPREST_Base+'/posts/?_fields=acf.location,acf.testo_eng,slug,title,content&per_page=99');
+	let i = 0;
+	ARThere_data.then( heredata => {
+		heredata.forEach((el) => {
+			if (el.acf.location.includes(id)) {
+				art_display[i]={};
+				// console.debug(CAWdata.id,el);
+				art_display[i].slug = el.slug;
+				art_display[i].title = el.title.rendered;
+				art_display[i].content = current_lang == 'en' ? el.acf.testo_eng : el.content.rendered;
+				i++;
+			}
+		});
+	}).then( callback );
+}
+
 function setLocalStorageWithExpiry( key, value, ttl ) {
 	const now = new Date()
 
@@ -203,8 +275,8 @@ function setLocalStorageWithExpiry( key, value, ttl ) {
 	localStorage.setItem(key, JSON.stringify(item))
 }
 
-function location_public2private( id ) {
-	
+function getlocation_post_id_from_location_number( num ) {
+	// ... servirà poi per i QRCODE
 }
 
 
@@ -397,44 +469,8 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					});
 				}
 
-
-
 				if (!CAWARTdata || CAWARTdata=='') {
-					//recupero i dati della location (ho solo l'ID del post type location)
-					const EVPlace_data = getPostsFromWp(WPREST_Base+'/locations/?_fields=acf.location_id,acf.location,id,slug,title&per_page=99');
-					EVPlace_data.then( EVPdata => {
-						console.debug('trovo listone locations (EVPdata): ',EVPdata);
-						//for (let k = 0; k < CAWdata.length; k++) {
-						for (let k = 0; k < CAWdata.length; k++) {
-							const EVPlace_id = CAWdata[k].acf.location;
-							console.debug('cerco locations for '+CAWdata[k].title.rendered+' con id: '+EVPlace_id);
-							// per ogni EVPlace_id devo trovare in EVPdata i dati della location e poi li integro in CAWDATA[k]
-							CAWdata[k].location_details=[];
-							let f = 0;
-							let ld = 0;
-							Object.values(EVPlace_id).forEach(el => {
-								//console.debug(el);
-								for (var ld =0; ld < EVPdata.length; ld++) {
-									//console.debug(e);
-									if (EVPdata[ld].id === el) {
-										// console.debug('trovato');
-										let EVlocation = {
-											'name' : EVPdata[ld].title.rendered,
-											'post_id': EVPdata[ld].id,
-											'id' : EVPdata[ld].acf.location_id,
-											'lng' : EVPdata[ld].acf.location.lng,
-											'lat' : EVPdata[ld].acf.location.lat
-										}
-										CAWdata[k].location_details[f] = EVlocation;
-										f++;
-										break;
-									}
-								}
-							});
-							// console.debug(CAWdata[k]);
-						}						
-					}).then(()=>{ composeTabContent(); })
-
+					get_locations_for_artists_in_list(CAWdata, composeTabContent);
 				} else {
 					CAWdata = JSON.parse(CAWARTdata);
 					console.debug(CAWdata);
@@ -447,7 +483,37 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 				//console.debug(CAWdata);
 				if (CAWdata.acf.location_id) {
 					// 👉 LOCATIONS
-					// query all posts with acf 'location_id' == CAWdata.acf.location_id
+					get_artists_for_location_id (CAWdata, CAWdata.id, printLocationsTab);
+
+					function printLocationsTab () {
+						console.debug(art_display.length+' artists displaying here', art_display);
+						TabContent += `
+							<h2 class="title-tabcontent heading-line">${CAWdata.acf.location_id}. ${CAWdata.title.rendered}</h2>
+							<p class="small-tabcontent">
+								<span>${CAWdata.acf.location.street_name}, ${CAWdata.acf.location.street_number}</span>
+								<span>`;
+						for (let i = 0; i < art_display.length; i++) {
+							TabContent += `
+								<a href="javascript:;" title="info su ${art_display[i].title}" onclick="document.getElementById('artist-${art_display[i].slug}').scrollIntoView({behavior: 'smooth'});">${art_display[i].title}</a>`
+							if (i < art_display.length-1) {
+								TabContent += '<br/>';
+							}
+						}
+						TabContent += `</span>
+							</p>
+							<div class="content-tabcontent">${content_tabcontent}</div>`;
+							for (let i = 0; i < art_display.length; i++) {
+							TabContent += `
+								<div class="content-tabcontent content-artdisplay" id="artist-${art_display[i].slug}">
+									${art_display[i].content}
+								</div>`;
+							}
+						TabContainer.innerHTML = TabContent;
+
+					}
+
+					/*
+					// query all posts (Artists) with acf 'location_id' == CAWdata.acf.location_id
 					const ARThere_data = getPostsFromWp(WPREST_Base+'/posts/?_fields=acf.location,acf.testo_eng,slug,title,content&per_page=99');
 					let i = 0;
 					let art_display=[];
@@ -487,6 +553,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 							}
 						TabContainer.innerHTML = TabContent;
 					});
+					*/
 					
 				} else { 
 					// 👉 SIMPLE POSTS/PAGES:
