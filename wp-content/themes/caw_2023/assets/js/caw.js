@@ -344,7 +344,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					    el.acf.testo_eng.indexOf("<h3>") + 4, 
 					    el.acf.testo_eng.lastIndexOf("</h3>")
 					);
-					let engtext = el.acf.testo_eng.replace(engtitle,'');
+					let engtext = '<p>'+el.acf.testo_eng.replace(engtitle,'')+'</p>';
 
 					let event_content = current_lang == 'en' ? engtext : el.content.rendered;
 					let event_title = current_lang == 'en' ? engtitle : el.title.rendered;

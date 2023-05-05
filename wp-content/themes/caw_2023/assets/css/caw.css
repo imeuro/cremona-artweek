@@ -446,7 +446,7 @@ button.menu-toggle:after {
 
 
 #caw-tabcontainer {
-	padding: 20px 15px;
+	padding: 20px 15px 100px 15px;
 	margin-bottom: 75px;
 	color: var(--main-color);
 	font-family: var(--secondary-font);
@@ -469,6 +469,7 @@ button.menu-toggle:after {
 #caw-tabcontainer .title-tabcontent.heading-line {
     border-bottom: 3px solid var(--main-color);
     padding: 0 52px 35px 0;
+    margin-bottom: 23px;
     white-space: break-spaces;
 }
 #caw-tabcontainer .small-tabcontent small {
