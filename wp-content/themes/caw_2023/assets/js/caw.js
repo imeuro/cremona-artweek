@@ -467,16 +467,16 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						TabContent += `
 							<h2 class="title-tabcontent heading-line">${CAWdata.acf.location_id}. ${CAWdata.title.rendered}</h2>
 							<p class="small-tabcontent">
-								<small>${CAWdata.acf.location.street_name}, ${CAWdata.acf.location.street_number}</small>
-								<small>`;
+								<span>${CAWdata.acf.location.street_name}, ${CAWdata.acf.location.street_number}</span>
+								<span>`;
 						for (let i = 0; i < art_display.length; i++) {
 							TabContent += `
 								<a href="javascript:;" title="info su ${art_display[i].title}" onclick="document.getElementById('artist-${art_display[i].slug}').scrollIntoView({behavior: 'smooth'});">${art_display[i].title}</a>`
 							if (i < art_display.length-1) {
-								TabContent += ', ';
+								TabContent += '<br/>';
 							}
 						}
-						TabContent += `</small>
+						TabContent += `</span>
 							</p>
 							<div class="content-tabcontent">${content_tabcontent}</div>`;
 							for (let i = 0; i < art_display.length; i++) {
