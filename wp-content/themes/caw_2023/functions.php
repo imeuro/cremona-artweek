@@ -106,6 +106,12 @@ function add_async_forscript($url)
         return str_replace('#asyncload', '', $url);
     else
         return str_replace('#asyncload', '', $url)."' async='async"; 
+    if (strpos($url, '#deferload')===false)
+        return $url;
+    else if (is_admin())
+        return str_replace('#deferload', '', $url);
+    else
+        return str_replace('#deferload', '', $url)."' defer"; 
 }
 add_filter('clean_url', 'add_async_forscript', 11, 1);
 
@@ -123,7 +129,7 @@ add_action( 'wp_enqueue_scripts', 'caw_2023_scripts' );
 
 // mapbox libraries
 function caw_mapbox_assets() {
-	wp_enqueue_script( 'caw_2023-mapboxx', 'https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.js#asyncload', array(), _S_VERSION, true );
+	wp_enqueue_script( 'caw_2023-mapboxx', 'https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.js#deferload', array(), _S_VERSION, true );
 	wp_enqueue_style( 'caw_2023-mapboxx', 'https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.css', array(), _S_VERSION );
 }
 add_action( 'wp_enqueue_scripts', 'caw_mapbox_assets' );
