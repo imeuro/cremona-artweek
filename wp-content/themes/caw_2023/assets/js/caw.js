@@ -482,12 +482,11 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 							for (let i = 0; i < art_display.length; i++) {
 							TabContent += `
 								<div class="content-tabcontent content-artdisplay" id="artist-${art_display[i].slug}">
-									<h2>${art_display[i].title}</h3>
 									<div>${art_display[i].content}</div>
 								</div>`;
 							}
 							`<div class="content-tabcontent content-artdisplay">
-								${content_tabcontent}
+								<strong>${art_display[i].title}</strong> ${content_tabcontent}
 							</div>
 						`;
 						TabContainer.innerHTML = TabContent;
