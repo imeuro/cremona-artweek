@@ -149,6 +149,59 @@ div#page {
 }
 .site-header .main-navigation a:hover { text-decoration: underline; }
 
+
+.site-header #weather-situa {
+    font-family: Arial;
+    color: var(--main-color);
+    line-height: 14px;
+    width: 180px;
+    padding: 0 15px;
+    position: absolute;
+    left: 0;
+    top: 10px;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+
+#weather-situa > span:nth-child(odd) {flex: 0 0 70px; overflow-x: visible;}
+#weather-situa > span:nth-child(even) {flex: 1 0 calc(100% - 70px);}
+
+
+span.weather-temp {
+    font-size: 32px;
+    line-height: 22px;
+    text-align: center;
+    position: relative;
+    top: -10px;
+}
+
+span.weather-ico {
+    font-size: 28px;
+    position: relative;
+    top: -5px;
+    height: 31px;
+    text-align: center;
+}
+
+span.weather-desc {
+    font-size: 12px;
+    text-align: center;
+    position: relative;
+    top: 0px;
+}
+
+@media screen and (min-width: 37.5em) {
+	.site-header #weather-situa {
+		top: initial;
+		bottom: 150px;
+		width: 210px;
+	}
+}
+
+
 .site-header .main-navigation ul#lang-switcher {
     border-top: none;
     display: flex;

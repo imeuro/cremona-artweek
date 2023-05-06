@@ -7,7 +7,8 @@ let BaseCoords = window.innerWidth<600 ? [10.021,45.139] : [10.020, 45.134];
 let BaseZoom = window.innerWidth<600 ? 12.85 : 13.85;
 let map = '';
 let ShiftMap = window.innerWidth<600 ? 0 : 0.0015;
-let art_display=[];
+let art_display = [];
+let CAWweather = {};
 
 // THE MAP BOX
 const generateMapbox = () => {
@@ -280,7 +281,6 @@ function getlocation_post_id_from_location_number( num ) {
 }
 
 
-
 // HELPER FUNCTIONS ENDS HERE
 // __________________________
 
@@ -330,11 +330,50 @@ Array.from(MenuDiv.children).forEach((el) => {
 		document.getElementById('site-navigation').classList.remove('toggled');
 		document.getElementById('masthead').classList = 'site-header compact';
 	}, false)
-
-
-	//console.debug(itemID, divType);
-	//el.firstChild.removeAttribute('href');
 })
+
+
+// METEO IN SIDEBAR
+function printCurrentWeather( target ) {
+	//load the icons css
+	let OWiconsCSS = document.createElement('link');
+	OWiconsCSS.id   = 'OWicons-css';
+    OWiconsCSS.rel  = 'stylesheet';
+    OWiconsCSS.type = 'text/css';
+    OWiconsCSS.href = Baseurl+'/wp-content/themes/caw_2023/assets/css/open-weather-icons.css';
+    OWiconsCSS.media = 'all';
+    document.head.appendChild(OWiconsCSS);
+
+    // read and compose infos
+	CAWweather = localStorage.getItem("CAW-meteo-situa");
+	const w = JSON.parse(CAWweather).value;
+	console.debug(CAWweather);
+	CAWsitua = `
+		<span class="weather-loc">${w.name}</span>
+		<span class="weather-ico"><i class="owi owi-${w.weather[0].icon}"></i></span>
+		<span class="weather-temp">${Math.round( w.main.temp )}&deg;</span>
+		<span class="weather-desc">${w.weather[0].description}</span>
+	`;
+	let wCont = document.createElement('div');
+	wCont.id='weather-situa';
+	wCont.innerHTML = CAWsitua;
+	target.after(wCont);
+}
+
+const apiURL = 'https://api.openweathermap.org/data/2.5/weather?lat='+BaseCoords[1]+'&lon='+BaseCoords[0]+'&lang='+current_lang+'&units=metric&appid=e32dcab669abc89d3e05052b0d643bab';
+
+if ( CAWweather === null || Object.keys(CAWweather).length === 0 ) {
+	CAWweather = getPostsFromWp( apiURL );
+	CAWweather.then( gotCAWweather => {
+		console.debug('scrivo LocalStorage');
+		setLocalStorageWithExpiry( "CAW-meteo-situa", gotCAWweather, 21600000 ) // 6 hours
+	}).then( () => { printCurrentWeather(langswitch); } );
+} else {
+	printCurrentWeather(langswitch)
+}
+
+
+
 
 
 
