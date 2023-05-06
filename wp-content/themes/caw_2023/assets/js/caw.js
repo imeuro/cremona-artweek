@@ -79,8 +79,8 @@ const generateMapbox = () => {
 			})
 
 			const popup = new mapboxgl.Popup({ 
-				anchor: 'left',
-				offset: [20, 11],
+				anchor: 'top-left',
+				offset: [20, -30],
 				className: 'caw-popup',
 				closeButton: false,
 				maxWidth: '400px',
