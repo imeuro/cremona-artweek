@@ -4,7 +4,7 @@ const current_lang = document.body.dataset.lang;
 let locationsList = getPostsFromWp(WPREST_Base+'/locations?per_page=99');
 var CAWgeoJSON = [];
 let BaseCoords = window.innerWidth<600 ? [10.021,45.139] : [10.020, 45.134];
-let BaseZoom = window.innerWidth<600 ? 12.85 : 14.15;
+let BaseZoom = window.innerWidth<600 ? 12.85 : 13.85;
 let map = '';
 let ShiftMap = window.innerWidth<600 ? 0 : 0.0015;
 let art_display=[];
@@ -382,12 +382,9 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 				    return x - y;
 				});
 				// testatina x listing eventi extra:
-				if (itemID == 12) {
-					TabContent += ` <h2 class="title-tabcontent heading-line">Eventi</h2>`;
-				}
-				if (itemID == 76) {
-					TabContent += ` <h2 class="title-tabcontent heading-line">Events</h2>`;
-				}
+				let TabTitle = current_lang == 'en' ? 'Events' : 'Eventi';
+				TabContent += ` <h2 class="title-tabcontent heading-line">${TabTitle}</h2>`;
+
 				Object.values(CAWdata).forEach(el => {
 					// event start
 					let EVstart = new Date(el.acf.evento_date_start);
@@ -447,6 +444,8 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 
 				// partendo da CAWDATA (o CAWlocalDATA), poi mi compongo TabContent
 				const composeTabContent = () => {
+					let TabTitle = current_lang == 'en' ? 'Artists' : 'Artisti';
+					TabContent += ` <h2 class="title-tabcontent heading-line">${TabTitle}</h2>`;
 					Object.values(CAWdata).forEach(el => {
 						const content_tabcontent = (itemID == 500 && el.acf.testo_eng) ? '<p>'+el.acf.testo_eng+'</p>' : el.content.rendered;
 
@@ -455,7 +454,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						TabContent += `
 							<h2 class="title-tabcontent">${el.title.rendered}</h2>`;
 						Array.from(el.location_details).forEach(e => {
-							TabContent += `<span><a class="info-tabcontent" data-position-lng="${e.lng}" data-position-lat="${e.lat}" href="javascript:LoadItInTheDiv(${e.post_id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${e.lng} - ${ShiftMap}),${e.lat}],essential: true,zoom:17,duration: 2000});">${e.id}. ${e.name} »</a></span>`;
+							TabContent += `<span><a class="info-tabcontent" data-position-lng="${e.lng}" data-position-lat="${e.lat}" href="javascript:LoadItInTheDiv(${e.post_id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${e.lng} - ${ShiftMap}),${e.lat}],essential: true,zoom:17,duration: 2000});">${e.id}. ${e.name}</a></span>`;
 						})
 						TabContent += `	</div>`;
 						
@@ -511,49 +510,6 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						TabContainer.innerHTML = TabContent;
 
 					}
-
-					/*
-					// query all posts (Artists) with acf 'location_id' == CAWdata.acf.location_id
-					const ARThere_data = getPostsFromWp(WPREST_Base+'/posts/?_fields=acf.location,acf.testo_eng,slug,title,content&per_page=99');
-					let i = 0;
-					let art_display=[];
-					ARThere_data.then( heredata => {
-						heredata.forEach((el) => {
-							if (el.acf.location.includes(CAWdata.id)) {
-								art_display[i]={};
-								// console.debug(CAWdata.id,el);
-								art_display[i].slug = el.slug;
-								art_display[i].title = el.title.rendered;
-								art_display[i].content = current_lang == 'en' ? el.acf.testo_eng : el.content.rendered;
-								i++;
-							}
-						});
-					}).then(() => {
-						console.debug(art_display.length+' artists displaying here', art_display);
-						TabContent += `
-							<h2 class="title-tabcontent heading-line">${CAWdata.acf.location_id}. ${CAWdata.title.rendered}</h2>
-							<p class="small-tabcontent">
-								<span>${CAWdata.acf.location.street_name}, ${CAWdata.acf.location.street_number}</span>
-								<span>`;
-						for (let i = 0; i < art_display.length; i++) {
-							TabContent += `
-								<a href="javascript:;" title="info su ${art_display[i].title}" onclick="document.getElementById('artist-${art_display[i].slug}').scrollIntoView({behavior: 'smooth'});">${art_display[i].title}</a>`
-							if (i < art_display.length-1) {
-								TabContent += '<br/>';
-							}
-						}
-						TabContent += `</span>
-							</p>
-							<div class="content-tabcontent">${content_tabcontent}</div>`;
-							for (let i = 0; i < art_display.length; i++) {
-							TabContent += `
-								<div class="content-tabcontent content-artdisplay" id="artist-${art_display[i].slug}">
-									${art_display[i].content}
-								</div>`;
-							}
-						TabContainer.innerHTML = TabContent;
-					});
-					*/
 					
 				} else { 
 					// 👉 SIMPLE POSTS/PAGES:

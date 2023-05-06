@@ -289,7 +289,7 @@ button.menu-toggle:after {
 		width: 210px;
 	}
 	.site-header .main-navigation a {
-		font-size: 1.063em;
+		font-size: 1.0625em;
 		padding: 0;
 		margin: 0;
 		border-bottom: 2px solid transparent;
@@ -477,15 +477,16 @@ button.menu-toggle:after {
     line-height: 1.4em;
 }
 #caw-tabcontainer a {
+	font-size: 1.0625em;
 	line-height: 1.4em;
-	border-bottom: 2px solid var(--main-color);
+	border-bottom: 2px solid transparent;
     text-decoration: none;
 }
 #caw-tabcontainer a:hover {
-	border-bottom: 2px solid transparent;
+	border-bottom: 2px solid var(--main-color);
 }
 #caw-tabcontainer .content-tabcontent p {
-	font-size: 1.063em;
+	font-size: 1.0625em;
     line-height: 1.4em;
 }
 #caw-tabcontainer .content-tabcontent img {
@@ -494,7 +495,7 @@ button.menu-toggle:after {
     object-fit: cover;
 }
 #caw-tabcontainer .content-tabcontent.content-artdisplay {
-    padding: 30px 0;
+    padding: 5px 0;
 }
 #caw-tabcontainer .caw-listing-item {
     margin: 0 0 25px 0;
@@ -510,7 +511,10 @@ button.menu-toggle:after {
     line-height: 1em;
 }
 #caw-tabcontainer .caw-listing-item .time-tabcontent  { margin-bottom: 0; }
-#caw-tabcontainer .caw-listing-item .title-tabcontent { margin-bottom: 0.5em; }
+#caw-tabcontainer .caw-listing-item .title-tabcontent { 
+	margin-bottom: 0.1em;
+   	margin-top: 10px
+ }
 #caw-tabcontainer .caw-listing .content-tabcontent p { margin: 5px 0; }
 
 #caw-tabcontainer .wp-block-table {
