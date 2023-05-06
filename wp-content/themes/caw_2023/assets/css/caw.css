@@ -517,6 +517,8 @@ button.menu-toggle:after {
  }
 #caw-tabcontainer .caw-listing .content-tabcontent p { margin: 5px 0; }
 
+
+/* LISTA SPONSORSS */
 #caw-tabcontainer .wp-block-table {
 	color: transparent;
 	border: none;
@@ -528,6 +530,9 @@ button.menu-toggle:after {
 }
 #caw-tabcontainer .wp-block-table img {
 	margin: 10px 25px 10px 0;
+}
+#caw-tabcontainer figure.wp-block-gallery {
+    max-width: 50%;
 }
 
 @media all and (min-width: 37.5em) {
