@@ -467,10 +467,12 @@ button.menu-toggle:after {
 	letter-spacing: 0.018em;
 }
 #caw-tabcontainer .title-tabcontent.heading-line {
-    border-bottom: 3px solid var(--main-color);
-    padding: 0 52px 35px 0;
-    margin-bottom: 23px;
-    white-space: break-spaces;
+	border-bottom: 0.08em solid var(--main-color);
+	padding: 0px 52px 35px 0;
+	margin-bottom: -12px;
+	white-space: break-spaces;
+	margin-top: 0.23em;
+
 }
 #caw-tabcontainer .small-tabcontent span {
 	display: block;
