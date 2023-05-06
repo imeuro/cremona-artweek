@@ -489,7 +489,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						TabContent += `
 							<h2 class="title-tabcontent heading-line">${CAWdata.acf.location_id}. ${CAWdata.title.rendered}</h2>
 							<p class="small-tabcontent">
-								<span>${CAWdata.acf.location.street_name}, ${CAWdata.acf.location.street_number}</span>
+								<span style="margin-bottom:12px;">${CAWdata.acf.location.street_name}, ${CAWdata.acf.location.street_number}</span>
 								<span>`;
 						for (let i = 0; i < art_display.length; i++) {
 							TabContent += `
