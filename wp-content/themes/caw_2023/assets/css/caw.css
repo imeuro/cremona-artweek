@@ -474,6 +474,7 @@ button.menu-toggle:after {
 }
 #caw-tabcontainer .small-tabcontent span {
 	display: block;
+	font-size: 1.0625em;
     line-height: 1.4em;
 }
 #caw-tabcontainer a {
