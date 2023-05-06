@@ -458,7 +458,7 @@ button.menu-toggle:after {
 #caw-tabcontainer .title-tabcontent,
 #caw-tabcontainer .time-tabcontent {
 	font-family: var(--main-font);
-	font-size: 2.32em;
+	font-size: 2.2em;
 	line-height: 1em;
 	text-transform: uppercase;
 	font-weight: 400;
