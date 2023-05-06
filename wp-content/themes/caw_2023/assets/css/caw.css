@@ -450,7 +450,7 @@ button.menu-toggle:after {
 	margin-bottom: 75px;
 	color: var(--main-color);
 	font-family: var(--secondary-font);
-	font-size: 1em;
+	font-size: 17px;
 	opacity: 0;
 	transition: opacity 150ms ease-in-out;
 }
@@ -474,11 +474,9 @@ button.menu-toggle:after {
 }
 #caw-tabcontainer .small-tabcontent span {
 	display: block;
-	font-size: 1.0625em;
     line-height: 1.4em;
 }
 #caw-tabcontainer a {
-	font-size: 1.0625em;
 	line-height: 1.4em;
 	border-bottom: 2px solid transparent;
     text-decoration: none;
@@ -487,7 +485,6 @@ button.menu-toggle:after {
 	border-bottom: 2px solid var(--main-color);
 }
 #caw-tabcontainer .content-tabcontent p {
-	font-size: 1.0625em;
     line-height: 1.4em;
 }
 #caw-tabcontainer .content-tabcontent img {
