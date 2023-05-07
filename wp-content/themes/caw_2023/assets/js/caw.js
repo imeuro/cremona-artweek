@@ -8,7 +8,6 @@ let BaseZoom = window.innerWidth<600 ? 12.85 : 13.85;
 let map = '';
 let ShiftMap = window.innerWidth<600 ? 0 : 0.0015;
 let art_display = [];
-let CAWweather = {};
 
 // THE MAP BOX
 const generateMapbox = () => {
@@ -361,7 +360,8 @@ function printCurrentWeather( target ) {
 }
 
 const apiURL = 'https://api.openweathermap.org/data/2.5/weather?lat='+BaseCoords[1]+'&lon='+BaseCoords[0]+'&lang='+current_lang+'&units=metric&appid=e32dcab669abc89d3e05052b0d643bab';
-
+let CAWweather = localStorage.getItem("CAW-meteo-situa");
+// al limite posso fare che da mobile gira solo se aprono il menu...
 if ( CAWweather === null || Object.keys(CAWweather).length === 0 ) {
 	CAWweather = getPostsFromWp( apiURL );
 	CAWweather.then( gotCAWweather => {
