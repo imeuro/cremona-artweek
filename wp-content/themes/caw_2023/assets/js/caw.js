@@ -274,6 +274,23 @@ function setLocalStorageWithExpiry( key, value, ttl ) {
 	}
 	localStorage.setItem(key, JSON.stringify(item))
 }
+function getLocalStorageWithExpiry(key) {
+	const itemStr = localStorage.getItem(key)
+	// if the item doesn't exist, return null
+	if (!itemStr) {
+		return null
+	}
+	const item = JSON.parse(itemStr)
+	const now = new Date()
+	// compare the expiry time of the item with the current time
+	if (now.getTime() > item.expiry) {
+		// If the item is expired, delete the item from storage
+		// and return null
+		localStorage.removeItem(key)
+		return null
+	}
+	return item.value
+}
 
 function getlocation_post_id_from_location_number( num ) {
 	// ... servirà poi per i QRCODE
@@ -360,7 +377,7 @@ function printCurrentWeather( target ) {
 }
 
 const apiURL = 'https://api.openweathermap.org/data/2.5/weather?lat='+BaseCoords[1]+'&lon='+BaseCoords[0]+'&lang='+current_lang+'&units=metric&appid=e32dcab669abc89d3e05052b0d643bab';
-let CAWweather = localStorage.getItem("CAW-meteo-situa");
+let CAWweather = getLocalStorageWithExpiry("CAW-meteo-situa");
 // al limite posso fare che da mobile gira solo se aprono il menu...
 if ( CAWweather === null || Object.keys(CAWweather).length === 0 ) {
 	CAWweather = getPostsFromWp( apiURL );
