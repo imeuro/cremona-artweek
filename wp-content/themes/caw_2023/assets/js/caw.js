@@ -275,12 +275,32 @@ function setLocalStorageWithExpiry( key, value, ttl ) {
 	localStorage.setItem(key, JSON.stringify(item))
 }
 
-function getlocation_post_id_from_location_number( num ) {
-	// ... servirà poi per i QRCODE
-
-
+let found_location_id = null;
+function QRcode2location( num ) {
+	const locations_data = getPostsFromWp(WPREST_Base+'/locations/?_fields=id,acf.location_id&per_page=99');
+	locations_data.then( loc => {
+		loc.forEach((el) => {
+			if (el.acf.location_id == num) {
+				found_location_id = el.id;
+				//console.debug(num,found_location_id);
+			}
+		});
+	}).then( () => {
+		console.debug(num,found_location_id);
+		if (found_location_id !== null) {
+			LoadItInTheDiv(found_location_id,'locations','HalfDiv','en');
+		}
+	}).then( callback );
 }
 
+
+document.addEventListener('DOMContentLoaded', () => {
+	let numlocation = location.hash.match(/^#location\/([0-9]+)$/);
+	if ( numlocation !== null ) {
+		const hashnum = numlocation[1];
+		const hashcallback = QRcode2location( hashnum );
+	}
+});
 
 
 // HELPER FUNCTIONS ENDS HERE
