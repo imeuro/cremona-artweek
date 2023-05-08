@@ -2,7 +2,6 @@ const Baseurl = ['localhost','meuro.dev'].includes(window.location.hostname) ? '
 const WPREST_Base = Baseurl+'/wp-json/wp/v2';
 const current_lang = document.body.dataset.lang;
 let locationsList = getPostsFromWp(WPREST_Base+'/locations?per_page=99');
-let GA4locationID = '';
 let GA4pageTitle = '';
 var CAWgeoJSON = [];
 let BaseCoords = window.innerWidth<600 ? [10.021,45.139] : [10.020, 45.134];
@@ -102,9 +101,8 @@ const generateMapbox = () => {
 				const feature = features[0];
 				console.debug({feature});
 				readmorelink = feature.properties.post_id;
-				
+
 				coords = feature.geometry.coordinates;
-				// let EVPlace = feature.properties.location_address;
 
 				// Create a popup, specify its options 
 				// and properties, and add it to the map.
@@ -136,8 +134,6 @@ const generateMapbox = () => {
 			});
 
 			map.on('click', 'places', () => {
-				GA4pageTitle = feature.properties.location+' - locations';
-				GA4locationID = feature.properties.location_id;
 			 	LoadItInTheDiv(readmorelink,'locations','HalfDiv',current_lang);
 			 	map.flyTo({
 					center: [(coords[0] - ShiftMap),coords[1]],
@@ -364,6 +360,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 		urlRequest = WPREST_Base+'/eventi?per_page=99'
 	} else {
 		postType = (postType == '') ? 'pages' : postType;
+		GA4pageTitle = 'pages';
 		urlRequest = WPREST_Base+'/'+postType+"/"+itemID;
 	}
 	console.debug(urlRequest);
@@ -490,7 +487,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 				if (CAWdata.acf.location_id) {
 					// 👉 LOCATIONS
 					get_artists_for_location_id (CAWdata, CAWdata.id, printLocationsTab);
-
+					GA4pageTitle = 'location/'+CAWdata.acf.location_id;
 					function printLocationsTab () {
 						console.debug(art_display.length+' artists displaying here', art_display);
 						TabContent += `
@@ -520,6 +517,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					
 				} else { 
 					// 👉 SIMPLE POSTS/PAGES:
+					GA4pageTitle += '/'+CAWdata.slug;
 					TabContent += `
 						<h2 class="title-tabcontent heading-line">${CAWdata.title.rendered}</h2>
 						<div class="content-tabcontent">${content_tabcontent}</div>
@@ -532,7 +530,13 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 			TabDiv.scrollTo(0,0);
 			
 		}
-	);
+	).then( () => {
+		gtag('event', 'page_view', {
+			page_title: GA4pageTitle+' - Cremona Contemporanea | Art Week',
+			page_location: 'https://www.cremona-artweek.com/'+current_lang+'/'+GA4pageTitle,
+			sub_section: current_lang,
+		});
+	});
 	setTimeout(() => {
 		TabDiv.classList.add('open',divType);
 		document.getElementById('masthead').classList.add('compact');
@@ -541,11 +545,6 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 		TabContainer.classList.add('visible');
 	},1000);
 
-	gtag('event', 'page_view', {
-	  page_title: GA4pageTitle+' - Cremona Contemporanea | Art Week',
-	  page_location: 'https://www.cremona-artweek.com/'+current_lang+'/'+GA4pageTitle+GA4locationID,
-	  sub_section: current_lang,
-	});
 }
 
 document.querySelector('.close-tabcontainer').addEventListener('click', () => {
