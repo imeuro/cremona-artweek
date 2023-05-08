@@ -29,6 +29,9 @@
 
 	<link rel="preload" fetchpriority="high" as="image" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/CRC_Final.svg" type="image/svg+xml">
 
+	<style>
+		.mapboxgl-control-container .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl.mapboxgl-ctrl-group { margin-right: 40px; box-shadow: none; }
+	</style>
 </head>
 
 <body <?php body_class(); ?> data-lang="<?php echo pll_current_language(); ?>">
