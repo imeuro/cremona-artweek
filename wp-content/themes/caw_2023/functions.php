@@ -113,7 +113,7 @@ function add_defer_forscript( $tag, $handle, $src ) {
     'caw_2023-mapbox'
   );
   if ( in_array( $handle, $defer ) ) {
-     return '<script src="' . $src . '" defer="defer" type="text/javascript"></script>' . "\n";
+     return '<script src="' . $src . '" defer type="text/javascript"></script>' . "\n";
   }
     
     return $tag;
