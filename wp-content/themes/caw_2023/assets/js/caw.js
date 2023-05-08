@@ -275,22 +275,34 @@ function setLocalStorageWithExpiry( key, value, ttl ) {
 	localStorage.setItem(key, JSON.stringify(item))
 }
 
-let found_location_id = null;
+let found_location_data = null;
 function QRcode2location( num ) {
-	const locations_data = getPostsFromWp(WPREST_Base+'/locations/?_fields=id,acf.location_id&per_page=99');
+	const locations_data = getPostsFromWp(WPREST_Base+'/locations/?_fields=id,acf.location_id,acf.location.lat,acf.location.lng&per_page=99');
 	locations_data.then( loc => {
 		loc.forEach((el) => {
 			if (el.acf.location_id == num) {
-				found_location_id = el.id;
+				found_location_data = {
+					'id'  : el.id,
+					'lat' : el.acf.location.lat,
+					'lng' : el.acf.location.lng
+				}
 				//console.debug(num,found_location_id);
 			}
 		});
 	}).then( () => {
-		console.debug(num,found_location_id);
-		if (found_location_id !== null) {
-			LoadItInTheDiv(found_location_id,'locations','HalfDiv','en');
+		console.debug(num,found_location_data);
+		if (found_location_data !== null) {
+			LoadItInTheDiv(found_location_data.id,'locations','HalfDiv','en');
+			setTimeout( () => {
+				map.flyTo({
+					center: [(found_location_data.lng - ShiftMap),found_location_data.lat],
+					essential: true,
+					zoom:17,
+					duration: 2000
+				})
+			},2000)
 		}
-	}).then( callback );
+	})
 }
 
 
