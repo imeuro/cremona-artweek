@@ -107,15 +107,17 @@ function add_async_forscript($url)
 }
 add_filter('clean_url', 'add_async_forscript', 11, 1);
 
-function add_defer_forscript($url)
-{    
-    if (strpos($url, '#deferload')===false)
-        return $url;
-    else
-    	//return $url;
-        return str_replace("#deferload'", "' defer", $url); 
-}
-add_filter('clean_url', 'add_defer_forscript', 11, 1);
+function add_defer_forscript( $tag, $handle, $src ) {
+  $defer = array( 
+    'caw_2023-mapbox'
+  );
+  if ( in_array( $handle, $defer ) ) {
+     return '<script src="' . $src . '" defer="defer" type="text/javascript"></script>' . "\n";
+  }
+    
+    return $tag;
+} 
+add_filter( 'script_loader_tag', 'add_defer_forscript', 10, 3 );
 
 function caw_2023_scripts() {
 	wp_enqueue_style( 'caw_2023-style', get_stylesheet_uri(), array(), _S_VERSION );
@@ -123,18 +125,22 @@ function caw_2023_scripts() {
     wp_enqueue_style( 'caw_2023-style-custom', get_template_directory_uri() . '/assets/css/caw.css', array(), _S_VERSION );
 
 	wp_enqueue_script( 'caw_2023-navigation', get_template_directory_uri() . '/assets/js/navigation.js#asyncload', array(), _S_VERSION, true );
-	wp_enqueue_script( 'caw_2023-general', get_template_directory_uri() . '/assets/js/caw.js', array('caw_2023-mapboxx'), _S_VERSION, true );
+	wp_enqueue_script( 'caw_2023-general', get_template_directory_uri() . '/assets/js/caw.js', array('caw_2023-mapbox'), _S_VERSION, true );
+
+
+	wp_enqueue_script( 'caw_2023-mapbox', 'https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.js', array(), _S_VERSION, true );
+	wp_enqueue_style( 'caw_2023-mapbox', 'https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.css', array(), _S_VERSION );
 
 }
 add_action( 'wp_enqueue_scripts', 'caw_2023_scripts' );
 
 
 // mapbox libraries
-function caw_mapbox_assets() {
-	wp_enqueue_script( 'caw_2023-mapboxx', 'https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.js#deferload', array(), _S_VERSION, true );
-	wp_enqueue_style( 'caw_2023-mapboxx', 'https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.css', array(), _S_VERSION );
-}
-add_action( 'wp_enqueue_scripts', 'caw_mapbox_assets' );
+// function caw_mapbox_assets() {
+// 	wp_enqueue_script( 'caw_2023-mapboxx', 'https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.js#deferload', array(), _S_VERSION, true );
+// 	wp_enqueue_style( 'caw_2023-mapboxx', 'https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.css', array(), _S_VERSION );
+// }
+// add_action( 'wp_enqueue_scripts', 'caw_mapbox_assets' );
 
 /**
  * Custom template tags for this theme.
