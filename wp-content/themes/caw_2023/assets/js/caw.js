@@ -2,12 +2,14 @@ const Baseurl = ['localhost','meuro.dev'].includes(window.location.hostname) ? '
 const WPREST_Base = Baseurl+'/wp-json/wp/v2';
 const current_lang = document.body.dataset.lang;
 let locationsList = getPostsFromWp(WPREST_Base+'/locations?per_page=99');
+let GA4locationID = '';
+let GA4pageTitle = '';
 var CAWgeoJSON = [];
 let BaseCoords = window.innerWidth<600 ? [10.021,45.139] : [10.020, 45.134];
 let BaseZoom = window.innerWidth<600 ? 12.85 : 13.85;
 let map = '';
 let ShiftMap = window.innerWidth<600 ? 0 : 0.0015;
-let art_display=[];
+let art_display = [];
 
 // THE MAP BOX
 const generateMapbox = () => {
@@ -134,6 +136,8 @@ const generateMapbox = () => {
 			});
 
 			map.on('click', 'places', () => {
+				GA4pageTitle = feature.properties.location+' - locations';
+				GA4locationID = feature.properties.location_id;
 			 	LoadItInTheDiv(readmorelink,'locations','HalfDiv',current_lang);
 			 	map.flyTo({
 					center: [(coords[0] - ShiftMap),coords[1]],
@@ -277,6 +281,8 @@ function setLocalStorageWithExpiry( key, value, ttl ) {
 
 function getlocation_post_id_from_location_number( num ) {
 	// ... servirà poi per i QRCODE
+
+
 }
 
 
@@ -343,6 +349,7 @@ let resultFromWP = [];
 let TabContent = '';
 
 const LoadItInTheDiv = (itemID, postType, divType, lang) => {
+	GA4pageTitle = postType;
 	TabDiv.classList = '';
 	TabContainer.classList.remove('visible');
 	Array.from(MenuDiv.children).forEach((el) => {
@@ -350,8 +357,10 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 	});
 
 	if (itemID == 498 || itemID == 500) { // archivio artisti by nearest in time
+		GA4pageTitle = 'artisti';
 		urlRequest = WPREST_Base+'/posts?orderby=date&order=desc&per_page=99'
 	} else if (itemID == 12 || itemID == 76) { // [eng] archivio eventi by nearest in time
+		GA4pageTitle = 'eventi'
 		urlRequest = WPREST_Base+'/eventi?per_page=99'
 	} else {
 		postType = (postType == '') ? 'pages' : postType;
@@ -462,8 +471,6 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						if (Art_done == CAWdata.length) {
 							console.debug('All artists processed.');
 							TabContainer.innerHTML = TabContent;
-							// localStorage.setItem('CAWARTdata', JSON.stringify(CAWdata));
-							// localStorage.setItem('CAWARTdata', '');
 						}
 					});
 				}
@@ -533,6 +540,12 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 	setTimeout(() => {
 		TabContainer.classList.add('visible');
 	},1000);
+
+	gtag('event', 'page_view', {
+	  page_title: GA4pageTitle+' - Cremona Contemporanea | Art Week',
+	  page_location: 'https://www.cremona-artweek.com/'+current_lang+'/'+GA4pageTitle+GA4locationID,
+	  sub_section: current_lang,
+	});
 }
 
 document.querySelector('.close-tabcontainer').addEventListener('click', () => {
