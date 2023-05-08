@@ -113,7 +113,7 @@ function add_defer_forscript($url)
         return $url;
     else
     	//return $url;
-        return str_replace("#deferload'", "'", $url)."' defer='defer"; 
+        return str_replace("#deferload'", "' defer", $url); 
 }
 add_filter('clean_url', 'add_defer_forscript', 11, 1);
 
