@@ -11,10 +11,10 @@
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 	<header class="entry-header">
-		<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
+		<?php the_title( '<h1 class="title-tabcontent heading-line">', '</h1>' ); ?>
 	</header><!-- .entry-header -->
 
-	<?php caw_2023_post_thumbnail(); ?>
+	<?php // caw_2023_post_thumbnail(); ?>
 
 	<div class="entry-content">
 		<?php

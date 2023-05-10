@@ -22,6 +22,9 @@ body {
 .site-header {
 	font-family: var(--main-font);
 }
+.entry-header {
+	text-transform: uppercase;
+}
 
 a,
 a:hover,
@@ -80,6 +83,16 @@ div#page {
     width: 100vw;
     height: 100%;
 }
+#single-page-primary {
+    top: 225px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 225px);
+    overflow-y: auto;
+    color: var(--main-color);
+    background: #fff;
+    padding: 0 20px 0;
+}
 @media screen and (min-width: 37.5em) {
 	div#page {
 		position: initial;
@@ -123,8 +136,22 @@ div#page {
 		height: 100%;
 		z-index: 1;
 	}
+	#single-page-primary {
+	    top: 0;
+	    left: 245px;
+	    width: calc(100vw - 245px);
+	    height: 100%;
+	    overflow-y: auto;
+	    padding: 0;
+	}
 }
 /* /END the grid */
+
+
+
+
+
+
 
 
 .site-header .caw-event-description {

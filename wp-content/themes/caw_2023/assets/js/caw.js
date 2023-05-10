@@ -356,13 +356,16 @@ Array.from(MenuDiv.children).forEach((el) => {
 	let itemID = el.firstChild.dataset.postid;
 	let lang = el.firstChild.dataset.lang;
 	let divType = el.classList.contains('fullDiv')?'full':'normal';
+
 	el.firstChild.addEventListener('click', (e) => {
-		e.preventDefault();
-		LoadItInTheDiv(itemID, '',divType,lang);
-		el.firstChild.classList.add('current');
-		// close menu
-		document.getElementById('site-navigation').classList.remove('toggled');
-		document.getElementById('masthead').classList = 'site-header compact';
+		if (TabDiv !== null) {
+			e.preventDefault();
+			LoadItInTheDiv(itemID, '',divType,lang);
+			el.firstChild.classList.add('current');
+			// close menu
+			document.getElementById('site-navigation').classList.remove('toggled');
+			document.getElementById('masthead').classList = 'site-header compact';
+		}
 	}, false)
 
 

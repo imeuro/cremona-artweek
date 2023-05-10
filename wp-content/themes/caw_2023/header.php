@@ -36,7 +36,7 @@
 
 <body <?php body_class(); ?> data-lang="<?php echo pll_current_language(); ?>">
 <?php wp_body_open(); ?>
-<div id="page" class="site">
+<div id="page" class="site home">
 	<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'caw_2023' ); ?></a>
 
 	<header id="masthead" class="site-header">
