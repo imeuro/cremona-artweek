@@ -139,7 +139,7 @@ div#page {
 	#single-page-primary {
 	    top: 0;
 	    left: 245px;
-	    width: calc(100vw - 245px);
+	    width: calc(100vw - 265px);
 	    height: 100%;
 	    overflow-y: auto;
 	    padding: 0;
