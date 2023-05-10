@@ -183,7 +183,9 @@ document.addEventListener('DOMContentLoaded', () => {
 				geoJSON.features = features;
 				CAWgeoJSON = geoJSON;
 				console.debug(CAWgeoJSON)
-				generateMapbox();
+				if (typeof(mapboxgl) !== "undefined") {
+					generateMapbox();
+				}
 			}
 	);
 
@@ -582,14 +584,17 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 
 }
 
-document.querySelector('.close-tabcontainer').addEventListener('click', () => {
-	TabDiv.classList = '';
-	TabContainer.classList.remove('visible');
-	document.getElementById('masthead').classList.remove('compact');
-	map.flyTo({
-		center: BaseCoords,
-		essential: true,
-		zoom:BaseZoom,
-		duration: 1000
-	});
-})
+const closeTab = document.querySelector('.close-tabcontainer');
+if (closeTab!== null) {
+	closeTab.addEventListener('click', () => {
+		TabDiv.classList = '';
+		TabContainer.classList.remove('visible');
+		document.getElementById('masthead').classList.remove('compact');
+		map.flyTo({
+			center: BaseCoords,
+			essential: true,
+			zoom:BaseZoom,
+			duration: 1000
+		});
+	})
+}
