@@ -22,6 +22,8 @@
 	<link rel="icon" type="image/png" sizes="16x16" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/favicons/favicon-16x16.png">
 	<link rel="manifest" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/favicons/site.webmanifest">
 
+	<link rel="canonical" href="<?php echo get_home_url(); ?>" />
+
 	<link rel="preload" href="<?php echo get_template_directory_uri(); ?>/assets/fonts/OPSPlacard-Regular.woff2" as="font" type="font/woff2" crossorigin>
 	<link rel="preconnect" href="https://api.mapbox.com" />
 
