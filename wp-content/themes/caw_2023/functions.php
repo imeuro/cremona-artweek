@@ -191,3 +191,10 @@ function remove_wp_stupid_css(){
  wp_dequeue_style( 'classic-theme-styles' );
 } 
 add_action( 'wp_enqueue_scripts', 'remove_wp_stupid_css', 20 );
+
+// Remove Global Styles and SVG Filters from WP 5.9.1 - 2022-02-27
+function remove_global_styles_and_svg_filters() {
+	remove_action( 'wp_enqueue_scripts', 'wp_enqueue_global_styles' );
+	remove_action( 'wp_body_open', 'wp_global_styles_render_svg_filters' );
+}
+add_action('init', 'remove_global_styles_and_svg_filters');

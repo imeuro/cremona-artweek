@@ -17,10 +17,18 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="profile" href="https://gmpg.org/xfn/11">
 
-	<link rel="apple-touch-icon" sizes="180x180" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/favicons/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/favicons/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/favicons/favicon-16x16.png">
-	<link rel="manifest" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/favicons/site.webmanifest">
+
+	<link rel="icon" href="/favicon.ico">
+	<link rel="apple-touch-icon" sizes="180x180" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/favicons/apple-touch-icon.png?v=1.0">
+	<link rel="icon" type="image/png" sizes="32x32" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/favicons/favicon-32x32.png?v=1.0">
+	<link rel="icon" type="image/png" sizes="16x16" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/favicons/favicon-16x16.png?v=1.0">
+	<link rel="manifest" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/favicons/site.webmanifest?v=1.0">
+	<link rel="mask-icon" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/favicons/safari-pinned-tab.svg?v=1.0" color="#ff0000">
+	<link rel="shortcut icon" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/favicons/favicon.ico?v=1.0">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="theme-color" content="#ffffff">
+
+
 
 	<link rel="preload" href="<?php echo get_template_directory_uri(); ?>/assets/fonts/OPSPlacard-Regular.woff2" as="font" type="font/woff2" crossorigin>
 	<link rel="preconnect" href="https://api.mapbox.com" />

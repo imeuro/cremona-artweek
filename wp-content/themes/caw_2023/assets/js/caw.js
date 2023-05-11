@@ -307,14 +307,17 @@ function QRcode2location( num ) {
 	})
 }
 
+const evlist = ['hashchange','DOMContentLoaded'];
+evlist.forEach((ev) => {
+	document.addEventListener(ev, () => {
+		let numlocation = location.hash.match(/^#location\/([0-9]+)$/);
+		if ( numlocation !== null ) {
+			const hashnum = numlocation[1];
+			const hashcallback = QRcode2location( hashnum );
+		}
+	});	
+})
 
-document.addEventListener('DOMContentLoaded', () => {
-	let numlocation = location.hash.match(/^#location\/([0-9]+)$/);
-	if ( numlocation !== null ) {
-		const hashnum = numlocation[1];
-		const hashcallback = QRcode2location( hashnum );
-	}
-});
 
 
 // HELPER FUNCTIONS ENDS HERE
