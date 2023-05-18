@@ -45,11 +45,11 @@ const generateMapbox = () => {
 
 		const markers =[
 		  {
-		  	url:'/cremona-artweek/wp-content/themes/caw_2023/assets/graphics/caw-marker.png', 
+		  	url: Baseurl+'/wp-content/themes/caw_2023/assets/graphics/caw-marker.png', 
 		  	id: 'image_location'
 		  },
 		  {
-		  	url: '/cremona-artweek/wp-content/themes/caw_2023/assets/graphics/caw-marker-spot.png', 
+		  	url: Baseurl+'/wp-content/themes/caw_2023/assets/graphics/caw-marker-spot.png', 
 		  	id: 'image_spot'
 		  },
 		]
