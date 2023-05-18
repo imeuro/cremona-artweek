@@ -37,6 +37,7 @@ function cp_change_post_object() {
  * Additional custom taxonomies can be defined here
  * https://codex.wordpress.org/Function_Reference/register_taxonomy
  */
+/*
 function add_custom_taxonomies() {
   // Add new "Languages" taxonomy to Posts
   register_taxonomy('lang', '', array(
@@ -65,8 +66,8 @@ function add_custom_taxonomies() {
     ),
   ));
 }
-add_action( 'init', 'add_custom_taxonomies', 0 );
-
+//add_action( 'init', 'add_custom_taxonomies', 0 );
+*/
 
 // Register Custom Post Type
 function locations_post_type() {
@@ -126,26 +127,25 @@ function locations_post_type() {
 add_action( 'init', 'locations_post_type', 0 );
 
 // Register Custom Post Type
-/*
-function artisti_post_type() {
+function spots_post_type() {
 
 	$labels = array(
-		'name'                  => _x( 'Artisti', 'Post Type General Name', 'text_domain' ),
-		'singular_name'         => _x( 'Artista', 'Post Type Singular Name', 'text_domain' ),
-		'menu_name'             => __( 'Artisti', 'text_domain' ),
-		'name_admin_bar'        => __( 'Artista', 'text_domain' ),
-		'archives'              => __( 'Archivio Artisti', 'text_domain' ),
-		'attributes'            => __( 'Attributi Artista', 'text_domain' ),
+		'name'                  => _x( 'Spots', 'Post Type General Name', 'text_domain' ),
+		'singular_name'         => _x( 'Spot', 'Post Type Singular Name', 'text_domain' ),
+		'menu_name'             => __( 'Spots', 'text_domain' ),
+		'name_admin_bar'        => __( 'Spot', 'text_domain' ),
+		'archives'              => __( 'Archivio Spots', 'text_domain' ),
+		'attributes'            => __( 'Attributi Spot', 'text_domain' ),
 		'parent_item_colon'     => __( 'Parent Item:', 'text_domain' ),
-		'all_items'             => __( 'Tutti gli Artisti', 'text_domain' ),
-		'add_new_item'          => __( 'Aggiungi Artista', 'text_domain' ),
-		'add_new'               => __( 'Aggiungi Artista', 'text_domain' ),
-		'new_item'              => __( 'Nuovo Artista', 'text_domain' ),
-		'edit_item'             => __( 'Edit Artista', 'text_domain' ),
-		'update_item'           => __( 'Update Artista', 'text_domain' ),
-		'view_item'             => __( 'Visualizza Artista', 'text_domain' ),
-		'view_items'            => __( 'Visualizza Artista', 'text_domain' ),
-		'search_items'          => __( 'Cerca Artista', 'text_domain' ),
+		'all_items'             => __( 'Tutti gli Spots', 'text_domain' ),
+		'add_new_item'          => __( 'Aggiungi Spot', 'text_domain' ),
+		'add_new'               => __( 'Aggiungi Spot', 'text_domain' ),
+		'new_item'              => __( 'Nuovo Spot', 'text_domain' ),
+		'edit_item'             => __( 'Edit Spot', 'text_domain' ),
+		'update_item'           => __( 'Update Spot', 'text_domain' ),
+		'view_item'             => __( 'Visualizza Spot', 'text_domain' ),
+		'view_items'            => __( 'Visualizza Spot', 'text_domain' ),
+		'search_items'          => __( 'Cerca Spot', 'text_domain' ),
 		'not_found'             => __( 'Non trovato', 'text_domain' ),
 		'not_found_in_trash'    => __( 'Non trovato in Trash', 'text_domain' ),
 		'featured_image'        => __( 'Featured Image', 'text_domain' ),
@@ -159,8 +159,8 @@ function artisti_post_type() {
 		'filter_items_list'     => __( 'Filter items list', 'text_domain' ),
 	);
 	$args = array(
-		'label'                 => __( 'Artista', 'text_domain' ),
-		'description'           => __( 'Post Type Artista Description', 'text_domain' ),
+		'label'                 => __( 'Spot', 'text_domain' ),
+		'description'           => __( 'Post Type Spot Description', 'text_domain' ),
 		'labels'                => $labels,
 		'supports'              => array( 'title', 'editor', 'custom-fields' ),
 		'taxonomies'            => array( 'lang' ),
@@ -178,11 +178,11 @@ function artisti_post_type() {
 		'capability_type'       => 'page',
 		'show_in_rest'          => true,
 	);
-	register_post_type( 'artisti', $args );
+	register_post_type( 'spots', $args );
 
 }
-add_action( 'init', 'artisti_post_type', 0 );
-*/
+add_action( 'init', 'spots_post_type', 0 );
+
 
 // Register Custom Post Type
 function events_post_type() {

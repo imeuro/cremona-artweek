@@ -2,8 +2,10 @@ const Baseurl = ['localhost','meuro.dev'].includes(window.location.hostname) ? '
 const WPREST_Base = Baseurl+'/wp-json/wp/v2';
 const current_lang = document.body.dataset.lang;
 let locationsList = getPostsFromWp(WPREST_Base+'/locations?per_page=99');
+let spotsList = getPostsFromWp(WPREST_Base+'/spots?per_page=99');
 let GA4pageTitle = '';
-var CAWgeoJSON = [];
+var CAWgeoJSON_locations = [];
+var CAWgeoJSON_spots = [];
 let BaseCoords = window.innerWidth<600 ? [10.021,45.139] : [10.020, 45.134];
 let BaseZoom = window.innerWidth<600 ? 12.85 : 13.85;
 let map = '';
@@ -39,27 +41,42 @@ const generateMapbox = () => {
 	map.on('load', () => {
 		// JSON EXAMPLE @
 		// https://docs.mapbox.com/mapbox-gl-js/example/popup-on-hover/
-		// console.debug(CAWgeoJSON);
-		map.loadImage(
-		Baseurl+'/wp-content/themes/caw_2023/assets/graphics/caw-marker.png',
-		(error, image) => {
-			if (error) throw error;
-			 
-			// Add the image to the map style.
-			map.addImage('cawpointer', image);
+		console.debug(CAWgeoJSON_locations);
 
+		const markers =[
+		  {
+		  	url:'/cremona-artweek/wp-content/themes/caw_2023/assets/graphics/caw-marker.png', 
+		  	id: 'image_location'
+		  },
+		  {
+		  	url: '/cremona-artweek/wp-content/themes/caw_2023/assets/graphics/caw-marker-spot.png', 
+		  	id: 'image_spot'
+		  },
+		]
 
-			map.addSource('places', {
+		Promise.all(
+            markers.map(img => new Promise((resolve, reject) => {
+                map.loadImage(img.url, function (error, res) {
+                	if (error) throw error;
+                    map.addImage(img.id, res)
+                    resolve();
+                })
+            }))
+        ).then(() => {
+
+        	//console.debug('promise done');
+        	
+			map.addSource('locations', {
 				'type': 'geojson',
-				'data': CAWgeoJSON
+				'data': CAWgeoJSON_locations
 			}) 
 
 			map.addLayer({
-				'id': 'places',
+				'id': 'locations',
 				'type': 'symbol',
-				'source': 'places',
+				'source': 'locations',
 				'layout': {
-					'icon-image': 'cawpointer',
+					'icon-image': 'image_location',
 					'icon-size': .85,
 					'icon-allow-overlap': true,
 					'icon-ignore-placement': true,
@@ -89,11 +106,11 @@ const generateMapbox = () => {
 
 			let readmorelink;
 			let coords = [];
-			map.on('mouseenter', 'places', (event) => {
+			map.on('mouseenter', 'locations', (event) => {
 				map.getCanvas().style.cursor = 'pointer';
 				// If the user clicked on one of your markers, get its information.
 				const features = map.queryRenderedFeatures(event.point, {
-					layers: ['places'] // replace with your layer name
+					layers: ['locations'] // replace with your layer name
 				});
 				if (!features.length) {
 					return;
@@ -128,13 +145,116 @@ const generateMapbox = () => {
 				get_artists_for_location_id ( feature, readmorelink, setPopupContent );
 			});
 
-			map.on('mouseleave', 'places', () => {
+			map.on('mouseleave', 'locations', () => {
 				map.getCanvas().style.cursor = '';
 				popup.remove();
 			});
 
-			map.on('click', 'places', () => {
+			map.on('click', 'locations', () => {
 			 	LoadItInTheDiv(readmorelink,'locations','HalfDiv',current_lang);
+			 	map.flyTo({
+					center: [(coords[0] - ShiftMap),coords[1]],
+					essential: true,
+					zoom:17,
+					duration: 2000
+				});
+
+			});
+			
+		})
+		.then(() => {
+			// JSON EXAMPLE @
+			// https://docs.mapbox.com/mapbox-gl-js/example/popup-on-hover/
+			console.debug(CAWgeoJSON_spots);
+
+
+
+			map.addSource('spots', {
+				'type': 'geojson',
+				'data': CAWgeoJSON_spots
+			}) 
+
+			map.addLayer({
+				'id': 'spots',
+				'type': 'symbol',
+				'source': 'spots',
+				'layout': {
+					'icon-image': 'image_spot',
+					'icon-size': .85,
+					'icon-allow-overlap': true,
+					'icon-ignore-placement': true,
+					'text-allow-overlap': true,
+					'text-ignore-placement': true,
+					'text-optional': true,
+					//'text-field': ['get', 'location_id'],
+					'text-variable-anchor': ['center'],
+					'text-radial-offset': 0,
+					'text-justify': 'auto',
+					'text-size': 18,
+					'text-font': ['OPS Placard Regular'],
+				},
+
+				'paint': {
+					'text-color': '#ffffff',
+				}
+			})
+
+			// const popup = new mapboxgl.Popup({ 
+			// 	anchor: 'top-left',
+			// 	offset: [20, -30],
+			// 	className: 'caw-popup',
+			// 	closeButton: false,
+			// 	maxWidth: '400px',
+			// })
+
+			let readmorelink;
+			let coords = [];
+			map.on('mouseenter', 'spots', (event) => {
+				map.getCanvas().style.cursor = 'pointer';
+				// If the user clicked on one of your markers, get its information.
+				const features = map.queryRenderedFeatures(event.point, {
+					layers: ['spots'] // replace with your layer name
+				});
+				if (!features.length) {
+					return;
+				}
+				const feature = features[0];
+				console.debug({feature});
+				readmorelink = feature.properties.post_id;
+
+				coords = feature.geometry.coordinates;
+
+				// Create a popup, specify its options 
+				// and properties, and add it to the map.
+				// const setPopupContent = () => {
+				// 	console.debug('art_display',art_display);
+				// 	let artists = '';
+				// 	if (window.innerWidth>600) {
+				// 		for (var i = 0; i < art_display.length; i++) {
+				// 			artists += art_display[i].title;
+				// 			if (i < art_display.length-1) {
+				// 				artists += '<br/>';
+				// 			}
+				// 		}
+				// 		popup.setLngLat(feature.geometry.coordinates)
+				// 		.setHTML(
+				// 			`<p>${feature.properties.title}<br><small style="line-height:8px; display:inline.block">${artists}</small></p>
+				// 			`
+				// 		)
+				// 		.addTo(map);
+				// 		console.debug({artists})
+				// 	}
+				// }
+				get_artists_for_location_id ( feature, readmorelink, setPopupContent );
+			});
+
+			map.on('mouseleave', 'spots', () => {
+				map.getCanvas().style.cursor = '';
+				popup.remove();
+			});
+
+			map.on('click', 'spots', () => {
+			 	LoadItInTheDiv(readmorelink,'spots','HalfDiv',current_lang);
 			 	map.flyTo({
 					center: [(coords[0] - ShiftMap),coords[1]],
 					essential: true,
@@ -181,14 +301,57 @@ document.addEventListener('DOMContentLoaded', () => {
 				});
 
 				geoJSON.features = features;
-				CAWgeoJSON = geoJSON;
-				console.debug(CAWgeoJSON)
-				if (typeof(mapboxgl) !== "undefined") {
-					generateMapbox();
-				}
+				CAWgeoJSON_locations = geoJSON;
+				console.debug(CAWgeoJSON_locations)
 			}
 	);
+	
+	spotsList.then( 
+			ARTdata => {
+				var features = [];
+				var geoJSON = {};
+				let i = 1;
+				geoJSON.type = 'FeatureCollection';
+				Object.values(ARTdata).forEach(el => {
+					// console.debug( {el} );
+					var art = {};
+					art.type = "Feature";
+					art.properties = {}
+					art.properties.type = el.type;
+					art.properties.title = el.title.rendered;
+					art.properties.description = el.content.rendered;
+					art.properties.post_id = el.id;
+					art.properties.testo_eng = el.acf.testo_eng;
+					art.properties.location_id = el.acf.location_id;
+					art.properties.location_name = el.acf.location.name;
+					art.properties.location_address = el.acf.location.street_name+', '+el.acf.location.street_number;
+					art.properties.location_number = el.acf.evento_num;
+					art.geometry = {};
+					art.geometry.type = "Point"
+					art.geometry.coordinates = [el.acf.location.lng,el.acf.location.lat];
+					i++;
+					features.push(art);
+				});
 
+				geoJSON.features = features;
+				CAWgeoJSON_spots = geoJSON;
+				console.debug(CAWgeoJSON_spots)
+				
+			}
+	);
+	
+
+	let preflightcheck = setInterval(function () {
+		if (typeof(mapboxgl) !== "undefined") {
+			if (Object.keys(CAWgeoJSON_spots).length > 0 && Object.keys(CAWgeoJSON_locations).length > 0){
+				generateMapbox();
+				console.debug('now.')
+				clearInterval(preflightcheck);
+				return;
+			}
+			console.debug('not yet.')
+		}
+	}, 200);
 });
 // THE MAP BOX ENDS HERE
 // __________________________
