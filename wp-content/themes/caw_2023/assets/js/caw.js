@@ -343,7 +343,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	let preflightcheck = setInterval(function () {
 		if (typeof(mapboxgl) !== "undefined") {
-			if (Object.keys(CAWgeoJSON_spots).length > 0 && Object.keys(CAWgeoJSON_locations).length > 0){
+			// if (Object.keys(CAWgeoJSON_spots).length > 0 && Object.keys(CAWgeoJSON_locations).length > 0){
+			if (Object.keys(CAWgeoJSON_locations).length > 0){
 				generateMapbox();
 				console.debug('now.')
 				clearInterval(preflightcheck);
