@@ -4,7 +4,7 @@ Plugin Name: Cremona Art Week 2023
 Plugin URI: http://wordpress.org/plugins/hello-dolly/
 Description: Cremona Art Week specific functions/capabilities.
 Author: Mauro Fioravanzi
-Version: 0
+Version: 1.1
 Author URI: http://meuro.dev/
 */
 

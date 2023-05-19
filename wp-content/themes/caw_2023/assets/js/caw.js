@@ -245,12 +245,12 @@ const generateMapbox = () => {
 				// 		console.debug({artists})
 				// 	}
 				// }
-				get_artists_for_location_id ( feature, readmorelink, setPopupContent );
+				// get_artists_for_location_id ( feature, readmorelink, setPopupContent );
 			});
 
 			map.on('mouseleave', 'spots', () => {
 				map.getCanvas().style.cursor = '';
-				popup.remove();
+				// popup.remove();
 			});
 
 			map.on('click', 'spots', () => {
@@ -344,7 +344,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	let preflightcheck = setInterval(function () {
 		if (typeof(mapboxgl) !== "undefined") {
 			if (Object.keys(CAWgeoJSON_spots).length > 0 && Object.keys(CAWgeoJSON_locations).length > 0){
-			// if (Object.keys(CAWgeoJSON_locations).length > 0){
 				generateMapbox();
 				console.debug('now.')
 				clearInterval(preflightcheck);
@@ -718,7 +717,21 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						TabContainer.innerHTML = TabContent;
 
 					}
-					
+				} else if (CAWdata.acf.location_id === '') {
+					// 👉 SPOTS
+					let content_orari = (current_lang == 'en') ? CAWdata.acf.orari_evento_eng : CAWdata.acf.orari_evento_it;
+					if (typeof(content_orari) === 'undefined') { content_orari = '-' };
+					TabContent += `
+						<h2 class="title-tabcontent heading-line">${CAWdata.title.rendered}</h2>
+						<p class="small-tabcontent">
+							<span>${content_orari}</span>
+							<span style="margin-bottom:12px;">${CAWdata.acf.location.street_name}, ${CAWdata.acf.location.street_number}</span>
+						</p>
+					`;						
+					TabContent += `
+						<div class="content-tabcontent">${content_tabcontent}</div>
+					`;
+					TabContainer.innerHTML = TabContent;
 				} else { 
 					// 👉 SIMPLE POSTS/PAGES:
 					GA4pageTitle += '/'+CAWdata.slug;
