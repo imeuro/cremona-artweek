@@ -719,7 +719,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					}
 				} else if (CAWdata.acf.location_id === '') {
 					// 👉 SPOTS
-					let content_orari = (current_lang == 'en') ? CAWdata.acf.orari_evento_eng : CAWdata.acf.orari_evento_it;
+					let content_orari = (current_lang == 'en') ? CAWdata.acf.orari_evento_en : CAWdata.acf.orari_evento_it;
 					if (typeof(content_orari) === 'undefined') { content_orari = '-' };
 					TabContent += `
 						<h2 class="title-tabcontent heading-line">${CAWdata.title.rendered}</h2>
