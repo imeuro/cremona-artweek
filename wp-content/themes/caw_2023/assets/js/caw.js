@@ -622,9 +622,12 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					    el.acf.testo_eng.indexOf("<h3>") + 4, 
 					    el.acf.testo_eng.lastIndexOf("</h3>")
 					);
-					let engtext = '<p>'+el.acf.testo_eng.replace("<h3>"+engtitle+"</h3>",'')+'</p>';
-					console.debug(engtitle);
-					console.debug(engtext);
+					let engtext = JSON.stringify(el.acf.testo_eng);
+					engtext = engtext.replace("\r\n\r\n",'</p><p>');
+					engtext = engtext.replace("\r\n",'<br />');
+					engtext = '<p>'+el.acf.testo_eng.replace("<h3>"+engtitle+"</h3>",'')+'</p>';
+					// console.debug(engtitle);
+					// console.debug(engtext);
 
 					let event_content = current_lang == 'en' ? engtext : el.content.rendered;
 					let event_title = current_lang == 'en' ? engtitle : el.title.rendered;
@@ -687,7 +690,20 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 
 			} 
 			else { // LOCATIONS & SIMPLE POSTS/PAGES:
-				const content_tabcontent = (current_lang == 'en' && CAWdata.acf.testo_eng) ? CAWdata.acf.testo_eng : CAWdata.content.rendered;
+				let engtext = '';
+				if (current_lang == 'en' && CAWdata.acf.testo_eng) {
+					engtext = JSON.stringify(CAWdata.acf.testo_eng);
+					let engtitle = CAWdata.acf.testo_eng.substring(
+					    CAWdata.acf.testo_eng.indexOf("<h3>") + 4, 
+					    CAWdata.acf.testo_eng.lastIndexOf("</h3>")
+					);
+					engtext = engtext.replace("\r\n\r\n",'</p><p>');
+					engtext = engtext.replace("\r\n",'<br />');
+					engtext = '<p>'+CAWdata.acf.testo_eng.replace("<h3>"+engtitle+"</h3>",'')+'</p>';
+					console.debug(engtext);
+				}
+
+				const content_tabcontent = (current_lang == 'en' && CAWdata.acf.testo_eng) ? engtext : CAWdata.content.rendered;
 				//console.debug(CAWdata);
 				if (CAWdata.acf.location_id) {
 					// 👉 LOCATIONS
