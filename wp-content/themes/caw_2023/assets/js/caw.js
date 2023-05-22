@@ -482,6 +482,30 @@ evlist.forEach((ev) => {
 })
 
 
+const formatACFText = (fieldName) => {
+	let engtext = fieldName;
+	// console.debug(typeof(engtext));
+
+	let engtitle = engtext.substring(
+		engtext.indexOf("<h3>") + 4, 
+		engtext.lastIndexOf("</h3>")
+	);
+
+	if (current_lang == 'en' && engtext) {
+
+		// console.debug('pre -',engtext);
+		newengtext = engtext.replace(/(?:\r\n|\r|\n)/g, "<br>");
+		// console.debug('post -',newengtext);
+		if (engtitle != "") {
+			newengtext = '<p>'+newengtext.replace("<h3>"+engtitle+"</h3>",'')+'</p>';
+		} else {
+			newengtext = '<p>'+engtext+'</p>';
+		}
+
+	}
+	return newengtext;
+}
+
 
 // HELPER FUNCTIONS ENDS HERE
 // __________________________
@@ -622,12 +646,15 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					    el.acf.testo_eng.indexOf("<h3>") + 4, 
 					    el.acf.testo_eng.lastIndexOf("</h3>")
 					);
-					let engtext = JSON.stringify(el.acf.testo_eng);
+					// let engtext = JSON.stringify(el.acf.testo_eng);
+					let engtext = el.acf.testo_eng;
+					console.debug('pre -',engtext);
 					engtext = engtext.replace("\r\n\r\n",'</p><p>');
-					engtext = engtext.replace("\r\n",'<br />');
-					engtext = '<p>'+el.acf.testo_eng.replace("<h3>"+engtitle+"</h3>",'')+'</p>';
-					// console.debug(engtitle);
-					// console.debug(engtext);
+					engtext = engtext.replace("\r\n", "<br>");
+					console.debug('post -',engtext);
+					engtext = '<p>'+engtext.replace("<h3>"+engtitle+"</h3>",'')+'</p>';
+					console.debug(engtitle);
+					console.debug(engtext);
 
 					let event_content = current_lang == 'en' ? engtext : el.content.rendered;
 					let event_title = current_lang == 'en' ? engtitle : el.title.rendered;
@@ -661,7 +688,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					let TabTitle = current_lang == 'en' ? 'Artists' : 'Artisti';
 					TabContent += ` <h2 class="title-tabcontent heading-line">${TabTitle}</h2>`;
 					Object.values(CAWdata).forEach(el => {
-						const content_tabcontent = (itemID == 500 && el.acf.testo_eng) ? '<p>'+el.acf.testo_eng+'</p>' : el.content.rendered;
+						const content_tabcontent = (el.acf.testo_eng) ? formatACFText(el.acf.testo_eng) : el.content.rendered;
 
 						TabContent += `
 							<div class="caw-listing-item caw listing-artisti" id="${el.slug}">`;
@@ -690,20 +717,8 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 
 			} 
 			else { // LOCATIONS & SIMPLE POSTS/PAGES:
-				let engtext = '';
-				if (current_lang == 'en' && CAWdata.acf.testo_eng) {
-					engtext = JSON.stringify(CAWdata.acf.testo_eng);
-					let engtitle = CAWdata.acf.testo_eng.substring(
-					    CAWdata.acf.testo_eng.indexOf("<h3>") + 4, 
-					    CAWdata.acf.testo_eng.lastIndexOf("</h3>")
-					);
-					engtext = engtext.replace("\r\n\r\n",'</p><p>');
-					engtext = engtext.replace("\r\n",'<br />');
-					engtext = '<p>'+CAWdata.acf.testo_eng.replace("<h3>"+engtitle+"</h3>",'')+'</p>';
-					console.debug(engtext);
-				}
+				const content_tabcontent = (current_lang == 'en' && CAWdata.acf.testo_eng) ? formatACFText(CAWdata.acf.testo_eng) : CAWdata.content.rendered;
 
-				const content_tabcontent = (current_lang == 'en' && CAWdata.acf.testo_eng) ? engtext : CAWdata.content.rendered;
 				//console.debug(CAWdata);
 				if (CAWdata.acf.location_id) {
 					// 👉 LOCATIONS
@@ -711,6 +726,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					GA4pageTitle = 'location/'+CAWdata.acf.location_id;
 					function printLocationsTab () {
 						console.debug(art_display.length+' artists displaying here', art_display);
+
 						TabContent += `
 							<h2 class="title-tabcontent heading-line">${CAWdata.acf.location_id}. ${CAWdata.title.rendered}</h2>
 							<p class="small-tabcontent">
@@ -729,9 +745,13 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 							for (let i = 0; i < art_display.length; i++) {
 							TabContent += `
 								<div class="content-tabcontent content-artdisplay" id="artist-${art_display[i].slug}">
-									${art_display[i].content}
+									${formatACFText(art_display[i].content)}
 								</div>`;
+
+							// console.debug('ooooo',art_display[i].content);
+							// console.debug('xxxxx',formatACFText(art_display[i].content));
 							}
+
 						TabContainer.innerHTML = TabContent;
 
 					}
