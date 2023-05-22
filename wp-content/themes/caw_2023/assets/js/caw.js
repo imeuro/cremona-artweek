@@ -494,7 +494,7 @@ const formatACFText = (fieldName) => {
 	if (current_lang == 'en' && engtext) {
 
 		// console.debug('pre -',engtext);
-		newengtext = engtext.replace(/(?:\r\n|\r|\n)/g, "<br>");
+		let newengtext = engtext.replace(/(?:\r\n|\r|\n)/g, "<br>");
 		// console.debug('post -',newengtext);
 		if (engtitle != "") {
 			newengtext = '<p>'+newengtext.replace("<h3>"+engtitle+"</h3>",'')+'</p>';
@@ -502,6 +502,8 @@ const formatACFText = (fieldName) => {
 			newengtext = '<p>'+engtext+'</p>';
 		}
 
+	} else {
+		newengtext = engtext
 	}
 	return newengtext;
 }
