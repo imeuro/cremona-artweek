@@ -386,16 +386,11 @@ button.menu-toggle:after {
 .caw-popup .mapboxgl-popup-tip {
 	border: none;
 }
-.mapboxgl-control-container .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl.mapboxgl-ctrl-group {
-    margin-right: 40px;
-    box-shadow: none;
-}
 .mapboxgl-control-container .mapboxgl-ctrl-group button,
 .mapboxgl-control-container .mapboxgl-ctrl-group button:first-child,
 .mapboxgl-control-container .mapboxgl-ctrl-group button:last-child {
     border: none;
     border-radius: 0;
-    /* background: #f00; */
 }
 
 #caw-content {

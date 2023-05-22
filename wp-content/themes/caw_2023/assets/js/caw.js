@@ -24,7 +24,9 @@ const generateMapbox = () => {
 		glyphs: 'mapbox://fonts/meuro/OPS%20Placard%20Regular/0-255.pbf',
 		// cooperativeGestures: true,
 	});
-	map.addControl(new mapboxgl.NavigationControl(),'bottom-right');
+	if (window.innerWidth>600) {
+		map.addControl(new mapboxgl.NavigationControl(),'bottom-right');
+	}
 	// Add geolocate control to the map.
 	map.addControl(
 		new mapboxgl.GeolocateControl({
@@ -494,11 +496,12 @@ const formatACFText = (fieldName) => {
 
 	if (current_lang == 'en' && engtext) {
 
-		// console.debug('pre -',engtext);
-		newengtext = engtext.replace(/(?:\r\n|\r|\n)/g, "<br>");
+		console.debug('pre -',engtext);
+		newengtext = engtext.replace(/(?:\n\n)/g, "</p><p>");
+		newengtext = newengtext.replace(/(?:\r\n|\r|\n)/g, "<br>");
 		// console.debug('post -',newengtext);
 		if (engtitle != "") {
-			newengtext = '<p>'+newengtext.replace("<h3>"+engtitle+"</h3>",'')+'</p>';
+			newengtext = '<p>ww'+newengtext.replace("<h3>"+engtitle+"</h3><br>",'')+'</p>';
 		} else {
 			newengtext = '<p>'+engtext+'</p>';
 		}
@@ -645,21 +648,24 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					}
 					let EVend_date = EVstart_date!=EVend_day ? EVend_day + '.' + EVend_paddedMonth + ' ' : '';
 
+					// let engtitle = el.acf.testo_eng.substring(
+					//     el.acf.testo_eng.indexOf("<h3>") + 4, 
+					//     el.acf.testo_eng.lastIndexOf("</h3>")
+					// );
+					// let engtext = el.acf.testo_eng;
+					// console.debug('pre -',engtext);
+					// engtext = engtext.replace("\r\n\r\n",'</p><p>');
+					// engtext = engtext.replace("\r\n", "<br>");
+					// console.debug('post -',engtext);
+					// engtext = '<p>'+engtext.replace("<h3>"+engtitle+"</h3>",'')+'</p>';
+					// console.debug(engtitle);
+					// console.debug(engtext);
+					let event_text = formatACFText(el.acf.testo_eng);
 					let engtitle = el.acf.testo_eng.substring(
 					    el.acf.testo_eng.indexOf("<h3>") + 4, 
 					    el.acf.testo_eng.lastIndexOf("</h3>")
 					);
-					// let engtext = JSON.stringify(el.acf.testo_eng);
-					let engtext = el.acf.testo_eng;
-					console.debug('pre -',engtext);
-					engtext = engtext.replace("\r\n\r\n",'</p><p>');
-					engtext = engtext.replace("\r\n", "<br>");
-					console.debug('post -',engtext);
-					engtext = '<p>'+engtext.replace("<h3>"+engtitle+"</h3>",'')+'</p>';
-					console.debug(engtitle);
-					console.debug(engtext);
-
-					let event_content = current_lang == 'en' ? engtext : el.content.rendered;
+					let event_content = current_lang == 'en' ? event_text : el.content.rendered;
 					let event_title = current_lang == 'en' ? engtitle : el.title.rendered;
 
 					TabContent += `

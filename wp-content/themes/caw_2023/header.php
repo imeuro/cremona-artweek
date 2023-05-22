@@ -39,6 +39,8 @@
 
 	<style>
 		.mapboxgl-control-container .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl.mapboxgl-ctrl-group { margin-right: 40px; box-shadow: none; }
+		.mapboxgl-ctrl.mapboxgl-ctrl-attrib { height:20px; display:none; }
+/*		.mapboxgl-control-container .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl.mapboxgl-ctrl-group:nth-child(2) {display: none}*/
 	</style>
 </head>
 
