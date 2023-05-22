@@ -484,6 +484,7 @@ evlist.forEach((ev) => {
 
 const formatACFText = (fieldName) => {
 	let engtext = fieldName;
+	let newengtext = '';
 	// console.debug(typeof(engtext));
 
 	let engtitle = engtext.substring(
@@ -494,7 +495,7 @@ const formatACFText = (fieldName) => {
 	if (current_lang == 'en' && engtext) {
 
 		// console.debug('pre -',engtext);
-		let newengtext = engtext.replace(/(?:\r\n|\r|\n)/g, "<br>");
+		newengtext = engtext.replace(/(?:\r\n|\r|\n)/g, "<br>");
 		// console.debug('post -',newengtext);
 		if (engtitle != "") {
 			newengtext = '<p>'+newengtext.replace("<h3>"+engtitle+"</h3>",'')+'</p>';
