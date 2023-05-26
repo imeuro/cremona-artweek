@@ -201,14 +201,6 @@ const generateMapbox = () => {
 				}
 			})
 
-			// const popup = new mapboxgl.Popup({ 
-			// 	anchor: 'top-left',
-			// 	offset: [20, -30],
-			// 	className: 'caw-popup',
-			// 	closeButton: false,
-			// 	maxWidth: '400px',
-			// })
-
 			let readmorelink;
 			let coords = [];
 			map.on('mouseenter', 'spots', (event) => {
@@ -226,33 +218,10 @@ const generateMapbox = () => {
 
 				coords = feature.geometry.coordinates;
 
-				// Create a popup, specify its options 
-				// and properties, and add it to the map.
-				// const setPopupContent = () => {
-				// 	console.debug('art_display',art_display);
-				// 	let artists = '';
-				// 	if (window.innerWidth>600) {
-				// 		for (var i = 0; i < art_display.length; i++) {
-				// 			artists += art_display[i].title;
-				// 			if (i < art_display.length-1) {
-				// 				artists += '<br/>';
-				// 			}
-				// 		}
-				// 		popup.setLngLat(feature.geometry.coordinates)
-				// 		.setHTML(
-				// 			`<p>${feature.properties.title}<br><small style="line-height:8px; display:inline.block">${artists}</small></p>
-				// 			`
-				// 		)
-				// 		.addTo(map);
-				// 		console.debug({artists})
-				// 	}
-				// }
-				// get_artists_for_location_id ( feature, readmorelink, setPopupContent );
 			});
 
 			map.on('mouseleave', 'spots', () => {
 				map.getCanvas().style.cursor = '';
-				// popup.remove();
 			});
 
 			map.on('click', 'spots', () => {
@@ -733,12 +702,16 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					// 👉 LOCATIONS
 					get_artists_for_location_id (CAWdata, CAWdata.id, printLocationsTab);
 					GA4pageTitle = 'location/'+CAWdata.acf.location_id;
+					let content_orari = (current_lang == 'en') ? CAWdata.acf.orari_evento_en : CAWdata.acf.orari_evento_it;
+					if (typeof(content_orari) === 'undefined') { content_orari = '-' };
+
 					function printLocationsTab () {
 						console.debug(art_display.length+' artists displaying here', art_display);
 
 						TabContent += `
 							<h2 class="title-tabcontent heading-line">${CAWdata.acf.location_id}. ${CAWdata.title.rendered}</h2>
 							<p class="small-tabcontent">
+								<span>${content_orari}</span>
 								<span style="margin-bottom:12px;">${CAWdata.acf.location.street_name}, ${CAWdata.acf.location.street_number}</span>
 								<span>`;
 						for (let i = 0; i < art_display.length; i++) {
