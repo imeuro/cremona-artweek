@@ -21,7 +21,7 @@ class PLL_Frontend_Nav_Menu extends PLL_Nav_Menu {
 	 *
 	 * @since 1.2
 	 *
-	 * @param object $polylang
+	 * @param object $polylang The Polylang object.
 	 */
 	public function __construct( &$polylang ) {
 		parent::__construct( $polylang );
@@ -251,7 +251,7 @@ class PLL_Frontend_Nav_Menu extends PLL_Nav_Menu {
 						$infos = $this->explode_location( $loc );
 						if ( $infos['lang'] === $this->curlang->slug ) {
 							$menus[ $infos['location'] ] = (int) $value;
-						} elseif ( $this->curlang->slug === $this->options['default_lang'] ) {
+						} elseif ( $this->curlang->is_default ) {
 							$menus[ $loc ] = (int) $value;
 						}
 					}
@@ -262,12 +262,12 @@ class PLL_Frontend_Nav_Menu extends PLL_Nav_Menu {
 	}
 
 	/**
-	 * Attempt to translate the nav menu when it is hardcoded or when no location is defined in wp_nav_menu
+	 * Attempts to translate the nav menu when it is hardcoded or when no location is defined in wp_nav_menu().
 	 *
 	 * @since 1.7.10
 	 *
-	 * @param array $args
-	 * @return array modified $args
+	 * @param array $args Array of `wp_nav_menu()` arguments.
+	 * @return array
 	 */
 	public function wp_nav_menu_args( $args ) {
 		$theme = get_option( 'stylesheet' );

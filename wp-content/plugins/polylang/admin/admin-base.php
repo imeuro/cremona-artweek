@@ -75,6 +75,10 @@ abstract class PLL_Admin_Base extends PLL_Base {
 		add_action( 'admin_print_footer_scripts', array( $this, 'admin_print_footer_scripts' ), 0 ); // High priority in case an ajax request is sent by an immediately invoked function
 
 		add_action( 'customize_controls_enqueue_scripts', array( $this, 'customize_controls_enqueue_scripts' ) );
+
+		// Early instantiated to be able to correctly initialize language properties.
+		$this->static_pages = new PLL_Admin_Static_Pages( $this );
+		$this->model->set_languages_ready();
 	}
 
 	/**
@@ -91,12 +95,11 @@ abstract class PLL_Admin_Base extends PLL_Base {
 		$this->default_term = new PLL_Admin_Default_Term( $this );
 		$this->default_term->add_hooks();
 
-		if ( ! $this->model->get_languages_list() ) {
+		if ( ! $this->model->has_languages() ) {
 			return;
 		}
 
 		$this->links = new PLL_Admin_Links( $this ); // FIXME needed here ?
-		$this->static_pages = new PLL_Admin_Static_Pages( $this ); // FIXME needed here ?
 		$this->filters_links = new PLL_Filters_Links( $this ); // FIXME needed here ?
 
 		// Filter admin language for users
@@ -122,7 +125,7 @@ abstract class PLL_Admin_Base extends PLL_Base {
 		$tabs = array( 'lang' => __( 'Languages', 'polylang' ) );
 
 		// Only if at least one language has been created
-		if ( $this->model->get_languages_list() ) {
+		if ( $this->model->has_languages() ) {
 			$tabs['strings'] = __( 'Translations', 'polylang' );
 		}
 
@@ -170,22 +173,22 @@ abstract class PLL_Admin_Base extends PLL_Base {
 		 * For each script:
 		 * 0 => the pages on which to load the script
 		 * 1 => the scripts it needs to work
-		 * 2 => 1 if loaded even if languages have not been defined yet, 0 otherwise
-		 * 3 => 1 if loaded in footer
+		 * 2 => true if loaded even if languages have not been defined yet, false otherwise
+		 * 3 => true if loaded in footer
 		 */
 		$scripts = array(
-			'user'    => array( array( 'profile', 'user-edit' ), array( 'jquery' ), 0, 0 ),
-			'widgets' => array( array( 'widgets' ), array( 'jquery' ), 0, 0 ),
+			'user'    => array( array( 'profile', 'user-edit' ), array( 'jquery' ), false, false ),
+			'widgets' => array( array( 'widgets' ), array( 'jquery' ), false, false ),
 		);
 
 		$block_screens = array( 'widgets', 'site-editor' );
 
 		if ( ! empty( $screen->post_type ) && $this->model->is_translated_post_type( $screen->post_type ) ) {
-			$scripts['post'] = array( array( 'edit', 'upload' ), array( 'jquery', 'wp-ajax-response' ), 0, 1 );
+			$scripts['post'] = array( array( 'edit', 'upload' ), array( 'jquery', 'wp-ajax-response' ), false, true );
 
 			// Classic editor.
 			if ( ! method_exists( $screen, 'is_block_editor' ) || ! $screen->is_block_editor() ) {
-				$scripts['classic-editor'] = array( array( 'post', 'media', 'async-upload' ), array( 'jquery', 'wp-ajax-response', 'post', 'jquery-ui-dialog', 'wp-i18n' ), 0, 1 );
+				$scripts['classic-editor'] = array( array( 'post', 'media', 'async-upload' ), array( 'jquery', 'wp-ajax-response', 'post', 'jquery-ui-dialog', 'wp-i18n' ), false, true );
 			}
 
 			// Block editor with legacy metabox in WP 5.0+.
@@ -193,15 +196,15 @@ abstract class PLL_Admin_Base extends PLL_Base {
 		}
 
 		if ( $this->is_block_editor( $screen ) ) {
-			$scripts['block-editor'] = array( $block_screens, array( 'jquery', 'wp-ajax-response', 'wp-api-fetch', 'jquery-ui-dialog', 'wp-i18n' ), 0, 1 );
+			$scripts['block-editor'] = array( $block_screens, array( 'jquery', 'wp-ajax-response', 'wp-api-fetch', 'jquery-ui-dialog', 'wp-i18n' ), false, true );
 		}
 
 		if ( ! empty( $screen->taxonomy ) && $this->model->is_translated_taxonomy( $screen->taxonomy ) ) {
-			$scripts['term'] = array( array( 'edit-tags', 'term' ), array( 'jquery', 'wp-ajax-response', 'jquery-ui-autocomplete' ), 0, 1 );
+			$scripts['term'] = array( array( 'edit-tags', 'term' ), array( 'jquery', 'wp-ajax-response', 'jquery-ui-autocomplete' ), false, true );
 		}
 
 		foreach ( $scripts as $script => $v ) {
-			if ( in_array( $screen->base, $v[0] ) && ( $v[2] || $this->model->get_languages_list() ) ) {
+			if ( in_array( $screen->base, $v[0] ) && ( $v[2] || $this->model->has_languages() ) ) {
 				wp_enqueue_script( 'pll_' . $script, plugins_url( '/js/build/' . $script . $suffix . '.js', POLYLANG_ROOT_FILE ), $v[1], POLYLANG_VERSION, $v[3] );
 				if ( 'classic-editor' === $script || 'block-editor' === $script ) {
 					wp_set_script_translations( 'pll_' . $script, 'polylang' );
@@ -236,7 +239,7 @@ abstract class PLL_Admin_Base extends PLL_Base {
 	 * @return void
 	 */
 	public function customize_controls_enqueue_scripts() {
-		if ( $this->model->get_languages_list() ) {
+		if ( $this->model->has_languages() ) {
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 			wp_enqueue_script( 'pll_widgets', plugins_url( '/js/build/widgets' . $suffix . '.js', POLYLANG_ROOT_FILE ), array( 'jquery' ), POLYLANG_VERSION, true );
 			$this->add_inline_scripts();
@@ -299,10 +302,19 @@ abstract class PLL_Admin_Base extends PLL_Base {
 			$params = array_merge( $params, array( 'pll_term_id' => (int) $tag_ID ) );
 		}
 
+		/**
+		 * Filters the list of parameters to add to the admin ajax request.
+		 *
+		 * @since 3.4.5
+		 *
+		 * @param array $params List of parameters to add to the admin ajax request.
+		 */
+		$params = apply_filters( 'pll_admin_ajax_params', $params );
+
 		$str = http_build_query( $params );
 		$arr = wp_json_encode( $params );
 		?>
-		<script type="text/javascript">
+		<script>
 			if (typeof jQuery != 'undefined') {
 				jQuery(
 					function( $ ){
@@ -433,7 +445,7 @@ abstract class PLL_Admin_Base extends PLL_Base {
 		$this->filter_lang = $this->model->get_language( get_user_meta( get_current_user_id(), 'pll_filter_content', true ) );
 
 		// Set preferred language for use when saving posts and terms: must not be empty
-		$this->pref_lang = empty( $this->filter_lang ) ? $this->model->get_language( $this->options['default_lang'] ) : $this->filter_lang;
+		$this->pref_lang = empty( $this->filter_lang ) ? $this->model->get_default_language() : $this->filter_lang;
 
 		/**
 		 * Filters the preferred language on admin side.
@@ -459,7 +471,7 @@ abstract class PLL_Admin_Base extends PLL_Base {
 	 *
 	 * @since 1.6.5
 	 *
-	 * @param array $qvars
+	 * @param array $qvars The array of requested query variables.
 	 * @return array
 	 */
 	public function request( $qvars ) {
@@ -489,7 +501,7 @@ abstract class PLL_Admin_Base extends PLL_Base {
 
 		$title = sprintf(
 			'<span class="ab-label"%1$s><span class="screen-reader-text">%2$s</span>%3$s</span>',
-			'all' === $selected->slug ? '' : sprintf( ' lang="%s"', esc_attr( $selected->get_locale( 'display' ) ) ),
+			$selected instanceof PLL_Language ? sprintf( ' lang="%s"', esc_attr( $selected->get_locale( 'display' ) ) ) : '',
 			__( 'Filters content by language', 'polylang' ),
 			esc_html( $selected->name )
 		);

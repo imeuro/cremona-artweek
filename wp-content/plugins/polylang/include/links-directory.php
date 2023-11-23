@@ -28,45 +28,45 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 		parent::__construct( $model );
 
 		$this->home_relative = home_url( '/', 'relative' );
-
-		if ( did_action( 'pll_init' ) ) {
-			$this->init();
-		} else {
-			add_action( 'pll_init', array( $this, 'init' ) );
-		}
 	}
 
 	/**
-	 * Called only at first object creation to avoid duplicating filters when switching blog.
+	 * Adds hooks for rewrite rules.
 	 *
 	 * @since 1.6
 	 *
 	 * @return void
 	 */
 	public function init() {
+		add_action( 'pll_prepare_rewrite_rules', array( $this, 'prepare_rewrite_rules' ) ); // Ensure it's hooked before `self::do_prepare_rewrite_rules()` is called.
+
+		parent::init();
+
 		if ( did_action( 'setup_theme' ) ) {
 			$this->add_permastruct();
 		} else {
 			add_action( 'setup_theme', array( $this, 'add_permastruct' ), 2 );
 		}
-
-		// Make sure to prepare rewrite rules when flushing.
-		add_action( 'pre_option_rewrite_rules', array( $this, 'prepare_rewrite_rules' ) );
 	}
 
 	/**
 	 * Adds the language code in a url.
 	 *
 	 * @since 1.2
+	 * @since 3.4 Accepts now a language slug.
 	 *
-	 * @param string             $url  The url to modify.
-	 * @param PLL_Language|false $lang The language object.
+	 * @param string                    $url      The url to modify.
+	 * @param PLL_Language|string|false $language Language object or slug.
 	 * @return string The modified url.
 	 */
-	public function add_language_to_link( $url, $lang ) {
-		if ( ! empty( $lang ) ) {
+	public function add_language_to_link( $url, $language ) {
+		if ( $language instanceof PLL_Language ) {
+			$language = $language->slug;
+		}
+
+		if ( ! empty( $language ) ) {
 			$base = $this->options['rewrite'] ? '' : 'language/';
-			$slug = $this->options['default_lang'] == $lang->slug && $this->options['hide_default'] ? '' : $base . $lang->slug . '/';
+			$slug = $this->options['default_lang'] === $language && $this->options['hide_default'] ? '' : $base . $language . '/';
 			$root = ( false === strpos( $url, '://' ) ) ? $this->home_relative . $this->root : preg_replace( '#^https?://#', '://', $this->home . '/' . $this->root );
 
 			if ( false === strpos( $url, $new = $root . $slug ) ) {
@@ -87,13 +87,12 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 	 * @return string The modified url.
 	 */
 	public function remove_language_from_link( $url ) {
-		$languages = array();
-
-		foreach ( $this->model->get_languages_list() as $language ) {
-			if ( ! $this->options['hide_default'] || $this->options['default_lang'] != $language->slug ) {
-				$languages[] = $language->slug;
-			}
-		}
+		$languages = $this->model->get_languages_list(
+			array(
+				'hide_default' => $this->options['hide_default'],
+				'fields'       => 'slug',
+			)
+		);
 
 		if ( ! empty( $languages ) ) {
 			$root = ( false === strpos( $url, '://' ) ) ? $this->home_relative . $this->root : preg_replace( '#^https?://#', '://', $this->home . '/' . $this->root );
@@ -132,13 +131,18 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 	 * Returns the home url in a given language.
 	 *
 	 * @since 1.3.1
+	 * @since 3.4 Accepts now a language slug.
 	 *
-	 * @param PLL_Language $lang The language object.
+	 * @param PLL_Language|string $language Language object or slug.
 	 * @return string
 	 */
-	public function home_url( $lang ) {
+	public function home_url( $language ) {
+		if ( $language instanceof PLL_Language ) {
+			$language = $language->slug;
+		}
+
 		$base = $this->options['rewrite'] ? '' : 'language/';
-		$slug = $this->options['default_lang'] == $lang->slug && $this->options['hide_default'] ? '' : '/' . $this->root . $base . $lang->slug;
+		$slug = $this->options['default_lang'] === $language && $this->options['hide_default'] ? '' : '/' . $this->root . $base . $language;
 		return trailingslashit( $this->home . $slug );
 	}
 
@@ -151,7 +155,7 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 	 */
 	public function add_permastruct() {
 		// Language information always in front of the uri ( 'with_front' => false ).
-		if ( $this->model->get_languages_list() ) {
+		if ( $this->model->has_languages() ) {
 			add_permastruct( 'language', $this->options['rewrite'] ? '%language%' : 'language/%language%', array( 'with_front' => false ) );
 		}
 	}
@@ -160,26 +164,25 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 	 * Prepares the rewrite rules filters.
 	 *
 	 * @since 0.8.1
+	 * @since 3.5 Hooked to `pll_prepare_rewrite_rules` and remove `$pre` parameter.
 	 *
-	 * @param mixed $pre Not used as the filter is used as an action.
-	 * @return mixed
+	 * @return void
 	 */
-	public function prepare_rewrite_rules( $pre ) {
+	public function prepare_rewrite_rules() {
 		/*
 		 * Don't modify the rules if there is no languages created yet and make sure
 		 * to add the filters only once and if all custom post types and taxonomies
 		 * have been registered.
 		 */
-		if ( $this->model->get_languages_list() && did_action( 'wp_loaded' ) && ! has_filter( 'language_rewrite_rules', '__return_empty_array' ) ) {
-			add_filter( 'language_rewrite_rules', '__return_empty_array' ); // Suppress the rules created by WordPress for our taxonomy.
-
-			foreach ( $this->get_rewrite_rules_filters() as $type ) {
-				add_filter( $type . '_rewrite_rules', array( $this, 'rewrite_rules' ) );
-			}
-
-			add_filter( 'rewrite_rules_array', array( $this, 'rewrite_rules' ) ); // Needed for post type archives.
+		if ( ! $this->model->has_languages() || ! did_action( 'wp_loaded' ) || ! self::$can_filter_rewrite_rules ) {
+			return;
 		}
-		return $pre;
+
+		add_filter( 'language_rewrite_rules', '__return_empty_array' ); // Suppress the rules created by WordPress for our taxonomy.
+
+		foreach ( $this->get_rewrite_rules_filters_with_callbacks() as $rule => $callback ) {
+			add_filter( $rule, $callback );
+		}
 	}
 
 	/**
@@ -275,5 +278,40 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 		}
 
 		return $newrules;
+	}
+
+	/**
+	 * Removes hooks to filter rewrite rules, called when switching blog @see {PLL_Base::switch_blog()}.
+	 * See `self::prepare_rewrite_rules()` for added hooks.
+	 *
+	 * @since 3.5
+	 *
+	 * @return void
+	 */
+	public function remove_filters() {
+		parent::remove_filters();
+
+		foreach ( $this->get_rewrite_rules_filters_with_callbacks() as $rule => $callback ) {
+			remove_filter( $rule, $callback );
+		}
+	}
+
+	/**
+	 * Returns *all* rewrite rules filters with their associated callbacks.
+	 *
+	 * @since 3.5
+	 *
+	 * @return callable[] Array of hook names as key and callbacks as values.
+	 */
+	protected function get_rewrite_rules_filters_with_callbacks() {
+		$filters = array(
+			'rewrite_rules_array'    => array( $this, 'rewrite_rules' ), // Needed for post type archives.
+		);
+
+		foreach ( $this->get_rewrite_rules_filters() as $type ) {
+			$filters[ $type . '_rewrite_rules' ] = array( $this, 'rewrite_rules' );
+		}
+
+		return $filters;
 	}
 }

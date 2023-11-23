@@ -145,10 +145,36 @@ function initMetaboxAutoComplete() {
 	);
 }
 
+;// CONCATENATED MODULE: ./js/src/lib/filter-path-middleware.js
+/**
+ * @package Polylang
+ */
+
+/**
+ * Filters requests for translatable entities.
+ * This logic is shared accross all Polylang plugins.
+ *
+ * @since 3.5
+ *
+ * @param {APIFetchOptions} options
+ * @param {Array} filteredRoutes
+ * @param {CallableFunction} filter
+ * @returns {APIFetchOptions}
+ */
+const filterPathMiddleware = ( options, filteredRoutes, filter ) => {
+	const cleanPath = options.path.split( '?' )[0].replace(/^\/+|\/+$/g, ''); // Get path without query parameters and trim '/'.
+
+	return Object.values( filteredRoutes ).find( ( path ) => cleanPath === path ) ? filter( options ) : options;
+}
+
+/* harmony default export */ const filter_path_middleware = (filterPathMiddleware);
+
 ;// CONCATENATED MODULE: ./js/src/block-editor.js
 /**
  * @package Polylang
  */
+
+
 
 
 
@@ -161,17 +187,15 @@ function initMetaboxAutoComplete() {
  */
 wp.apiFetch.use(
 	function( options, next ) {
-		// If options.url is defined, this is not a REST request but a direct call to post.php for legacy metaboxes.
-		if ( 'undefined' === typeof options.url ) {
-			if ( 'undefined' === typeof options.data || null === options.data ) {
-				// GET
-				options.path += ( ( options.path.indexOf( '?' ) >= 0 ) ? '&lang=' : '?lang=' ) + getCurrentLanguage();
-			} else {
-				// PUT, POST
-				options.data.lang = getCurrentLanguage();
-			}
+		/*
+		 * If options.url is defined, this is not a REST request but a direct call to post.php for legacy metaboxes.
+		 * If `filteredRoutes` is not defined, return early.
+		 */
+		if ( 'undefined' !== typeof options.url || 'undefined' === typeof pllFilteredRoutes ) {
+			return next( options );
 		}
-		return next( options );
+
+		return next( filter_path_middleware( options, pllFilteredRoutes, addLanguageParameter ) );
 	}
 );
 
@@ -190,6 +214,26 @@ function getCurrentLanguage() {
 	}
 
 	return lang.value;
+}
+
+/**
+ * Adds language parameter according to the current one (query string for GET, body for PUT and POST).
+ *
+ * @since 3.5
+ *
+ * @param {APIFetchOptions} options
+ * @returns {APIFetchOptions}
+ */
+function addLanguageParameter ( options ) {
+	if ( 'undefined' === typeof options.data || null === options.data ) {
+		// GET
+		options.path += ( ( options.path.indexOf( '?' ) >= 0 ) ? '&lang=' : '?lang=' ) + getCurrentLanguage();
+	} else {
+		// PUT, POST
+		options.data.lang = getCurrentLanguage();
+	}
+
+	return options;
 }
 
 /**
@@ -216,20 +260,18 @@ jQuery(
 		$( '.post_lang_choice' ).on(
 			'change',
 			function( event ) {
-				const select = wp.data.select;
-				const dispatch = wp.data.dispatch;
-				const subscribe = wp.data.subscribe;
-				const emptyPost = isEmptyPost();
+				const { select, dispatch, subscribe } = wp.data;
+				const emptyPost                       = isEmptyPost();
+				const { addQueryArgs }                = wp.url;
 
 				// Initialize the confirmation dialog box.
-				const confirmationModal = initializeConfimationModal();
+				const confirmationModal            = initializeConfimationModal();
 				const { dialogContainer : dialog } = confirmationModal;
-				let { dialogResult } = confirmationModal;
-				// The selected option in the dropdown list.
-				const selectedOption = event.target;
+				let { dialogResult }               = confirmationModal;
+				const selectedOption               = event.target; // The selected option in the dropdown list.
 
 				// Specific case for empty posts.
-				// Place at the beginning because window.location changing triggers automatically page reloading.
+				// Place at the beginning because window.location change triggers automatically page reloading.
 				if ( location.pathname.match( /post-new.php/gi ) && emptyPost ) {
 					reloadPageForEmptyPost( selectedOption.value );
 				}
@@ -240,7 +282,7 @@ jQuery(
 				if ( $( this ).data( 'old-value' ) !== selectedOption.value && ! emptyPost ) {
 					dialog.dialog( 'open' );
 				} else {
-					// Update the old language with the new one to be able to compare it in the next changing.
+					// Update the old language with the new one to be able to compare it in the next change.
 					// Because the page isn't reloaded in this case.
 					initializeLanguageOldValue();
 					dialogResult = Promise.resolve();
@@ -270,12 +312,9 @@ jQuery(
 				);
 
 				function isEmptyPost() {
-					const editor = wp.data.select( 'core/editor' );
-					const title = editor.getEditedPostAttribute( 'title' ).trim();
-					const content = editor.getEditedPostAttribute( 'content' ).trim();
-					const excerpt = editor.getEditedPostAttribute( 'excerpt' ).trim();
+					const editor = select( 'core/editor' );
 
-					return ! title && ! content && ! excerpt;
+					return ! editor.getEditedPostAttribute( 'title' )?.trim() && ! editor.getEditedPostContent() && ! editor.getEditedPostAttribute( 'excerpt' )?.trim();
 				}
 
 				/**
@@ -301,21 +340,37 @@ jQuery(
 				 */
 				function blockEditorSavePostAndReloadPage() {
 
-					let unsubscribe = null;
+					let unsubscribe    = null;
+					const previousPost = select( 'core/editor').getCurrentPost();
 
 					// Listen if the savePost is completely done by subscribing to its events.
 					const savePostIsDone = new Promise(
 						function( resolve, reject ) {
 							unsubscribe = subscribe(
 								function() {
-									const isSavePostSucceeded = select( 'core/editor' ).didPostSaveRequestSucceed();
-									const isSavePostFailed = select( 'core/editor' ).didPostSaveRequestFail();
-									if ( isSavePostSucceeded || isSavePostFailed ) {
-										if ( isSavePostFailed ) {
-											reject();
-										} else {
-											resolve();
+									const post                 = select( 'core/editor').getCurrentPost();
+									const { id, status, type } = post;
+									const error                = select( 'core' )
+										.getLastEntitySaveError(
+											'postType',
+											type,
+											id
+										);
+
+									if ( error ) {
+										reject();
+									}
+
+									if ( previousPost.modified !== post.modified ) {
+
+										if ( location.pathname.match( /post-new.php/gi ) && status !== 'auto-draft' && id ) {
+											window.history.replaceState(
+												{ id },
+												'Post ' + id,
+												addQueryArgs( 'post.php', { post: id, action: 'edit' } )
+											);
 										}
+										resolve();
 									}
 								}
 							);
