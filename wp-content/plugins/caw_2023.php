@@ -255,18 +255,23 @@ add_action( 'init', 'register_my_menu' );
 
 add_filter('nav_menu_link_attributes', 'menu_post_ids', 90000, 1);
 function menu_post_ids($val){
- $postid = url_to_postid( $val['href'] );
- $lang = strpos($val['href'], '/en/') ? 'en' : 'it';
- if ( $postid === 0 && strpos($val['href'], '/en/') ) { 
- // facciamolo andare a calci..
- 	$firstpart = pll_home_url('it').'en/';
- 	$cleanpath = str_replace($firstpart,'',$val['href']);
- 	$postidARR = get_page_by_path($cleanpath);
- 	$postid = $postidARR->ID;
- }
- $val['data-postid'] = $postid;
- $val['data-lang'] = $lang;
- return $val;
+	//print_r($val['href']);
+	$postid = url_to_postid( $val['href'] );
+	$lang = strpos($val['href'], '/en/') ? 'en' : 'it';
+	//print_r($lang);
+
+	if ( $postid === 0 ) {
+	// facciamolo andare a calci..
+		$firstpart = get_site_url(get_current_blog_id()).'/'.$lang.'/';
+		$cleanpath = str_replace($firstpart,'',$val['href']);
+		$postidARR = get_page_by_path($cleanpath);
+		//print_r(get_current_site());
+		//echo $firstpart." ____ ".$cleanpath;
+		$postid = $postidARR->ID;
+	}
+	$val['data-postid'] = $postid;
+	$val['data-lang'] = $lang;
+	return $val;
 }
 
 // add_filter('nav_menu_css_class' , 'special_nav_class' , 10 , 2);
