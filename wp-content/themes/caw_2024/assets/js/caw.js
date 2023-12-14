@@ -1,4 +1,4 @@
-const Edition = "2023";
+const Edition = "2024";
 const Baseurl = ['localhost','meuro.dev'].includes(window.location.hostname) ? '/cremona-artweek' : '';
 const WPREST_Base = Baseurl+'/'+Edition+'/wp-json/wp/v2';
 const current_lang = document.body.dataset.lang;
@@ -472,7 +472,6 @@ const formatACFText = (fieldName) => {
 		console.debug('pre -',engtext);
 		newengtext = engtext.replace(/(?:\n\n)/g, "</p><p>");
 		newengtext = newengtext.replace(/(?:\r\n|\r|\n)/g, "<br>");
-		newengtext = newengtext.replace(/\[.+?]/g, "");
 		// console.debug('post -',newengtext);
 		if (engtitle != "") {
 			newengtext = '<p>'+newengtext.replace("<h3>"+engtitle+"</h3><br>",'')+'</p>';
