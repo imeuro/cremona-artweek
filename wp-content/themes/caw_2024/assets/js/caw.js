@@ -1,4 +1,5 @@
-const Edition = "2024";
+const Edition = "";
+// const Edition = "2024";
 const Baseurl = ['localhost','meuro.dev'].includes(window.location.hostname) ? '/cremona-artweek' : '';
 const WPREST_Base = Baseurl+'/'+Edition+'/wp-json/wp/v2';
 const current_lang = document.body.dataset.lang;
