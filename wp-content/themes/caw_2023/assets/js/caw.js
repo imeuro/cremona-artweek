@@ -468,7 +468,7 @@ const formatACFText = (fieldName) => {
 		console.debug('pre -',engtext);
 		newengtext = engtext.replace(/(?:\n\n)/g, "</p><p>");
 		newengtext = newengtext.replace(/(?:\r\n|\r|\n)/g, "<br>");
-		newengtext = newengtext..replace(/\[.+?]/g, "")
+		newengtext = newengtext..replace(/\[.+?]/g, "");
 		// console.debug('post -',newengtext);
 		if (engtitle != "") {
 			newengtext = '<p>'+newengtext.replace("<h3>"+engtitle+"</h3><br>",'')+'</p>';
