@@ -23,7 +23,7 @@
 	<link rel="icon" type="image/png" sizes="32x32" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/favicons/favicon-32x32.png?v=1.0">
 	<link rel="icon" type="image/png" sizes="16x16" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/favicons/favicon-16x16.png?v=1.0">
 	<link rel="manifest" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/favicons/site.webmanifest?v=1.0">
-	<link rel="mask-icon" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/favicons/safari-pinned-tab.svg?v=1.0" color="#ff0000">
+	<link rel="mask-icon" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/favicons/safari-pinned-tab.svg?v=1.0" color="#1c39bb">
 	<link rel="shortcut icon" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/favicons/favicon.ico?v=1.0">
 	<meta name="msapplication-TileColor" content="#ffffff">
 	<meta name="theme-color" content="#ffffff">

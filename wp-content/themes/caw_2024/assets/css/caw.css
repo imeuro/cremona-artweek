@@ -1,8 +1,8 @@
 :root {
 	--main-font: 'OPSPlacard-Regular';
 	--secondary-font: Arial, 'Helvetica', sans-serif;
-	--main-color: #ff0000;
-	--backgorund-color: #ff0000;
+	--main-color: #1c39bb;
+	--backgorund-color: #1c39bb;
 }
 
 @font-face {
