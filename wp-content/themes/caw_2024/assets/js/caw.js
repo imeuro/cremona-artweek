@@ -49,11 +49,11 @@ const generateMapbox = () => {
 
 		const markers =[
 		  {
-		  	url: Baseurl+'/wp-content/themes/caw_2023/assets/graphics/caw-marker.png', 
+		  	url: Baseurl+'/wp-content/themes/caw_2024/assets/graphics/caw-marker.png', 
 		  	id: 'image_location'
 		  },
 		  {
-		  	url: Baseurl+'/wp-content/themes/caw_2023/assets/graphics/caw-marker-spot.png', 
+		  	url: Baseurl+'/wp-content/themes/caw_2024/assets/graphics/caw-marker-spot.png', 
 		  	id: 'image_spot'
 		  },
 		]
@@ -679,7 +679,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						TabContent += `
 							<h2 class="title-tabcontent">${el.title.rendered}</h2>`;
 						Array.from(el.location_details).forEach(e => {
-							TabContent += `<span><a class="info-tabcontent" data-position-lng="${e.lng}" data-position-lat="${e.lat}" href="javascript:LoadItInTheDiv(${e.post_id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${e.lng} - ${ShiftMap}),${e.lat}],essential: true,zoom:17,duration: 2000});">🔴 ${e.id}. ${e.name}</a></span>`;
+							TabContent += `<span><a class="info-tabcontent" data-position-lng="${e.lng}" data-position-lat="${e.lat}" href="javascript:LoadItInTheDiv(${e.post_id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${e.lng} - ${ShiftMap}),${e.lat}],essential: true,zoom:17,duration: 2000});"><img src="${Baseurl}/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="15" height="15" valign="middle" /> ${e.id}. ${e.name}</a></span>`;
 						})
 						TabContent += `	</div>`;
 						
