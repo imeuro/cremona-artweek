@@ -1,0 +1,6 @@
+#adminmenu #toplevel_page_-,
+#adminmenu #toplevel_page_- a:hover {
+    background: #f00;
+    color: #fff;
+    margin-bottom: 5px;
+}

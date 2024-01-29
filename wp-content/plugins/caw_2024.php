@@ -4,9 +4,31 @@ Plugin Name: Cremona Art Week 2024
 Plugin URI: http://wordpress.org/plugins/hello-dolly/
 Description: Cremona Art Week specific functions/capabilities.
 Author: Mauro Fioravanzi
-Version: 1.1
+Version: 1.2024.1
 Author URI: http://meuro.dev/
 */
+
+
+// SIAMO NEL 2024!
+function wpdocs_register_current_year() {
+	add_menu_page(
+		__( 'Ed. 2024', 'textdomain' ),
+		'Ed. 2024',
+		'edit_posts',
+		'#',
+		'',
+		get_template_directory_uri() . '/assets/graphics/caw-marker-mini.svg"' ,
+		1
+	);
+}
+add_action( 'admin_menu', 'wpdocs_register_current_year' );
+
+// CSS per area admin
+function admin_style() {
+	wp_enqueue_style('admin-styles', get_template_directory_uri().'/assets/css/admin.css');
+}
+add_action('admin_enqueue_scripts', 'admin_style');
+
 
 
 // Change dashboard Posts to Location
