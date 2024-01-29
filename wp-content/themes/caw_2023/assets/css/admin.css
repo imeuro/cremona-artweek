@@ -2,5 +2,8 @@
 #adminmenu #toplevel_page_- a:hover {
     background: #f00;
     color: #fff;
+    margin-top: -12px;
     margin-bottom: 5px;
+    cursor: default;
+    box-shadow: none;
 }
