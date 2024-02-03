@@ -734,7 +734,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 								loc.artists[i]={};
 								loc.artists[i].slug = el.slug;
 								loc.artists[i].title = el.title.rendered;
-								TabContent += `<span><img src="/cremona-artweek/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="15" height="15" valign="middle">&nbsp;&nbsp;${loc.artists[i].title}</span>`;	
+								TabContent += `<span>${loc.artists[i].title}</span>`;	
 
 								i++;
 							}	
