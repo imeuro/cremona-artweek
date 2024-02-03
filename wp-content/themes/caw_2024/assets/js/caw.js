@@ -22,7 +22,7 @@ const generateMapbox = () => {
 	
 	map = new mapboxgl.Map({
 		container: 'caw-mapbox', // container ID
-		style: 'mapbox://styles/meuro/clg4t7v1e004p01mpehknvnkd', // style URL
+		style: 'mapbox://styles/meuro/clg4t7v1e004p01mpehknvnkd?optimize=true', // style URL
 		center: BaseCoords, // starting position [lng, lat]
 		zoom: BaseZoom, // starting zoom
 		glyphs: 'mapbox://fonts/meuro/OPS%20Placard%20Regular/0-255.pbf',
@@ -81,6 +81,8 @@ const generateMapbox = () => {
 				'id': 'locations',
 				'type': 'symbol',
 				'source': 'locations',
+				'minzoom': 10,
+				'maxzoom': 20,
 				'layout': {
 					'icon-image': 'image_location',
 					'icon-size': .85,
@@ -184,6 +186,8 @@ const generateMapbox = () => {
 				'id': 'spots',
 				'type': 'symbol',
 				'source': 'spots',
+				'minzoom': 10,
+				'maxzoom': 20,
 				'layout': {
 					'icon-image': 'image_spot',
 					'icon-size': .85,
