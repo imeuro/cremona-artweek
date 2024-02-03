@@ -759,9 +759,9 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 							TabContent += `
 								<div class="caw-listing-item caw listing-locations" id="${spot.slug}">`;
 							TabContent += `
-								<a class="info-tabcontent" data-position-lng="${spot.acf.location.lng}" data-position-lat="${spot.acf.location.lat}" href="javascript:LoadItInTheDiv(${spot.id},'spots','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${spot.acf.location.lng} - ${ShiftMap}),${spot.acf.location.lat}],essential: true,zoom:17,duration: 2000});">
-									<span><img src="/cremona-artweek/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="15" height="15" valign="middle">&nbsp;&nbsp;${spot.title.rendered}</span>
-								</a>`;
+								<p><img src="/cremona-artweek/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="15" height="15" valign="middle">&nbsp;&nbsp;<a class="info-tabcontent" data-position-lng="${spot.acf.location.lng}" data-position-lat="${spot.acf.location.lat}" href="javascript:LoadItInTheDiv(${spot.id},'spots','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${spot.acf.location.lng} - ${ShiftMap}),${spot.acf.location.lat}],essential: true,zoom:17,duration: 2000});">
+									<span>${spot.title.rendered}</span>
+								</a></p>`;
 						});
 					})
 
