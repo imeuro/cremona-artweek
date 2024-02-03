@@ -751,7 +751,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					spotsList.then( spotsList => {
 
 						let TabTitle = current_lang == 'en' ? 'Other Locations' : 'Altre Locations';
-						TabContent += ` <h2 class="title-tabcontent heading-line">${TabTitle}</h2><br /><br />`;
+						TabContent += ` <br /><br /><h2 class="title-tabcontent heading-line">${TabTitle}</h2><br /><br />`;
 
 
 						console.debug(spotsList);
