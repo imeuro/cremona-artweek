@@ -277,22 +277,26 @@ add_action( 'init', 'register_my_menu' );
 
 add_filter('nav_menu_link_attributes', 'menu_post_ids', 90000, 1);
 function menu_post_ids($val){
-	//print_r($val['href']);
+	//print_r($val);
 	$postid = url_to_postid( $val['href'] );
 	$lang = strpos($val['href'], '/en/') ? 'en' : 'it';
-	//print_r($lang);
-
-	if ( $postid === 0 ) {
-	// facciamolo andare a calci..
-		$firstpart = get_site_url(get_current_blog_id()).'/'.$lang.'/';
-		$cleanpath = str_replace($firstpart,'',$val['href']);
-		$postidARR = get_page_by_path($cleanpath);
-		//print_r(get_current_site());
-		//echo $firstpart." ____ ".$cleanpath;
-		$postid = $postidARR->ID;
+	//print_r("<br>".$postid);
+	if ($val['target'] !== '_blank') {
+		if ( $postid === 0) {
+		// facciamolo andare a calci..
+			$firstpart = get_site_url(get_current_blog_id()).'/'.$lang.'/';
+			$cleanpath = str_replace($firstpart,'',$val['href']);
+			$postidARR = get_page_by_path($cleanpath);
+			//print_r(get_current_site());
+			//echo "<br>".$firstpart." ____ ".$cleanpath;
+			$postid = $postidARR->ID;
+		}
+		$val['data-postid'] = $postid;
+		$val['data-lang'] = $lang;
+	} else {
+		$val['data-postid'] = 'external';
 	}
-	$val['data-postid'] = $postid;
-	$val['data-lang'] = $lang;
+
 	return $val;
 }
 
@@ -303,3 +307,37 @@ function menu_post_ids($val){
 //   }
 //   return $classes;
 // }
+
+
+
+$post_types =['locations', 'spots'];
+foreach ($post_types as $post_type) {
+	// Add meta your meta field to the allowed values of the REST API orderby parameter
+	add_filter(
+	    'rest_' . $post_type . '_collection_params',
+	    function( $params ) {
+			 $fields = ["location_id"];
+			foreach ($fields as $key => $value) {
+				$params['orderby']['enum'][] = $value;
+			}
+	        return $params;
+	    },
+	    10,
+	    1
+	);
+
+	add_filter(
+	    'rest_' . $post_type . '_query',
+	    function ( $args, $request ) {
+			 $fields = ["location_id"];
+	        $order_by = $request->get_param( 'orderby' );
+	        if ( isset( $order_by ) && in_array($order_by, $fields)) {
+	            $args['meta_key'] = $order_by;
+	            $args['orderby']  = 'meta_value_num'; // user 'meta_value_num' for numerical fields
+	        }
+	        return $args;
+	    },
+	    10,
+	    2
+	);
+}

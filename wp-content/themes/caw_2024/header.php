@@ -35,7 +35,7 @@
 
 	<?php wp_head(); ?>
 
-	<link rel="preload" fetchpriority="high" as="image" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/CRC_Final.svg" type="image/svg+xml">
+	<link rel="preload" fetchpriority="high" as="image" href="<?php echo get_template_directory_uri(); ?>/assets/graphics/CRC_2024.svg" type="image/svg+xml">
 
 	<style>
 		.mapboxgl-control-container .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl.mapboxgl-ctrl-group { margin-right: 40px; box-shadow: none; }
