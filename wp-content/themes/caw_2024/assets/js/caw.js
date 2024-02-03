@@ -564,7 +564,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 	if (itemID == 498 || itemID == 500) { // archivio artisti by nearest in time
 		GA4pageTitle = 'artisti';
 		urlRequest = WPREST_Base+'/posts?orderby=date&order=desc&per_page=99'
-	} else if (itemID == 1045 || itemID == 1047) { // archivio luoghi
+	} else if (itemID == 1048 || itemID == 1049) { // archivio luoghi
 		GA4pageTitle = 'luoghi';
 		urlRequest = WPREST_Base+'/locations?_fields=acf.location_id,acf.location,id,slug,title&orderby=location_id&order=asc&per_page=99';
 		urlArtists = WPREST_Base+'/posts/?_fields=acf.location,slug,title&per_page=99';
@@ -706,7 +706,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 				}
 
 			} 
-			else if (itemID == 1045 || itemID == 1047) {
+			else if (itemID == 1048 || itemID == 1049) {
 				// 👉 LISTING "LOCATIONS":
 				
 				artistList.then( artistList => {
@@ -749,7 +749,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					});
 
 					spotsList.then( spotsList => {
-					
+
 						let TabTitle = current_lang == 'en' ? 'Other Locations' : 'Altre Locations';
 						TabContent += ` <h2 class="title-tabcontent heading-line">${TabTitle}</h2><br /><br />`;
 
