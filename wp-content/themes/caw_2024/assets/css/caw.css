@@ -500,7 +500,8 @@ button.menu-toggle:after {
 	display: block;
     line-height: 1.4em;
 }
-#caw-tabcontainer a {
+#caw-tabcontainer a,
+#caw-tabcontainer .listing-locations span {
 	line-height: 1.4em;
 	border-bottom: 2px solid transparent;
     text-decoration: none;

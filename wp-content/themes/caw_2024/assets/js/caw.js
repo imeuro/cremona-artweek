@@ -3,8 +3,10 @@ const Edition = "";
 const Baseurl = ['localhost','meuro.dev'].includes(window.location.hostname) ? '/cremona-artweek' : '';
 const WPREST_Base = Baseurl+'/'+Edition+'/wp-json/wp/v2';
 const current_lang = document.body.dataset.lang;
-let locationsList = getPostsFromWp(WPREST_Base+'/locations?per_page=99');
-let spotsList = getPostsFromWp(WPREST_Base+'/spots?per_page=99');
+// let locationsList = getPostsFromWp(WPREST_Base+'/locations?per_page=99');
+let locationsList = getPostsFromWp(WPREST_Base+'/locations?_fields=acf,id,slug,title,content&orderby=location_id&order=asc&per_page=99');
+let spotsList = getPostsFromWp(WPREST_Base+'/spots?_fields=acf,id,slug,title,content&per_page=99');
+let artistList = getPostsFromWp(WPREST_Base+'/posts/?_fields=acf.location,slug,title&per_page=99');
 let GA4pageTitle = '';
 var CAWgeoJSON_locations = [];
 var CAWgeoJSON_spots = [];
@@ -529,16 +531,16 @@ Array.from(MenuDiv.children).forEach((el) => {
 	let lang = el.firstChild.dataset.lang;
 	let divType = el.classList.contains('fullDiv')?'full':'normal';
 
-	el.firstChild.addEventListener('click', (e) => {
-		if (TabDiv !== null) {
+	if (TabDiv !== null && itemID !== 'external') {
+		el.firstChild.addEventListener('click', (e) => {
 			e.preventDefault();
 			LoadItInTheDiv(itemID, '',divType,lang);
 			el.firstChild.classList.add('current');
 			// close menu
 			document.getElementById('site-navigation').classList.remove('toggled');
 			document.getElementById('masthead').classList = 'site-header compact';
-		}
-	}, false)
+		}, false)
+	}
 
 
 	//console.debug(itemID, divType);
@@ -562,7 +564,11 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 	if (itemID == 498 || itemID == 500) { // archivio artisti by nearest in time
 		GA4pageTitle = 'artisti';
 		urlRequest = WPREST_Base+'/posts?orderby=date&order=desc&per_page=99'
-	} else if (itemID == 12 || itemID == 76) { // [eng] archivio eventi by nearest in time
+	} else if (itemID == 1045 || itemID == 1047) { // archivio luoghi
+		GA4pageTitle = 'luoghi';
+		urlRequest = WPREST_Base+'/locations?_fields=acf.location_id,acf.location,id,slug,title&orderby=location_id&order=asc&per_page=99';
+		urlArtists = WPREST_Base+'/posts/?_fields=acf.location,slug,title&per_page=99';
+	} else if (itemID == 12 || itemID == 76) { // archivio eventi by nearest in time
 		GA4pageTitle = 'eventi'
 		urlRequest = WPREST_Base+'/eventi?per_page=99'
 	} else {
@@ -700,6 +706,69 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 				}
 
 			} 
+			else if (itemID == 1045 || itemID == 1047) {
+				// 👉 LISTING "LOCATIONS":
+				
+				artistList.then( artistList => {
+
+					console.debug('artistList',artistList);
+					
+					let TabTitle = current_lang == 'en' ? 'Locations' : 'Luoghi';
+					TabContent += ` <h2 class="title-tabcontent heading-line">${TabTitle}</h2><br /><br />`;
+
+
+					// mi passo tutte le location id, e cerco in artistList chi ce l'ha (chi partecipa, insomma)
+					CAWdata.forEach((loc) => {
+						loc.artists = [];
+						let i = 0;
+
+						TabContent += `
+							<div class="caw-listing-item caw listing-locations" id="${loc.slug}">`;
+						TabContent += `
+							<a class="info-tabcontent" data-position-lng="${loc.acf.location.lng}" data-position-lat="${loc.acf.location.lat}" href="javascript:LoadItInTheDiv(${loc.id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${loc.acf.location.lng} - ${ShiftMap}),${loc.acf.location.lat}],essential: true,zoom:17,duration: 2000});">
+								<h2 class="title-tabcontent">${loc.acf.location_id}. ${loc.title.rendered}</h2>
+							</a>`;
+
+						artistList.forEach((el) => {
+							if (el.acf.location.includes(loc.id)) {
+								loc.artists[i]={};
+								loc.artists[i].slug = el.slug;
+								loc.artists[i].title = el.title.rendered;
+								TabContent += `<span><img src="/cremona-artweek/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="15" height="15" valign="middle">&nbsp;&nbsp;${loc.artists[i].title}</span>`;	
+
+								i++;
+							}	
+			
+						});
+
+						//console.debug('loc:',loc);
+
+						TabContent += `</div>`;
+
+
+					});
+
+					spotsList.then( spotsList => {
+					
+						let TabTitle = current_lang == 'en' ? 'Other Locations' : 'Altre Locations';
+						TabContent += ` <h2 class="title-tabcontent heading-line">${TabTitle}</h2><br /><br />`;
+
+
+						console.debug(spotsList);
+						spotsList.forEach((spot) => {
+							TabContent += `
+								<div class="caw-listing-item caw listing-locations" id="${spot.slug}">`;
+							TabContent += `
+								<a class="info-tabcontent" data-position-lng="${spot.acf.location.lng}" data-position-lat="${spot.acf.location.lat}" href="javascript:LoadItInTheDiv(${spot.id},'spots','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${spot.acf.location.lng} - ${ShiftMap}),${spot.acf.location.lat}],essential: true,zoom:17,duration: 2000});">
+									<span><img src="/cremona-artweek/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="15" height="15" valign="middle">&nbsp;&nbsp;${spot.title.rendered}</span>
+								</a>`;
+						});
+					})
+
+				}).then( () => { TabContainer.innerHTML = TabContent });
+
+
+			}
 			else { // LOCATIONS & SIMPLE POSTS/PAGES:
 				const content_tabcontent = (current_lang == 'en' && CAWdata.acf.testo_eng) ? formatACFText(CAWdata.acf.testo_eng) : CAWdata.content.rendered;
 
