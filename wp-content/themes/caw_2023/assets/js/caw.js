@@ -529,17 +529,16 @@ Array.from(MenuDiv.children).forEach((el) => {
 	let lang = el.firstChild.dataset.lang;
 	let divType = el.classList.contains('fullDiv')?'full':'normal';
 
-	el.firstChild.addEventListener('click', (e) => {
-		if (TabDiv !== null) {
+	if (TabDiv !== null && itemID !== 'external') {
+		el.firstChild.addEventListener('click', (e) => {
 			e.preventDefault();
 			LoadItInTheDiv(itemID, '',divType,lang);
 			el.firstChild.classList.add('current');
 			// close menu
 			document.getElementById('site-navigation').classList.remove('toggled');
 			document.getElementById('masthead').classList = 'site-header compact';
-		}
-	}, false)
-
+		}, false)
+	}
 
 	//console.debug(itemID, divType);
 	//el.firstChild.removeAttribute('href');
