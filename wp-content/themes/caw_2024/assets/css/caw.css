@@ -176,6 +176,10 @@ div#page {
 }
 .site-header .main-navigation a:hover { text-decoration: underline; }
 
+.site-header .main-navigation li.ext {
+    margin-top: 40px;
+}
+
 .site-header .main-navigation ul#lang-switcher {
     border-top: none;
     display: flex;
@@ -308,7 +312,7 @@ button.menu-toggle:after {
 
 @media all and (min-width: 37.5em) {
 	.site-header .main-navigation ul {
-		padding-top: 20px;
+		padding-top: 40px;
 	}
 	.site-header .main-navigation ul#lang-switcher{
 		position: fixed;
