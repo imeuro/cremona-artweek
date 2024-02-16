@@ -10,8 +10,8 @@ let artistList = getPostsFromWp(WPREST_Base+'/posts/?_fields=acf.location,slug,t
 let GA4pageTitle = '';
 var CAWgeoJSON_locations = [];
 var CAWgeoJSON_spots = [];
-let BaseCoords = window.innerWidth<600 ? [10.015,45.145] : [10.010, 45.134];
-let BaseZoom = window.innerWidth<600 ? 12.25 : 13.45;
+let BaseCoords = window.innerWidth<600 ? [10.023,45.142] : [10.018, 45.137];
+let BaseZoom = window.innerWidth<600 ? 13.25 : 14.60;
 let map = '';
 let ShiftMap = window.innerWidth<600 ? 0 : 0.0015;
 let art_display = [];
