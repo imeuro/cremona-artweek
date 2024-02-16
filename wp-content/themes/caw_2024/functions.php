@@ -1,15 +1,15 @@
 <?php
 /**
- * caw_2023 functions and definitions
+ * caw_2024 functions and definitions
  *
  * @link https://developer.wordpress.org/themes/basics/theme-functions/
  *
- * @package caw_2023
+ * @package caw_2024
  */
 
 if ( ! defined( '_S_VERSION' ) ) {
 	// Replace the version number of the theme on each release.
-	define( '_S_VERSION', '1.2024.1' );
+	define( '_S_VERSION', '1.2024.2' );
 }
 
 /**
@@ -19,14 +19,14 @@ if ( ! defined( '_S_VERSION' ) ) {
  * runs before the init hook. The init hook is too late for some features, such
  * as indicating support for post thumbnails.
  */
-function caw_2023_setup() {
+function caw_2024_setup() {
 	/*
 		* Make theme available for translation.
 		* Translations can be filed in the /languages/ directory.
-		* If you're building a theme based on caw_2023, use a find and replace
-		* to change 'caw_2023' to the name of your theme in all the template files.
+		* If you're building a theme based on caw_2024, use a find and replace
+		* to change 'caw_2024' to the name of your theme in all the template files.
 		*/
-	load_theme_textdomain( 'caw_2023', get_template_directory() . '/languages' );
+	load_theme_textdomain( 'caw_2024', get_template_directory() . '/languages' );
 
 	// Add default posts and comments RSS feed links to head.
 	add_theme_support( 'automatic-feed-links' );
@@ -49,7 +49,7 @@ function caw_2023_setup() {
 	// This theme uses wp_nav_menu() in one location.
 	register_nav_menus(
 		array(
-			'menu-1' => esc_html__( 'Primary', 'caw_2023' ),
+			'menu-1' => esc_html__( 'Primary', 'caw_2024' ),
 		)
 	);
 
@@ -72,7 +72,7 @@ function caw_2023_setup() {
 
 
 }
-add_action( 'after_setup_theme', 'caw_2023_setup' );
+add_action( 'after_setup_theme', 'caw_2024_setup' );
 
 
 /**
@@ -80,12 +80,12 @@ add_action( 'after_setup_theme', 'caw_2023_setup' );
  *
  * @link https://developer.wordpress.org/themes/functionality/sidebars/#registering-a-sidebar
  */
-function caw_2023_widgets_init() {
+function caw_2024_widgets_init() {
 	register_sidebar(
 		array(
-			'name'          => esc_html__( 'Sidebar', 'caw_2023' ),
+			'name'          => esc_html__( 'Sidebar', 'caw_2024' ),
 			'id'            => 'sidebar-1',
-			'description'   => esc_html__( 'Add widgets here.', 'caw_2023' ),
+			'description'   => esc_html__( 'Add widgets here.', 'caw_2024' ),
 			'before_widget' => '<section id="%1$s" class="widget %2$s">',
 			'after_widget'  => '</section>',
 			'before_title'  => '<h2 class="widget-title">',
@@ -93,7 +93,7 @@ function caw_2023_widgets_init() {
 		)
 	);
 }
-add_action( 'widgets_init', 'caw_2023_widgets_init' );
+add_action( 'widgets_init', 'caw_2024_widgets_init' );
 
 /**
  * Enqueue scripts and styles.
@@ -109,8 +109,8 @@ add_filter('clean_url', 'add_async_forscript', 11, 1);
 
 function add_defer_forscript( $tag, $handle, $src ) {
   $defer = array( 
-  	'caw_2023-navigation',
-    'caw_2023-mapbox'
+  	'caw_2024-navigation',
+    'caw_2024-mapbox'
   );
   if ( in_array( $handle, $defer ) ) {
      return '<script src="' . $src . '" defer type="text/javascript"></script>' . "\n";
@@ -120,27 +120,27 @@ function add_defer_forscript( $tag, $handle, $src ) {
 } 
 add_filter( 'script_loader_tag', 'add_defer_forscript', 10, 3 );
 
-function caw_2023_scripts() {
-	wp_enqueue_style( 'caw_2023-style', get_stylesheet_uri(), array(), _S_VERSION );
-	wp_style_add_data( 'caw_2023-style', 'rtl', 'replace' );
-    wp_enqueue_style( 'caw_2023-style-custom', get_template_directory_uri() . '/assets/css/caw.css', array(), _S_VERSION );
+function caw_2024_scripts() {
+	wp_enqueue_style( 'caw_2024-style', get_stylesheet_uri(), array(), _S_VERSION );
+	wp_style_add_data( 'caw_2024-style', 'rtl', 'replace' );
+    wp_enqueue_style( 'caw_2024-style-custom', get_template_directory_uri() . '/assets/css/caw.css', array(), _S_VERSION );
 
 	if (is_home() || is_front_page()) {
-		wp_enqueue_script( 'caw_2023-mapbox', 'https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.js', array(), _S_VERSION, true );
-		wp_enqueue_style( 'caw_2023-mapbox', 'https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.css', array(), _S_VERSION );
+		wp_enqueue_script( 'caw_2024-mapbox', 'https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.js', array(), _S_VERSION, true );
+		wp_enqueue_style( 'caw_2024-mapbox', 'https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.css', array(), _S_VERSION );
 	}
 
-	wp_enqueue_script( 'caw_2023-general', get_template_directory_uri() . '/assets/js/caw.js', array(), _S_VERSION, true );
-	wp_enqueue_script( 'caw_2023-navigation', get_template_directory_uri() . '/assets/js/navigation.js', array(), _S_VERSION, true );
+	wp_enqueue_script( 'caw_2024-general', get_template_directory_uri() . '/assets/js/caw.js', array(), _S_VERSION, true );
+	wp_enqueue_script( 'caw_2024-navigation', get_template_directory_uri() . '/assets/js/navigation.js', array(), _S_VERSION, true );
 
 }
-add_action( 'wp_enqueue_scripts', 'caw_2023_scripts' );
+add_action( 'wp_enqueue_scripts', 'caw_2024_scripts' );
 
 
 // mapbox libraries
 // function caw_mapbox_assets() {
-// 	wp_enqueue_script( 'caw_2023-mapboxx', 'https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.js#deferload', array(), _S_VERSION, true );
-// 	wp_enqueue_style( 'caw_2023-mapboxx', 'https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.css', array(), _S_VERSION );
+// 	wp_enqueue_script( 'caw_2024-mapboxx', 'https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.js#deferload', array(), _S_VERSION, true );
+// 	wp_enqueue_style( 'caw_2024-mapboxx', 'https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.css', array(), _S_VERSION );
 // }
 // add_action( 'wp_enqueue_scripts', 'caw_mapbox_assets' );
 
