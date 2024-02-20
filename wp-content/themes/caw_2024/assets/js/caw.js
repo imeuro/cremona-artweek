@@ -4,9 +4,9 @@ const Baseurl = ['localhost','meuro.dev'].includes(window.location.hostname) ? '
 const WPREST_Base = Baseurl+'/'+Edition+'/wp-json/wp/v2';
 const current_lang = document.body.dataset.lang;
 // let locationsList = getPostsFromWp(WPREST_Base+'/locations?per_page=99');
-let locationsList = getPostsFromWp(WPREST_Base+'/locations?_fields=acf,id,slug,title,content&orderby=location_id&order=asc&per_page=99');
-let spotsList = getPostsFromWp(WPREST_Base+'/spots?_fields=acf,id,slug,title,content&per_page=99');
-let artistList = getPostsFromWp(WPREST_Base+'/posts/?_fields=acf.location,slug,title&per_page=99');
+var locationsList = getPostsFromWp(WPREST_Base+'/locations?_fields=acf,id,slug,title,content&orderby=location_id&order=asc&per_page=99');
+var spotsList = getPostsFromWp(WPREST_Base+'/spots?_fields=acf,id,slug,title,content&per_page=99');
+var artistList = getPostsFromWp(WPREST_Base+'/posts/?_fields=acf.location,slug,title&per_page=99');
 let GA4pageTitle = '';
 var CAWgeoJSON_locations = [];
 var CAWgeoJSON_spots = [];
@@ -712,7 +712,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 			} 
 			else if (itemID == 1043 || itemID == 1045) {
 				// 👉 LISTING "LOCATIONS":
-				
+				artistList = getPostsFromWp(WPREST_Base+'/posts/?_fields=acf.location,slug,title&per_page=99');
 				artistList.then( artistList => {
 
 					console.debug('artistList',artistList);
@@ -729,9 +729,9 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						TabContent += `
 							<div class="caw-listing-item caw listing-locations" id="${loc.slug}">`;
 						TabContent += `
-							<a class="info-tabcontent" data-position-lng="${loc.acf.location.lng}" data-position-lat="${loc.acf.location.lat}" href="javascript:LoadItInTheDiv(${loc.id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${loc.acf.location.lng} - ${ShiftMap}),${loc.acf.location.lat}],essential: true,zoom:17,duration: 2000});">
+							<!-- a class="info-tabcontent" data-position-lng="${loc.acf.location.lng}" data-position-lat="${loc.acf.location.lat}" href="javascript:LoadItInTheDiv(${loc.id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${loc.acf.location.lng} - ${ShiftMap}),${loc.acf.location.lat}],essential: true,zoom:17,duration: 2000});" -->
 								<h2 class="title-tabcontent">${loc.acf.location_id}. ${loc.title.rendered}</h2>
-							</a>`;
+							<!-- /a -->`;
 
 						artistList.forEach((el) => {
 							if (el.acf.location.includes(loc.id)) {
