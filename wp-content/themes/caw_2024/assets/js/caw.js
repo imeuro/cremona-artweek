@@ -159,7 +159,7 @@ const generateMapbox = () => {
 			});
 
 			map.on('click', 'locations', () => {
-			 	// LoadItInTheDiv(readmorelink,'locations','HalfDiv',current_lang);
+			 	LoadItInTheDiv(readmorelink,'locations','HalfDiv',current_lang);
 			 	map.flyTo({
 					center: [(coords[0] - ShiftMap),coords[1]],
 					essential: true,
@@ -728,15 +728,12 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 
 						TabContent += `
 							<div class="caw-listing-item caw listing-locations" id="${loc.slug}">`;
-						/* 
 						TabContent += `
 							<a class="info-tabcontent" data-position-lng="${loc.acf.location.lng}" data-position-lat="${loc.acf.location.lat}" href="javascript:LoadItInTheDiv(${loc.id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${loc.acf.location.lng} - ${ShiftMap}),${loc.acf.location.lat}],essential: true,zoom:17,duration: 2000});">
 								<h2 class="title-tabcontent">${loc.acf.location_id}. ${loc.title.rendered}</h2>
 							</a>`;
-						*/
-
-						TabContent += `
-							<h2 class="title-tabcontent">${loc.acf.location_id}. ${loc.title.rendered}</h2>`;
+						// TabContent += `
+						// 	<h2 class="title-tabcontent">${loc.acf.location_id}. ${loc.title.rendered}</h2>`;
 
 						artistList.forEach((el) => {
 							if (el.acf.location.includes(loc.id)) {
@@ -758,20 +755,21 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					});
 
 					spotsList.then( spotsList => {
+						if (Object.keys(spotsList).length > 0) {
+							let TabTitle = current_lang == 'en' ? 'Other Locations' : 'Altre Locations';
+							TabContent += ` <br /><br /><h2 class="title-tabcontent heading-line">${TabTitle}</h2><br /><br />`;
 
-						let TabTitle = current_lang == 'en' ? 'Other Locations' : 'Altre Locations';
-						TabContent += ` <br /><br /><h2 class="title-tabcontent heading-line">${TabTitle}</h2><br /><br />`;
 
-
-						console.debug(spotsList);
-						spotsList.forEach((spot) => {
-							TabContent += `
-								<div class="caw-listing-item caw listing-locations" id="${spot.slug}">`;
-							TabContent += `
-								<p><img src="/cremona-artweek/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="15" height="15" valign="middle">&nbsp;&nbsp;<a class="info-tabcontent" data-position-lng="${spot.acf.location.lng}" data-position-lat="${spot.acf.location.lat}" href="javascript:LoadItInTheDiv(${spot.id},'spots','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${spot.acf.location.lng} - ${ShiftMap}),${spot.acf.location.lat}],essential: true,zoom:17,duration: 2000});">
-									<span>${spot.title.rendered}</span>
-								</a></p>`;
-						});
+							console.debug(spotsList);
+							spotsList.forEach((spot) => {
+								TabContent += `
+									<div class="caw-listing-item caw listing-locations" id="${spot.slug}">`;
+								TabContent += `
+									<p><img src="/cremona-artweek/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="15" height="15" valign="middle">&nbsp;&nbsp;<a class="info-tabcontent" data-position-lng="${spot.acf.location.lng}" data-position-lat="${spot.acf.location.lat}" href="javascript:LoadItInTheDiv(${spot.id},'spots','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${spot.acf.location.lng} - ${ShiftMap}),${spot.acf.location.lat}],essential: true,zoom:17,duration: 2000});">
+										<span>${spot.title.rendered}</span>
+									</a></p>`;
+							});
+						}
 					})
 
 				}).then( () => { TabContainer.innerHTML = TabContent });
