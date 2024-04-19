@@ -170,7 +170,7 @@ const generateMapbox = () => {
 			});
 			
 		})
-		.then(() => {
+		/*.then(() => {
 			// JSON EXAMPLE @
 			// https://docs.mapbox.com/mapbox-gl-js/example/popup-on-hover/
 			console.debug(CAWgeoJSON_spots);
@@ -244,6 +244,7 @@ const generateMapbox = () => {
 			});
 
 		});
+		*/
 		 
 	});
 
