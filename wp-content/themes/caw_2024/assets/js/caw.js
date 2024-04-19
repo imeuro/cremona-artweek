@@ -159,7 +159,7 @@ const generateMapbox = () => {
 			});
 
 			map.on('click', 'locations', () => {
-			 	LoadItInTheDiv(readmorelink,'locations','HalfDiv',current_lang);
+			 	// LoadItInTheDiv(readmorelink,'locations','HalfDiv',current_lang);
 			 	map.flyTo({
 					center: [(coords[0] - ShiftMap),coords[1]],
 					essential: true,
@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					art.properties.post_id = el.id;
 					art.properties.testo_eng = el.acf.testo_eng;
 					art.properties.location_id = el.acf.location_id;
-					//art.properties.location_name = el.acf.location.name;
+					art.properties.location_name = el.acf.location.name;
 					art.properties.location_address = el.acf.location.street_name+', '+el.acf.location.street_number;
 					art.properties.location_number = el.acf.evento_num;
 					art.geometry = {};
