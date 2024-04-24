@@ -159,7 +159,7 @@ const generateMapbox = () => {
 			});
 
 			map.on('click', 'locations', () => {
-			 	// LoadItInTheDiv(readmorelink,'locations','HalfDiv',current_lang);
+			 	LoadItInTheDiv(readmorelink,'locations','HalfDiv',current_lang);
 			 	map.flyTo({
 					center: [(coords[0] - ShiftMap),coords[1]],
 					essential: true,
@@ -732,12 +732,12 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 
 						TabContent += `
 							<div class="caw-listing-item caw listing-locations" id="${loc.slug}">`;
-						// TabContent += `
-						// 	<a class="info-tabcontent" data-position-lng="${loc.acf.location.lng}" data-position-lat="${loc.acf.location.lat}" href="javascript:LoadItInTheDiv(${loc.id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${loc.acf.location.lng} - ${ShiftMap}),${loc.acf.location.lat}],essential: true,zoom:17,duration: 2000});">
-						// 		<h2 class="title-tabcontent">${loc.acf.location_id}. ${loc.title.rendered}</h2>
-						// 	</a>`;
 						TabContent += `
-							<h2 class="title-tabcontent">${loc.acf.location_id}. ${loc.title.rendered}</h2>`;
+							<a class="info-tabcontent" data-position-lng="${loc.acf.location.lng}" data-position-lat="${loc.acf.location.lat}" href="javascript:LoadItInTheDiv(${loc.id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${loc.acf.location.lng} - ${ShiftMap}),${loc.acf.location.lat}],essential: true,zoom:17,duration: 2000});">
+								<h2 class="title-tabcontent">${loc.acf.location_id}. ${loc.title.rendered}</h2>
+							</a>`;
+						// TabContent += `
+						// 	<h2 class="title-tabcontent">${loc.acf.location_id}. ${loc.title.rendered}</h2>`;
 
 						artistList.forEach((el) => {
 							if (el.acf.location.includes(loc.id)) {
