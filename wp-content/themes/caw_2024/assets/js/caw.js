@@ -610,7 +610,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 				});
 				// testatina x listing eventi extra:
 				let TabTitle = current_lang == 'en' ? 'Events' : 'Eventi';
-				TabContent += ` <h2 class="title-tabcontent heading-line">${TabTitle}</h2>`;
+				TabContent += ` <h2 class="title-tabcontent heading-line">${TabTitle}</h2><br><br>`;
 
 				Object.values(CAWdata).forEach(el => {
 					// event start
