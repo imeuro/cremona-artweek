@@ -159,7 +159,7 @@ const generateMapbox = () => {
 			});
 
 			map.on('click', 'locations', () => {
-			 	// LoadItInTheDiv(readmorelink,'locations','HalfDiv',current_lang);
+			 	LoadItInTheDiv(readmorelink,'locations','HalfDiv',current_lang);
 			 	map.flyTo({
 					center: [(coords[0] - ShiftMap),coords[1]],
 					essential: true,
