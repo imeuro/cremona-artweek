@@ -683,7 +683,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 				// partendo da CAWDATA (o CAWlocalDATA), poi mi compongo TabContent
 				const composeTabContent = () => {
 					let TabTitle = current_lang == 'en' ? 'Artists' : 'Artisti';
-					TabContent += ` <h2 class="title-tabcontent heading-line">${TabTitle}</h2>`;
+					TabContent += ` <h2 class="title-tabcontent heading-line">${TabTitle}</h2><br><br>`;
 					Object.values(CAWdata).forEach(el => {
 						console.debug('el=',el);
 						const content_tabcontent = (el.acf.testo_eng) ? formatACFText(el.acf.testo_eng) : el.content.rendered;
