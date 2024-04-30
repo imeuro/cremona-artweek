@@ -572,6 +572,9 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 	if (itemID == 498 || itemID == 500) { // archivio artisti by nearest in time
 		GA4pageTitle = 'artisti';
 		urlRequest = WPREST_Base+'/posts?orderby=date&order=desc&per_page=99'
+	} else if (itemID == 1492 || itemID == 1494) { // archivio faville
+		GA4pageTitle = 'faville';
+		urlRequest = WPREST_Base+'/faville?orderby=date&order=desc&per_page=99';
 	} else if (itemID == 1043 || itemID == 1045) { // archivio luoghi
 		GA4pageTitle = 'luoghi';
 		urlRequest = WPREST_Base+'/locations?_fields=acf.location_id,acf.location,id,slug,title&orderby=location_id&order=asc&per_page=99';
@@ -683,6 +686,53 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 				// partendo da CAWDATA (o CAWlocalDATA), poi mi compongo TabContent
 				const composeTabContent = () => {
 					let TabTitle = current_lang == 'en' ? 'Artists' : 'Artisti';
+					TabContent += ` <h2 class="title-tabcontent heading-line">${TabTitle}</h2><br><br>`;
+					Object.values(CAWdata).forEach(el => {
+						console.debug('el=',el);
+						const content_tabcontent = (el.acf.testo_eng) ? formatACFText(el.acf.testo_eng) : el.content.rendered;
+
+						TabContent += `
+							<div class="caw-listing-item caw listing-artisti" id="${el.slug}">`;
+						TabContent += `
+							<h2 class="title-tabcontent">${el.title.rendered}</h2>`;
+						Array.from(el.location_details).forEach(e => {
+							TabContent += `<span><a class="info-tabcontent" data-position-lng="${e.lng}" data-position-lat="${e.lat}" href="javascript:LoadItInTheDiv(${e.post_id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${e.lng} - ${ShiftMap}),${e.lat}],essential: true,zoom:17,duration: 2000});"><img src="${Baseurl}/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="15" height="15" valign="middle" /> ${e.id}. ${e.name}</a></span>`;
+						})
+						TabContent += `	</div>`;
+						
+						Art_done++;
+						if (Art_done == CAWdata.length) {
+							console.debug('All artists processed.');
+							TabContainer.innerHTML = TabContent;
+						}
+					});
+				}
+
+				if (!CAWARTdata || CAWARTdata=='') {
+					get_locations_for_artists_in_list(CAWdata, composeTabContent);
+				} else {
+					CAWdata = JSON.parse(CAWARTdata);
+					console.debug(CAWdata);
+					composeTabContent();
+				}
+
+			} 			
+			else if (itemID == 1492 || itemID == 1494) {
+				// 👉 LISTING "FAVILLE" ( manually ordered by surname alphabetically ):
+				// TODO: LOCALSTORAGE w/ expiry date!!
+
+				var Art_todo = 0;
+				var Art_done = 0;
+
+				// 📌 SAVE DATA TO LOCALSTORAGE:
+				let CAWARTdata = '';
+				CAWARTdata = localStorage.removeItem('CAWARTdata');
+				// CAWARTdata = localStorage.getItem('CAWARTdata');
+				// console.debug('CAWARTdata',CAWARTdata);
+
+				// partendo da CAWDATA (o CAWlocalDATA), poi mi compongo TabContent
+				const composeTabContent = () => {
+					let TabTitle = current_lang == 'en' ? 'Faville' : 'Faville';
 					TabContent += ` <h2 class="title-tabcontent heading-line">${TabTitle}</h2><br><br>`;
 					Object.values(CAWdata).forEach(el => {
 						console.debug('el=',el);

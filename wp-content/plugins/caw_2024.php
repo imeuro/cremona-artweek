@@ -31,7 +31,7 @@ add_action('admin_enqueue_scripts', 'admin_style');
 
 
 
-// Change dashboard Posts to Location
+// Change dashboard Posts to Artists
 add_action( 'init', 'cp_change_post_object' );
 function cp_change_post_object() {
     $get_post_type = get_post_type_object('post');
@@ -59,37 +59,67 @@ function cp_change_post_object() {
  * Additional custom taxonomies can be defined here
  * https://codex.wordpress.org/Function_Reference/register_taxonomy
  */
-/*
-function add_custom_taxonomies() {
-  // Add new "Languages" taxonomy to Posts
-  register_taxonomy('lang', '', array(
-    // Hierarchical taxonomy (like categories)
-    'hierarchical' => true,
-    'show_in_rest' => true,
-    // This array of options controls the labels displayed in the WordPress Admin UI
-    'labels' => array(
-      'name' => _x( 'Languages', 'taxonomy general name' ),
-      'singular_name' => _x( 'Language', 'taxonomy singular name' ),
-      'search_items' =>  __( 'Search Languages' ),
-      'all_items' => __( 'All Languages' ),
-      'parent_item' => __( 'Parent Language' ),
-      'parent_item_colon' => __( 'Parent Language:' ),
-      'edit_item' => __( 'Edit Language' ),
-      'update_item' => __( 'Update Language' ),
-      'add_new_item' => __( 'Add New Language' ),
-      'new_item_name' => __( 'New Language Name' ),
-      'menu_name' => __( 'Languages' ),
-    ),
-    // Control the slugs used for this taxonomy
-    'rewrite' => array(
-      'slug' => 'lang', // This controls the base slug that will display before each term
-      'with_front' => false, // Don't display the category base before "/locations/"
-      'hierarchical' => false // This will allow URL's like "/locations/boston/cambridge/"
-    ),
-  ));
+
+
+
+
+// Register Custom Post Type
+function faville_post_type() {
+
+	$labels = array(
+		'name'                  => _x( 'Faville', 'Post Type General Name', 'text_domain' ),
+		'singular_name'         => _x( 'Faville', 'Post Type Singular Name', 'text_domain' ),
+		'menu_name'             => __( 'Faville', 'text_domain' ),
+		'name_admin_bar'        => __( 'Faville', 'text_domain' ),
+		'archives'              => __( 'Archivio Faville', 'text_domain' ),
+		'attributes'            => __( 'Attributi Faville', 'text_domain' ),
+		'parent_item_colon'     => __( 'Parent Item:', 'text_domain' ),
+		'all_items'             => __( 'Tutte le Faville', 'text_domain' ),
+		'add_new_item'          => __( 'Aggiungi Faville', 'text_domain' ),
+		'add_new'               => __( 'Aggiungi Faville', 'text_domain' ),
+		'new_item'              => __( 'Nuova Faville', 'text_domain' ),
+		'edit_item'             => __( 'Edit Faville', 'text_domain' ),
+		'update_item'           => __( 'Aggiorna Faville', 'text_domain' ),
+		'view_item'             => __( 'Visualizza Faville', 'text_domain' ),
+		'view_items'            => __( 'Visualizza Faville', 'text_domain' ),
+		'search_items'          => __( 'Cerca Faville', 'text_domain' ),
+		'not_found'             => __( 'Non trovato', 'text_domain' ),
+		'not_found_in_trash'    => __( 'Non trovato in Trash', 'text_domain' ),
+		'featured_image'        => __( 'Featured Image', 'text_domain' ),
+		'set_featured_image'    => __( 'Set featured image', 'text_domain' ),
+		'remove_featured_image' => __( 'Remove featured image', 'text_domain' ),
+		'use_featured_image'    => __( 'Use as featured image', 'text_domain' ),
+		'insert_into_item'      => __( 'Insert into item', 'text_domain' ),
+		'uploaded_to_this_item' => __( 'Uploaded to this item', 'text_domain' ),
+		'items_list'            => __( 'Items list', 'text_domain' ),
+		'items_list_navigation' => __( 'Items list navigation', 'text_domain' ),
+		'filter_items_list'     => __( 'Filter items list', 'text_domain' ),
+	);
+	$args = array(
+		'label'                 => __( 'Faville', 'text_domain' ),
+		'description'           => __( 'Post Type Faville Description', 'text_domain' ),
+		'labels'                => $labels,
+		'supports'              => array( 'title', 'editor', 'custom-fields' ),
+		'taxonomies'            => array( 'lang' ),
+		'hierarchical'          => false,
+		'public'                => true,
+		'show_ui'               => true,
+		'show_in_menu'          => true,
+		'menu_position'         => 5,
+		'show_in_admin_bar'     => true,
+		'show_in_nav_menus'     => true,
+		'can_export'            => true,
+		'has_archive'           => true,
+		'exclude_from_search'   => false,
+		'publicly_queryable'    => true,
+		'capability_type'       => 'page',
+		'show_in_rest'          => true,
+	);
+	register_post_type( 'Faville', $args );
+
 }
-//add_action( 'init', 'add_custom_taxonomies', 0 );
-*/
+add_action( 'init', 'faville_post_type', 0 );
+
 
 // Register Custom Post Type
 function locations_post_type() {
@@ -262,6 +292,7 @@ function events_post_type() {
 
 }
 add_action( 'init', 'events_post_type', 0 );
+
 
 function my_acf_init() {
 	acf_update_setting('google_api_key', 'AIzaSyAntKVh1XNkFwRhPm8xzDVT3EuHseeo94E');
