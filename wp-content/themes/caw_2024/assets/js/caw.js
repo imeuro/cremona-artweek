@@ -398,13 +398,14 @@ function get_artists_for_location_id ( CAWdata, id, callback ) {
 	// query all posts (Artists) with acf 'location_id' == CAWdata.acf.location_id
 	console.debug(id);
 	art_display=[];
-	const ARThere_data = getPostsFromWp(WPREST_Base+'/posts/?_fields=acf.location,acf.testo_eng,slug,title,content&per_page=99');
+	const ARThere_data = getPostsFromWp(WPREST_Base+'/posts/?_fields=id,acf.location,acf.testo_eng,slug,title,content&per_page=99');
 	let i = 0;
 	ARThere_data.then( heredata => {
 		heredata.forEach((el) => {
 			if (el.acf.location.includes(id)) {
 				art_display[i]={};
 				// console.debug(CAWdata.id,el);
+				art_display[i].id = el.id;
 				art_display[i].slug = el.slug;
 				art_display[i].title = el.title.rendered;
 				art_display[i].content = current_lang == 'en' ? el.acf.testo_eng : el.content.rendered;
@@ -688,16 +689,20 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					let TabTitle = current_lang == 'en' ? 'Artists' : 'Artisti';
 					TabContent += ` <h2 class="title-tabcontent heading-line">${TabTitle}</h2><br><br>`;
 					Object.values(CAWdata).forEach(el => {
-						console.debug('el=',el);
+						//console.debug('el=',el);
 						const content_tabcontent = (el.acf.testo_eng) ? formatACFText(el.acf.testo_eng) : el.content.rendered;
 
 						TabContent += `
 							<div class="caw-listing-item caw listing-artisti" id="${el.slug}">`;
 						TabContent += `
-							<h2 class="title-tabcontent">${el.title.rendered}</h2>`;
-						Array.from(el.location_details).forEach(e => {
-							TabContent += `<span><a class="info-tabcontent" data-position-lng="${e.lng}" data-position-lat="${e.lat}" href="javascript:LoadItInTheDiv(${e.post_id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${e.lng} - ${ShiftMap}),${e.lat}],essential: true,zoom:17,duration: 2000});"><img src="${Baseurl}/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="15" height="15" valign="middle" /> ${e.id}. ${e.name}</a></span>`;
-						})
+							<h2 class="title-tabcontent">
+								<a href="javascript:LoadItInTheDiv(${el.id},'posts','HalfDiv',current_lang);" title="info su ${el.title.rendered}">${el.title.rendered}</a>
+							</h2>`;
+
+						// lista locations per ogni artista:
+						// Array.from(el.location_details).forEach(e => {
+						// 	TabContent += `<span><a class="info-tabcontent" data-position-lng="${e.lng}" data-position-lat="${e.lat}" href="javascript:LoadItInTheDiv(${e.post_id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${e.lng} - ${ShiftMap}),${e.lat}],essential: true,zoom:17,duration: 2000});"><img src="${Baseurl}/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="15" height="15" valign="middle" /> ${e.id}. ${e.name}</a></span>`;
+						// })
 						TabContent += `	</div>`;
 						
 						Art_done++;
@@ -792,17 +797,19 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 									<h2 class="title-tabcontent">${loc.acf.location_id}. ${loc.title.rendered}</h2>`;
 							}
 
-						artistList.forEach((el) => {
-							if (el.acf.location.includes(loc.id)) {
-								loc.artists[i]={};
-								loc.artists[i].slug = el.slug;
-								loc.artists[i].title = el.title.rendered;
-								TabContent += `<span>${loc.artists[i].title}</span>`;	
-
-								i++;
-							}	
+						// lista artisti per questa location:
+						// artistList.forEach((el) => {
+						// 	if (el.acf.location.includes(loc.id)) {
+						// 		console.debug('element',el);
+						// 		loc.artists[i]={};
+						// 		loc.artists[i].id = el.id;
+						// 		loc.artists[i].slug = el.slug;
+						// 		loc.artists[i].title = el.title.rendered;
+						// 		TabContent += `<a href="javascript:LoadItInTheDiv(${loc.artists[i].id},'locations','HalfDiv',current_lang);"><img src="/cremona-artweek/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="15" height="15" valign="middle"> ${loc.artists[i].title}</a>`;
+						// 		i++;
+						// 	}	
 			
-						});
+						// });
 
 						//console.debug('loc:',loc);
 
@@ -852,25 +859,16 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 							<p class="small-tabcontent">
 								<span>${content_orari}</span>
 								<span style="margin-bottom:12px;">${CAWdata.acf.location.street_name}, ${CAWdata.acf.location.street_number}</span>
-								<span>`;
-						for (let i = 0; i < art_display.length; i++) {
-							TabContent += `
-								<a href="javascript:;" title="info su ${art_display[i].title}" onclick="document.getElementById('artist-${art_display[i].slug}').scrollIntoView({behavior: 'smooth'});">${art_display[i].title}</a>`
-							if (i < art_display.length-1) {
-								TabContent += '<br/>';
-							}
-						}
-						TabContent += `</span>
 							</p>
 							<div class="content-tabcontent">${content_tabcontent}</div>`;
-							for (let i = 0; i < art_display.length; i++) {
-							TabContent += `
-								<div class="content-tabcontent content-artdisplay" id="artist-${art_display[i].slug}">
-									${formatACFText(art_display[i].content)}
-								</div>`;
 
-							// console.debug('ooooo',art_display[i].content);
-							// console.debug('xxxxx',formatACFText(art_display[i].content));
+
+							for (let i = 0; i < art_display.length; i++) {
+								TabContent += `
+									<a href="javascript:LoadItInTheDiv(${art_display[i].id},'posts','HalfDiv',current_lang);" title="info su ${art_display[i].title}"><img src="/cremona-artweek/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="15" height="15" valign="middle"> ${art_display[i].title}</a>`
+								if (i < art_display.length-1) {
+									TabContent += '<br/>';
+								}
 							}
 
 						TabContainer.innerHTML = TabContent;
@@ -898,6 +896,12 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						<h2 class="title-tabcontent heading-line">${CAWdata.title.rendered}</h2>
 						<div class="content-tabcontent">${content_tabcontent}</div>
 					`;
+					// if (CAWdata.acf.location) {
+					// 	TabContent += `rrrr`;
+					// 	CAWdata.acf.location.forEach((el) => {
+					// 		TabContent += `ooooooo-- ${el}`+el;
+					// 	});
+					// }
 					TabContainer.innerHTML = TabContent;
 
 				}
