@@ -746,7 +746,9 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						TabContent += `
 							<div class="caw-listing-item caw listing-artisti" id="${el.slug}">`;
 						TabContent += `
-							<h2 class="title-tabcontent">${el.title.rendered}</h2>`;
+							<a class="info-tabcontent" href="javascript:LoadItInTheDiv(${el.id},'faville','HalfDiv',current_lang);">
+								<h2 class="title-tabcontent">${el.title.rendered}</h2>
+							</a>`;
 						Array.from(el.location_details).forEach(e => {
 							TabContent += `<span><a class="info-tabcontent" data-position-lng="${e.lng}" data-position-lat="${e.lat}" href="javascript:LoadItInTheDiv(${e.post_id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${e.lng} - ${ShiftMap}),${e.lat}],essential: true,zoom:17,duration: 2000});"><img src="${Baseurl}/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="15" height="15" valign="middle" /> ${e.id}. ${e.name}</a></span>`;
 						})
@@ -874,18 +876,26 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						TabContainer.innerHTML = TabContent;
 
 					}
-				} else if (CAWdata.acf.location_id === '') {
-					// 👉 SPOTS
-					let content_orari = (current_lang == 'en') ? CAWdata.acf.orari_evento_en : CAWdata.acf.orari_evento_it;
-					if (typeof(content_orari) === 'undefined') { content_orari = '-' };
+				// } else if (CAWdata.acf.location_id === '') {
+				// 	// 👉 SPOTS
+				// 	let content_orari = (current_lang == 'en') ? CAWdata.acf.orari_evento_en : CAWdata.acf.orari_evento_it;
+				// 	if (typeof(content_orari) === 'undefined') { content_orari = '-' };
+				// 	TabContent += `
+				// 		<h2 class="title-tabcontent heading-line">${CAWdata.title.rendered}</h2>
+				// 		<p class="small-tabcontent">
+				// 			<span>${content_orari}</span>
+				// 			<span style="margin-bottom:12px;">${CAWdata.acf.location.street_name}, ${CAWdata.acf.location.street_number}</span>
+				// 		</p>
+				// 	`;						
+				// 	TabContent += `
+				// 		<div class="content-tabcontent">${content_tabcontent}</div>
+				// 	`;
+				// 	TabContainer.innerHTML = TabContent;
+				} else if (CAWdata.type === 'faville') {
+					// 👉 FAVILLE
+					GA4pageTitle += '/'+CAWdata.slug;
 					TabContent += `
 						<h2 class="title-tabcontent heading-line">${CAWdata.title.rendered}</h2>
-						<p class="small-tabcontent">
-							<span>${content_orari}</span>
-							<span style="margin-bottom:12px;">${CAWdata.acf.location.street_name}, ${CAWdata.acf.location.street_number}</span>
-						</p>
-					`;						
-					TabContent += `
 						<div class="content-tabcontent">${content_tabcontent}</div>
 					`;
 					TabContainer.innerHTML = TabContent;
