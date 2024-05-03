@@ -633,10 +633,9 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					// event end
 					let EVend_date = '';
 					let EVend_time = '';
-					console.debug('el.acf.evento_date_end',el.acf.evento_date_end);
-					if (el.acf.evento_date_end != null || el.acf.evento_date_end != '')	{	
-						let EVend = new Date(el.acf.evento_date_end);
-						//console.debug(EVend);
+					let EVend = new Date(el.acf.evento_date_end);
+					if (!isNaN(EVend)) {
+						console.debug(EVend);
 						let EVend_day = el.acf.evento_date_end!='' ? EVend.getDate() : '';
 						let EVend_Month = EVend.getMonth() + 1;
 						let EVend_paddedMinutes = EVend.getMinutes()<=9 ? ('0'+EVend.getMinutes()).slice(-2) : EVend.getMinutes();
@@ -646,6 +645,8 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 							EVend_paddedMonth = EVend_Month<=9 ? ('0'+EVend_Month).slice(-2) : EVend_Month;
 						}
 						EVend_date = EVstart_date!=EVend_day ? EVend_day + '.' + EVend_paddedMonth + ' ' : '';
+					} else {
+						console.debug('evento: data fine evento vuota/non validah.');
 					}
 
 
