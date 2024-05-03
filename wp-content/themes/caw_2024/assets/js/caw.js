@@ -575,7 +575,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 		urlRequest = WPREST_Base+'/posts?orderby=date&order=desc&per_page=99'
 	} else if (itemID == 1492 || itemID == 1494) { // archivio faville
 		GA4pageTitle = 'faville';
-		urlRequest = WPREST_Base+'/faville?orderby=date&order=desc&per_page=99';
+		urlRequest = WPREST_Base+'/faville?_fields=id,acf,slug,title,content,type&orderby=date&order=desc&per_page=99';
 	} else if (itemID == 1043 || itemID == 1045) { // archivio luoghi
 		GA4pageTitle = 'luoghi';
 		urlRequest = WPREST_Base+'/locations?_fields=acf.location_id,acf.location,id,slug,title&orderby=location_id&order=asc&per_page=99';
@@ -873,7 +873,9 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 								}
 							}
 
-						TabContainer.innerHTML = TabContent;
+						setTimeout(() => {
+							TabContainer.innerHTML = TabContent;
+						},100);	
 
 					}
 				// } else if (CAWdata.acf.location_id === '') {
@@ -898,7 +900,10 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						<h2 class="title-tabcontent heading-line">${CAWdata.title.rendered}</h2>
 						<div class="content-tabcontent">${content_tabcontent}</div>
 					`;
-					TabContainer.innerHTML = TabContent;
+					setTimeout(() => {
+						TabContainer.innerHTML = TabContent;
+						console.debug(TabContainer.innerHTML);
+					},100);	
 				} else { 
 					// 👉 SIMPLE POSTS/PAGES:
 					GA4pageTitle += '/'+CAWdata.slug;
@@ -912,7 +917,9 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					// 		TabContent += `ooooooo-- ${el}`+el;
 					// 	});
 					// }
-					TabContainer.innerHTML = TabContent;
+					setTimeout(() => {
+						TabContainer.innerHTML = TabContent;
+					},100);	
 
 				}
 				
