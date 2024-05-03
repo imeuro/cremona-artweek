@@ -601,6 +601,9 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 	resultFromWP.then( 
 		CAWdata => {
 			console.debug( 'CAWdata:' , CAWdata );
+			CAWdata.forEach((el) => {
+				console.debug('event location:',el.acf.evento_location);
+			})
 			TabContent = '';
 
 			if (itemID == 12 || itemID == 76) { 
@@ -627,31 +630,25 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					if (el.acf.evento_date_start!='') {
 						EVstart_paddedMonth = EVstart_Month<=9 ? ('0'+EVstart_Month).slice(-2) : EVstart_Month;
 					}	
-					// event end				
-					let EVend = new Date(el.acf.evento_date_end);
-					//console.debug(EVend);
-					let EVend_day = el.acf.evento_date_end!='' ? EVend.getDate() : '';
-					let EVend_Month = EVend.getMonth() + 1;
-					let EVend_paddedMinutes = EVend.getMinutes()<=9 ? ('0'+EVend.getMinutes()).slice(-2) : EVend.getMinutes();
-					let EVend_time = EVend.getHours() + ':' + EVend_paddedMinutes;
-					let EVend_paddedMonth = '';
-					if (el.acf.evento_date_end!='') {
-						EVend_paddedMonth = EVend_Month<=9 ? ('0'+EVend_Month).slice(-2) : EVend_Month;
+					// event end		
+					if (el.acf.evento_date_end)	{	
+						let EVend = new Date(el.acf.evento_date_end);
+						//console.debug(EVend);
+						let EVend_day = el.acf.evento_date_end!='' ? EVend.getDate() : '';
+						let EVend_Month = EVend.getMonth() + 1;
+						let EVend_paddedMinutes = EVend.getMinutes()<=9 ? ('0'+EVend.getMinutes()).slice(-2) : EVend.getMinutes();
+						let EVend_time = EVend.getHours() + ':' + EVend_paddedMinutes;
+						let EVend_paddedMonth = '';
+						if (el.acf.evento_date_end!='') {
+							EVend_paddedMonth = EVend_Month<=9 ? ('0'+EVend_Month).slice(-2) : EVend_Month;
+						}
+						let EVend_date = EVstart_date!=EVend_day ? EVend_day + '.' + EVend_paddedMonth + ' ' : '';
+					} else {
+						let EVend_date = '';
+						let EVend_time = '';
 					}
-					let EVend_date = EVstart_date!=EVend_day ? EVend_day + '.' + EVend_paddedMonth + ' ' : '';
 
-					// let engtitle = el.acf.testo_eng.substring(
-					//     el.acf.testo_eng.indexOf("<h3>") + 4, 
-					//     el.acf.testo_eng.lastIndexOf("</h3>")
-					// );
-					// let engtext = el.acf.testo_eng;
-					// console.debug('pre -',engtext);
-					// engtext = engtext.replace("\r\n\r\n",'</p><p>');
-					// engtext = engtext.replace("\r\n", "<br>");
-					// console.debug('post -',engtext);
-					// engtext = '<p>'+engtext.replace("<h3>"+engtitle+"</h3>",'')+'</p>';
-					// console.debug(engtitle);
-					// console.debug(engtext);
+
 					let event_text = formatACFText(el.acf.testo_eng);
 					let engtitle = el.acf.testo_eng.substring(
 					    el.acf.testo_eng.indexOf("<h3>") + 4, 
