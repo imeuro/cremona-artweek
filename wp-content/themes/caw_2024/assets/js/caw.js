@@ -601,9 +601,6 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 	resultFromWP.then( 
 		CAWdata => {
 			console.debug( 'CAWdata:' , CAWdata );
-			CAWdata.forEach((el) => {
-				console.debug('event location:',el.acf.evento_location);
-			})
 			TabContent = '';
 
 			if (itemID == 12 || itemID == 76) { 
@@ -635,7 +632,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					let EVend_time = '';
 					let EVend = new Date(el.acf.evento_date_end);
 					if (!isNaN(EVend)) {
-						console.debug(EVend);
+						//console.debug(EVend);
 						let EVend_day = el.acf.evento_date_end!='' ? EVend.getDate() : '';
 						let EVend_Month = EVend.getMonth() + 1;
 						let EVend_paddedMinutes = EVend.getMinutes()<=9 ? ('0'+EVend.getMinutes()).slice(-2) : EVend.getMinutes();
@@ -657,6 +654,9 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					);
 					let event_content = current_lang == 'en' ? event_text : el.content.rendered;
 					let event_title = current_lang == 'en' ? engtitle : el.title.rendered;
+
+					console.debug(el.acf.evento_location.street_number);
+					!el.acf.evento_location.street_number ? el.acf.evento_location.street_number = 's/n' : el.acf.evento_location.street_number = el.acf.evento_location.street_number;
 
 					TabContent += `
 						<div class="caw-listing-item caw listing-artisti" id="${el.slug}" data-position-lng="${el.acf.evento_location.lng}" data-position-lat="${el.acf.evento_location.lat}">
