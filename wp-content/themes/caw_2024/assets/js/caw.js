@@ -632,7 +632,8 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					}	
 					// event end
 					let EVend_date = '';
-					let EVend_time = '';	
+					let EVend_time = '';
+					console.debug('el.acf.evento_date_end',el.acf.evento_date_end);
 					if (el.acf.evento_date_end != null)	{	
 						let EVend = new Date(el.acf.evento_date_end);
 						//console.debug(EVend);
