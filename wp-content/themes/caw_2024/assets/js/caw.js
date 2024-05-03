@@ -47,7 +47,7 @@ const generateMapbox = () => {
 	map.on('load', () => {
 		// JSON EXAMPLE @
 		// https://docs.mapbox.com/mapbox-gl-js/example/popup-on-hover/
-		console.debug(CAWgeoJSON_locations);
+		console.debug('Locations: ',CAWgeoJSON_locations);
 
 		const markers =[
 		  {
@@ -124,7 +124,7 @@ const generateMapbox = () => {
 					return;
 				}
 				const feature = features[0];
-				console.debug({feature});
+				// console.debug({feature});
 				readmorelink = feature.properties.post_id;
 
 				coords = feature.geometry.coordinates;
@@ -132,7 +132,7 @@ const generateMapbox = () => {
 				// Create a popup, specify its options 
 				// and properties, and add it to the map.
 				const setPopupContent = () => {
-					console.debug('art_display',art_display);
+					console.debug('Artists for this location: ',art_display);
 					let artists = '';
 					if (window.innerWidth>600) {
 						for (var i = 0; i < art_display.length; i++) {
@@ -147,7 +147,7 @@ const generateMapbox = () => {
 							`
 						)
 						.addTo(map);
-						console.debug({artists})
+						//console.debug({artists})
 					}
 				}
 				get_artists_for_location_id ( feature, readmorelink, setPopupContent );
@@ -282,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 				geoJSON.features = features;
 				CAWgeoJSON_locations = geoJSON;
-				console.debug(CAWgeoJSON_locations)
+				// console.debug(CAWgeoJSON_locations)
 			}
 	);
 	
@@ -358,13 +358,13 @@ function get_locations_for_artists_in_list ( CAWdata, callback ) {
 	//recupera i dati delle location (ho solo l'ID del post type location in CAWdata)
 	const EVPlace_data = getPostsFromWp(WPREST_Base+'/locations/?_fields=acf.location_id,acf.location,id,slug,title&per_page=99');
 		EVPlace_data.then( EVPdata => {
-			console.debug('trovo listone locations (EVPdata): ',EVPdata);
-			console.debug('CAWdata: ',CAWdata);
+			// console.debug('trovo listone locations (EVPdata): ',EVPdata);
+			// console.debug('CAWdata: ',CAWdata);
 			//for (let k = 0; k < CAWdata.length; k++) {
 			for (let k = 0; k < CAWdata.length; k++) {
 				const EVPlace_id = CAWdata[k].acf.location;
 				if (EVPlace_id != null) {
-					console.debug('cerco locations for '+CAWdata[k].title.rendered+' con id: '+EVPlace_id);
+					// console.debug('cerco locations for '+CAWdata[k].title.rendered+' con id: '+EVPlace_id);
 					// per ogni EVPlace_id devo trovare in EVPdata i dati della location e poi li integro in CAWDATA[k]
 					CAWdata[k].location_details=[];
 					let f = 0;
@@ -388,7 +388,7 @@ function get_locations_for_artists_in_list ( CAWdata, callback ) {
 							}
 						}
 					});
-					console.debug(CAWdata[k]);
+					// console.debug(CAWdata[k]);
 				}
 			}						
 		}).then( callback );
@@ -396,7 +396,7 @@ function get_locations_for_artists_in_list ( CAWdata, callback ) {
 
 function get_artists_for_location_id ( CAWdata, id, callback ) {
 	// query all posts (Artists) with acf 'location_id' == CAWdata.acf.location_id
-	console.debug(id);
+	//. dconsole.debug(id);
 	art_display=[];
 	const ARThere_data = getPostsFromWp(WPREST_Base+'/posts/?_fields=id,acf.location,acf.testo_eng,slug,title,content&per_page=99');
 	let i = 0;
@@ -588,7 +588,8 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 		GA4pageTitle = 'pages';
 		urlRequest = WPREST_Base+'/'+postType+"/"+itemID;
 	}
-	console.debug(urlRequest);
+	console.debug('------');
+	console.debug('data:',{urlRequest});
 
 	setTimeout(() => {
 		TabContainer.innerHTML = '<div class="loading-div"><div class="loading-anim"></div></div>';
@@ -603,14 +604,14 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 			console.debug( 'CAWdata:' , CAWdata );
 			TabContent = '';
 
-			if (itemID == 12 || itemID == 76) { 
+			if (itemID == 12 || itemID == 76) {  
 				// 👉 LISTING "EVENTI" (by nearest start date):
 				// sort by the acf.evento_date_start field
 
 				CAWdata.sort((x, y) => {
-				     x = new Date(x.acf.evento_date_start),
-				      y = new Date(y.acf.evento_date_start);
-				    return x - y;
+					x = new Date(x.acf.evento_date_start),
+					y = new Date(y.acf.evento_date_start);
+					return x - y;
 				});
 				// testatina x listing eventi extra:
 				let TabTitle = current_lang == 'en' ? 'Events' : 'Eventi';
@@ -643,19 +644,19 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						}
 						EVend_date = EVstart_date!=EVend_day ? EVend_day + '.' + EVend_paddedMonth + ' ' : '';
 					} else {
-						console.debug('evento: data fine evento vuota/non validah.');
+						// console.debug('evento: data fine evento vuota/non validah.');
 					}
 
 
 					let event_text = formatACFText(el.acf.testo_eng);
 					let engtitle = el.acf.testo_eng.substring(
-					    el.acf.testo_eng.indexOf("<h3>") + 4, 
-					    el.acf.testo_eng.lastIndexOf("</h3>")
+						el.acf.testo_eng.indexOf("<h3>") + 4, 
+						el.acf.testo_eng.lastIndexOf("</h3>")
 					);
 					let event_content = current_lang == 'en' ? event_text : el.content.rendered;
 					let event_title = current_lang == 'en' ? engtitle : el.title.rendered;
 
-					console.debug(el.acf.evento_location.street_number);
+					// console.debug(el.acf.evento_location.street_number);
 					!el.acf.evento_location.street_number ? el.acf.evento_location.street_number = 's/n' : el.acf.evento_location.street_number = el.acf.evento_location.street_number;
 
 					TabContent += `
@@ -667,6 +668,8 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						</div>
 					`;
 				});
+
+				console.debug('All events processed.');
 				TabContainer.innerHTML = TabContent;
 			}
 			else if (itemID == 498 || itemID == 500) {
@@ -738,7 +741,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					let TabTitle = current_lang == 'en' ? 'Faville' : 'Faville';
 					TabContent += ` <h2 class="title-tabcontent heading-line">${TabTitle}</h2><br><br>`;
 					Object.values(CAWdata).forEach(el => {
-						console.debug('el=',el);
+						// console.debug('el=',el);
 						const content_tabcontent = (el.acf.testo_eng) ? formatACFText(el.acf.testo_eng) : el.content.rendered;
 
 						TabContent += `
@@ -754,7 +757,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						
 						Art_done++;
 						if (Art_done == CAWdata.length) {
-							console.debug('All artists processed.');
+							console.debug('All faville processed.');
 							TabContainer.innerHTML = TabContent;
 						}
 					});
@@ -774,7 +777,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 				artistList = getPostsFromWp(WPREST_Base+'/posts/?_fields=acf.location,slug,title&per_page=99');
 				artistList.then( artistList => {
 
-					console.debug('artistList',artistList);
+					// console.debug('artistList',artistList);
 					
 					let TabTitle = current_lang == 'en' ? 'Locations' : 'Luoghi';
 					TabContent += ` <h2 class="title-tabcontent heading-line">${TabTitle}</h2><br /><br />`;
@@ -800,7 +803,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						// lista artisti per questa location:
 						artistList.forEach((el) => {
 							if (el.acf.location.includes(loc.id)) {
-								console.debug('element',el);
+								// console.debug('element',el);
 								loc.artists[i]={};
 								loc.artists[i].id = el.id;
 								loc.artists[i].slug = el.slug;
@@ -836,7 +839,10 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					// 	}
 					// })
 
-				}).then( () => { TabContainer.innerHTML = TabContent });
+				}).then( () => { 
+					TabContainer.innerHTML = TabContent;
+					console.debug('All locations processed.');
+				});
 
 
 			}
@@ -855,11 +861,12 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						console.debug(art_display.length+' artists displaying here', art_display);
 
 						TabContent += `
-							<h2 class="title-tabcontent heading-line">${CAWdata.acf.location_id}. ${CAWdata.title.rendered}</h2>
+							<h2 class="title-tabcontent">${CAWdata.acf.location_id}. ${CAWdata.title.rendered}</h2>
 							<p class="small-tabcontent">
 								<span>${content_orari}</span>
 								<span style="margin-bottom:12px;">${CAWdata.acf.location.street_name}, ${CAWdata.acf.location.street_number}</span>
 							</p>
+							<hr class="spacerbar" />
 							<div class="content-tabcontent">${content_tabcontent}</div>`;
 
 
