@@ -630,8 +630,10 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					if (el.acf.evento_date_start!='') {
 						EVstart_paddedMonth = EVstart_Month<=9 ? ('0'+EVstart_Month).slice(-2) : EVstart_Month;
 					}	
-					// event end		
-					if (el.acf.evento_date_end)	{	
+					// event end
+					let EVend_date = '';
+					let EVend_time = '';	
+					if (el.acf.evento_date_end != null)	{	
 						let EVend = new Date(el.acf.evento_date_end);
 						//console.debug(EVend);
 						let EVend_day = el.acf.evento_date_end!='' ? EVend.getDate() : '';
@@ -643,9 +645,6 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 							EVend_paddedMonth = EVend_Month<=9 ? ('0'+EVend_Month).slice(-2) : EVend_Month;
 						}
 						let EVend_date = EVstart_date!=EVend_day ? EVend_day + '.' + EVend_paddedMonth + ' ' : '';
-					} else {
-						let EVend_date = '';
-						let EVend_time = '';
 					}
 
 
