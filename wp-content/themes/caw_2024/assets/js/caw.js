@@ -472,7 +472,7 @@ evlist.forEach((ev) => {
 const formatACFText = (fieldName) => {
 	let engtext = fieldName;
 	let newengcontent = {};
-	
+
 	const engtitle = /<h3>(.*?)<\/h3>/g.exec(engtext);
 	console.debug('engtitle -',engtitle);
 	newengcontent.title = engtitle ? engtitle[1] : '';
@@ -687,7 +687,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					TabContent += ` <h2 class="title-tabcontent heading-line">${TabTitle}</h2><br><br>`;
 					Object.values(CAWdata).forEach(el => {
 						//console.debug('el=',el);
-						const content_tabcontent = (el.acf.testo_eng) ? formatACFText(el.acf.testo_eng) : el.content.rendered;
+						// const content_tabcontent = (el.acf.testo_eng) ? formatACFText(el.acf.testo_eng) : el.content.rendered;
 
 						TabContent += `
 							<div class="caw-listing-item caw listing-artisti" id="${el.slug}">`;
@@ -738,7 +738,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					TabContent += ` <h2 class="title-tabcontent heading-line">${TabTitle}</h2><br><br>`;
 					Object.values(CAWdata).forEach(el => {
 						// console.debug('el=',el);
-						const content_tabcontent = (el.acf.testo_eng) ? formatACFText(el.acf.testo_eng) : el.content.rendered;
+						// const content_tabcontent = (el.acf.testo_eng) ? formatACFText(el.acf.testo_eng) : el.content.rendered;
 
 						TabContent += `
 							<div class="caw-listing-item caw listing-artisti" id="${el.slug}">`;
@@ -843,7 +843,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 
 			}
 			else { // LOCATIONS & SIMPLE POSTS/PAGES:
-				const content_tabcontent = (current_lang == 'en' && CAWdata.acf.testo_eng) ? formatACFText(CAWdata.acf.testo_eng) : CAWdata.content.rendered;
+				const content_tabcontent = (current_lang == 'en' && CAWdata.acf.testo_eng) ? formatACFText(CAWdata.acf.testo_eng).text : CAWdata.content.rendered;
 
 				//console.debug(CAWdata);
 				if (CAWdata.acf.location_id) {
