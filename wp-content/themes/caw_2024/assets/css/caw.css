@@ -504,7 +504,7 @@ button.menu-toggle:after {
 	white-space: break-spaces;
 }
 #caw-tabcontainer .small-tabcontent {
-    height: 48px;
+    min-height: 48px;
 }
 #caw-tabcontainer .small-tabcontent span {
 	display: block;
