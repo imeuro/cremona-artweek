@@ -474,22 +474,22 @@ const formatACFText = (fieldName) => {
 	let newengtext = '';
 	// console.debug(typeof(engtext));
 
-	let engtitle = engtext.substring(
-		engtext.indexOf("<h3>") + 4, 
-		engtext.lastIndexOf("</h3>")
-	);
+	// let engtitle = engtext.substring(
+	// 	engtext.indexOf("<h3>") + 4, 
+	// 	engtext.lastIndexOf("</h3>")
+	// );
 
 	if (current_lang == 'en' && engtext) {
 
 		console.debug('pre -',engtext);
 		newengtext = engtext.replace(/(?:\n\n)/g, "</p><p>");
 		newengtext = newengtext.replace(/(?:\r\n|\r|\n)/g, "<br>");
-		// console.debug('post -',newengtext);
-		if (engtitle != "") {
-			newengtext = '<p>'+newengtext.replace("<h3>"+engtitle+"</h3><br>",'')+'</p>';
-		} else {
-			newengtext = '<p>'+engtext+'</p>';
-		}
+		console.debug('post -', newengtext);
+		// if (engtitle != "") {
+		// 	newengtext = '<p>'+newengtext.replace("<h3>"+engtitle+"</h3><br>",'')+'</p>';
+		// } else {
+		// 	newengtext = '<p>'+engtext+'</p>';
+		// }
 
 	} else {
 		newengtext = engtext
@@ -649,12 +649,14 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 
 
 					let event_text = formatACFText(el.acf.testo_eng);
+					// let event_text = el.acf.testo_eng;
 					let engtitle = el.acf.testo_eng.substring(
 						el.acf.testo_eng.indexOf("<h3>") + 4, 
 						el.acf.testo_eng.lastIndexOf("</h3>")
 					);
 					let event_content = current_lang == 'en' ? event_text : el.content.rendered;
-					let event_title = current_lang == 'en' ? engtitle : el.title.rendered;
+					// let event_title = current_lang == 'en' ? engtitle : el.title.rendered;
+					let event_title = el.title.rendered;
 
 					// console.debug(el.acf.evento_location.street_number);
 					!el.acf.evento_location.street_number ? el.acf.evento_location.street_number = 's/n' : el.acf.evento_location.street_number = el.acf.evento_location.street_number;
