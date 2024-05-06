@@ -786,16 +786,11 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 
 						TabContent += `
 							<div class="caw-listing-item caw listing-locations" id="${loc.slug}">`;
-							if (current_lang == 'it') {
-								TabContent += `
-									<a class="info-tabcontent" data-position-lng="${loc.acf.location.lng}" data-position-lat="${loc.acf.location.lat}" href="javascript:LoadItInTheDiv(${loc.id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${loc.acf.location.lng} - ${ShiftMap}),${loc.acf.location.lat}],essential: true,zoom:17,duration: 2000});">
-										<h2 class="title-tabcontent">${loc.acf.location_id}. ${loc.title.rendered}</h2>
-									</a>`;
-							} else {
-								TabContent += `
-									<h2 class="title-tabcontent">${loc.acf.location_id}. ${loc.title.rendered}</h2>`;
-							}
-
+							TabContent += `
+								<a class="info-tabcontent" data-position-lng="${loc.acf.location.lng}" data-position-lat="${loc.acf.location.lat}" href="javascript:LoadItInTheDiv(${loc.id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${loc.acf.location.lng} - ${ShiftMap}),${loc.acf.location.lat}],essential: true,zoom:17,duration: 2000});">
+									<h2 class="title-tabcontent">${loc.acf.location_id}. ${loc.title.rendered}</h2>
+								</a>`;
+							
 						// lista artisti per questa location:
 						artistList.forEach((el) => {
 							if (el.acf.location.includes(loc.id)) {
