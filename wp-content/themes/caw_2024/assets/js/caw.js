@@ -471,30 +471,29 @@ evlist.forEach((ev) => {
 
 const formatACFText = (fieldName) => {
 	let engtext = fieldName;
-	let newengtext = '';
-	// console.debug(typeof(engtext));
-
-	// let engtitle = engtext.substring(
-	// 	engtext.indexOf("<h3>") + 4, 
-	// 	engtext.lastIndexOf("</h3>")
-	// );
+	let newengcontent = {};
+	
+	const engtitle = /<h3>(.*?)<\/h3>/g.exec(engtext);
+	console.debug('engtitle -',engtitle);
+	newengcontent.title = engtitle ? engtitle[1] : '';
+	
 
 	if (current_lang == 'en' && engtext) {
-
-		console.debug('pre -',engtext);
-		newengtext = engtext.replace(/(?:\n\n)/g, "</p><p>");
-		newengtext = newengtext.replace(/(?:\r\n|\r|\n)/g, "<br>");
-		console.debug('post -', newengtext);
-		// if (engtitle != "") {
-		// 	newengtext = '<p>'+newengtext.replace("<h3>"+engtitle+"</h3><br>",'')+'</p>';
-		// } else {
-		// 	newengtext = '<p>'+engtext+'</p>';
-		// }
-
+		newengcontent.text = engtext.replace(/(?:\n\n)/g, "</p><p>");
+		newengcontent.text = newengcontent.text.replace(/(?:\r\n|\r|\n)/g, "<br>");
+		if (newengcontent.title !== '') {
+			newengcontent.text = '<p>'+newengcontent.text.replace("<h3>"+newengcontent.title+"</h3><br>",'')+'</p>';
+			newengcontent.text = '<p>'+newengcontent.text.replace("<h3>"+newengcontent.title+"</h3>",'')+'</p>';
+		} else {
+			newengcontent.text = '<p>'+engtext+'</p>';
+		}
 	} else {
-		newengtext = engtext
+		newengcontent = engtext
 	}
-	return newengtext;
+
+	//console.debug('engcontent: ', newengcontent);
+
+	return newengcontent;
 }
 
 
@@ -648,17 +647,12 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					}
 
 
-					let event_text = formatACFText(el.acf.testo_eng);
-					// let event_text = el.acf.testo_eng;
-					let engtitle = el.acf.testo_eng.substring(
-						el.acf.testo_eng.indexOf("<h3>") + 4, 
-						el.acf.testo_eng.lastIndexOf("</h3>")
-					);
-					let event_content = current_lang == 'en' ? event_text : el.content.rendered;
-					// let event_title = current_lang == 'en' ? engtitle : el.title.rendered;
-					let event_title = el.title.rendered;
+					let event_en = formatACFText(el.acf.testo_eng);
+					// console.debug(event_en);
 
-					// console.debug(el.acf.evento_location.street_number);
+					let event_content = current_lang == 'en' ? event_en.text : el.content.rendered;
+					let event_title = (current_lang == 'en' && event_en.title !== '') ? event_en.title : el.title.rendered;
+
 					!el.acf.evento_location.street_number ? el.acf.evento_location.street_number = 's/n' : el.acf.evento_location.street_number = el.acf.evento_location.street_number;
 
 					TabContent += `
