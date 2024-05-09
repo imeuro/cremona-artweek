@@ -737,7 +737,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 
 						// lista locations per ogni artista:
 						Array.from(el.location_details).forEach(e => {
-							TabContent += `<span><a class="info-tabcontent" data-position-lng="${e.lng}" data-position-lat="${e.lat}" href="javascript:LoadItInTheDiv(${e.post_id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${e.lng} - ${ShiftMap}),${e.lat}],essential: true,zoom:17,duration: 2000});"><img src="${Baseurl}/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="15" height="15" valign="middle" /> ${e.id}. ${e.name}</a></span>`;
+							TabContent += `<span><a class="info-tabcontent" data-position-lng="${e.lng}" data-position-lat="${e.lat}" href="javascript:LoadItInTheDiv(${e.post_id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${e.lng} - ${ShiftMap}),${e.lat}],essential: true,zoom:17,duration: 2000});"><img src="${Baseurl}/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="10" height="10" valign="middle" /> ${e.id}. ${e.name}</a></span>`;
 						})
 						TabContent += `	</div>`;
 						
@@ -786,7 +786,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 								<h2 class="title-tabcontent">${el.title.rendered}</h2>
 							</a>`;
 						Array.from(el.location_details).forEach(e => {
-							TabContent += `<span><a class="info-tabcontent" data-position-lng="${e.lng}" data-position-lat="${e.lat}" href="javascript:LoadItInTheDiv(${e.post_id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${e.lng} - ${ShiftMap}),${e.lat}],essential: true,zoom:17,duration: 2000});"><img src="${Baseurl}/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="15" height="15" valign="middle" /> ${e.id}. ${e.name}</a></span>`;
+							TabContent += `<span><a class="info-tabcontent" data-position-lng="${e.lng}" data-position-lat="${e.lat}" href="javascript:LoadItInTheDiv(${e.post_id},'locations','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${e.lng} - ${ShiftMap}),${e.lat}],essential: true,zoom:17,duration: 2000});"><img src="${Baseurl}/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="10" height="10" valign="middle" /> ${e.id}. ${e.name}</a></span>`;
 						})
 						TabContent += `	</div>`;
 						
@@ -843,7 +843,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 									loc.artists[i].id = el.id;
 									loc.artists[i].slug = el.slug;
 									loc.artists[i].title = el.title.rendered;
-									TabContent += `<span><a href="javascript:LoadItInTheDiv(${loc.artists[i].id},'locations','HalfDiv',current_lang);"><img src="/cremona-artweek/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="15" height="15" valign="middle">&nbsp;&nbsp;${loc.artists[i].title}</a></span>`;
+									TabContent += `<span><a href="javascript:LoadItInTheDiv(${loc.artists[i].id},'locations','HalfDiv',current_lang);"><img src="/cremona-artweek/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="10" height="10" valign="middle">&nbsp;&nbsp;${loc.artists[i].title}</a></span>`;
 									i++;
 								}	
 				
@@ -857,7 +857,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 									loc.faville[i].id = el.id;
 									loc.faville[i].slug = el.slug;
 									loc.faville[i].title = el.title.rendered;
-									TabContent += `<span><a href="javascript:LoadItInTheDiv(${loc.faville[i].id},'locations','HalfDiv',current_lang);"><img src="/cremona-artweek/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="15" height="15" valign="middle">&nbsp;&nbsp;${loc.faville[i].title}</a></span>`;
+									TabContent += `<span><a href="javascript:LoadItInTheDiv(${loc.faville[i].id},'locations','HalfDiv',current_lang);"><img src="/cremona-artweek/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="10" height="10" valign="middle">&nbsp;&nbsp;${loc.faville[i].title}</a></span>`;
 									i++;
 								}	
 				
@@ -881,7 +881,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 									TabContent += `
 										<div class="caw-listing-item caw listing-locations" id="${spot.slug}">`;
 									TabContent += `
-										<p><img src="/cremona-artweek/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="15" height="15" valign="middle">&nbsp;&nbsp;<a class="info-tabcontent" data-position-lng="${spot.acf.location.lng}" data-position-lat="${spot.acf.location.lat}" href="javascript:LoadItInTheDiv(${spot.id},'spots','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${spot.acf.location.lng} - ${ShiftMap}),${spot.acf.location.lat}],essential: true,zoom:17,duration: 2000});">
+										<p><img src="/cremona-artweek/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="10" height="10" valign="middle">&nbsp;&nbsp;<a class="info-tabcontent" data-position-lng="${spot.acf.location.lng}" data-position-lat="${spot.acf.location.lat}" href="javascript:LoadItInTheDiv(${spot.id},'spots','HalfDiv',current_lang);" onclick="map.flyTo({center: [(${spot.acf.location.lng} - ${ShiftMap}),${spot.acf.location.lat}],essential: true,zoom:17,duration: 2000});">
 											<span>${spot.title.rendered}</span>
 										</a></p>`;
 								});
@@ -923,7 +923,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 
 							for (let i = 0; i < art_display.length; i++) {
 								TabContent += `
-									<a href="javascript:LoadItInTheDiv(${art_display[i].id},'posts','HalfDiv',current_lang);" title="info su ${art_display[i].title}"><img src="/cremona-artweek/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="15" height="15" valign="middle"> ${art_display[i].title}</a>`
+									<a href="javascript:LoadItInTheDiv(${art_display[i].id},'posts','HalfDiv',current_lang);" title="info su ${art_display[i].title}"><img src="/cremona-artweek/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="10" height="10" valign="middle"> ${art_display[i].title}</a>`
 								if (i < art_display.length-1) {
 									TabContent += '<br/>';
 								}
@@ -933,7 +933,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 									TabContent += '<br/>';
 								}
 								TabContent += `
-									<a href="javascript:LoadItInTheDiv(${fav_display[k].id},'posts','HalfDiv',current_lang);" title="info su ${fav_display[k].title}"><img src="/cremona-artweek/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="15" height="15" valign="middle"> ${fav_display[k].title}</a>`
+									<a href="javascript:LoadItInTheDiv(${fav_display[k].id},'posts','HalfDiv',current_lang);" title="info su ${fav_display[k].title}"><img src="/cremona-artweek/wp-content/themes/caw_2024/assets/graphics/caw-marker-mini.png" width="10" height="10" valign="middle"> ${fav_display[k].title}</a>`
 							}
 
 						setTimeout(() => {
