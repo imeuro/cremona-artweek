@@ -696,7 +696,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						el.acf.evento_location = 'TBD';
 					}
 					if (!("street_number" in el.acf.evento_location) || el.acf.evento_location.street_number == "undefined") { 
-						el.acf.evento_location.street_number = 's/n' }
+						el.acf.evento_location.street_number = 's/n'
 					// else { 
 					// 	el.acf.evento_location.street_number = el.acf.evento_location.street_number;
 					}
