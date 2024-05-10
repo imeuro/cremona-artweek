@@ -692,10 +692,10 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					let event_content = current_lang == 'en' ? event_en.text : el.content.rendered;
 					let event_title = (current_lang == 'en' && event_en.title !== '') ? event_en.title : el.title.rendered;
 
-					if !("evento_location" in el.acf) {
+					if (!("evento_location" in el.acf)) {
 						el.acf.evento_location = 'TBD';
 					}
-					if !("street_number" in el.acf.evento_location) { 
+					if (!("street_number" in el.acf.evento_location) || el.acf.evento_location.street_number == "undefined") { 
 						el.acf.evento_location.street_number = 's/n' }
 					// else { 
 					// 	el.acf.evento_location.street_number = el.acf.evento_location.street_number;
