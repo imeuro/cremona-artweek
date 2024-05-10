@@ -467,42 +467,49 @@ function setLocalStorageWithExpiry( key, value, ttl ) {
 }
 
 let found_location_data = null;
-function QRcode2location( num ) {
-	const locations_data = getPostsFromWp(WPREST_Base+'/locations/?_fields=id,acf.location_id,acf.location.lat,acf.location.lng&per_page=99');
-	locations_data.then( loc => {
-		loc.forEach((el) => {
-			if (el.acf.location_id == num) {
-				found_location_data = {
-					'id'  : el.id,
-					'lat' : el.acf.location.lat,
-					'lng' : el.acf.location.lng
+function QRcode2div( post_type, num ) {
+	if (post_type == 'location' || post_type == 'luoghi') {
+		const locations_data = getPostsFromWp(WPREST_Base+'/locations/?_fields=id,acf.location_id,acf.location.lat,acf.location.lng&per_page=99');
+		locations_data.then( loc => {
+			loc.forEach((el) => {
+				if (el.acf.location_id == num) {
+					found_location_data = {
+						'id'  : el.id,
+						'lat' : el.acf.location.lat,
+						'lng' : el.acf.location.lng
+					}
+					//console.debug(num,found_location_id);
 				}
-				//console.debug(num,found_location_id);
+			});
+		}).then( () => {
+			console.debug(num,found_location_data);
+			if (found_location_data !== null) {
+				LoadItInTheDiv(found_location_data.id,'locations','HalfDiv','en');
+				setTimeout( () => {
+					map.flyTo({
+						center: [(found_location_data.lng - ShiftMap),found_location_data.lat],
+						essential: true,
+						zoom:17,
+						duration: 2000
+					})
+				},2000)
 			}
-		});
-	}).then( () => {
-		console.debug(num,found_location_data);
-		if (found_location_data !== null) {
-			LoadItInTheDiv(found_location_data.id,'locations','HalfDiv','en');
-			setTimeout( () => {
-				map.flyTo({
-					center: [(found_location_data.lng - ShiftMap),found_location_data.lat],
-					essential: true,
-					zoom:17,
-					duration: 2000
-				})
-			},2000)
-		}
-	})
+		})
+	} else {
+		LoadItInTheDiv(num,post_type,'HalfDiv','it');
+	}
 }
 
 const evlist = ['hashchange','DOMContentLoaded'];
 evlist.forEach((ev) => {
 	document.addEventListener(ev, () => {
-		let numlocation = location.hash.match(/^#location\/([0-9]+)$/);
+		let numlocation = location.hash.match(/^#([a-z]+)\/([0-9]+)$/);
+		console.debug(numlocation,current_lang);
 		if ( numlocation !== null ) {
-			const hashnum = numlocation[1];
-			const hashcallback = QRcode2location( hashnum );
+			let post_type = numlocation[1];
+			const hashnum = numlocation[2];
+			post_type == 'artisti' ? post_type='posts' : post_type;
+			const hashcallback = QRcode2div( post_type, hashnum );
 		}
 	});	
 })
@@ -692,7 +699,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					let event_content = current_lang == 'en' ? event_en.text : el.content.rendered;
 					let event_title = (current_lang == 'en' && event_en.title !== '') ? event_en.title : el.title.rendered;
 
-					// gestione eventi senza location
+					console.debug(el);
 					if (el.acf.evento_location === null) {
 						el.acf.evento_location = 'TBD';
 						if (el.acf.evento_location.street_number === null) { 
@@ -703,7 +710,6 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					} else { 
 					 	el.acf.evento_location.street_number = el.acf.evento_location.street_number;
 					}
-
 
 					TabContent += `
 						<div class="caw-listing-item caw listing-artisti" id="${el.slug}" data-position-lng="${el.acf.evento_location.lng}" data-position-lat="${el.acf.evento_location.lat}">
