@@ -423,6 +423,8 @@ button.menu-toggle:after {
     height: 50px;
     cursor: pointer;
 	transition: transform 250ms ease-in-out;
+	background: #ffffffcc;
+    border-radius: 4px;
 }
 #caw-content .close-tabcontainer:hover {
     transform-origin: center;
