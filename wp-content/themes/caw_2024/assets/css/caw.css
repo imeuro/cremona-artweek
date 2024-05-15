@@ -483,6 +483,7 @@ button.menu-toggle:after {
 		height: 50px;
 		cursor: pointer;
 		transition: transform 250ms ease-in-out;
+		background: transparent;
 	}
 }
 
@@ -520,7 +521,7 @@ button.menu-toggle:after {
 	border-bottom: 2.5px solid var(--main-color);
 	white-space: break-spaces;
 }
-#caw-tabcontainer .small-tabcontent {
+#caw-tabcontainer .small-tabcontent:not(.empty) {
     min-height: 48px;
 }
 #caw-tabcontainer .small-tabcontent span {
@@ -567,7 +568,44 @@ button.menu-toggle:after {
  }
 #caw-tabcontainer .caw-listing .content-tabcontent p { margin: 5px 0; }
 
-
+#caw-tabcontainer a.scheda-back-btn {
+	position: fixed;
+	bottom: 15px;
+	right: 100px;
+	width: 50px;
+	height: 50px;
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	justify-content: center;
+	background: #ffffffcc;
+	border-radius: 4px;
+}
+#caw-tabcontainer a.scheda-back-btn span {
+	position: relative;
+	display: inline-block;
+	border-bottom: 3px solid var(--main-color);
+	width: 30px;
+	height: 5px;
+}
+#caw-tabcontainer a.scheda-back-btn span:after,
+#caw-tabcontainer a.scheda-back-btn span:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: -7px;
+    left: 4px;
+    width: 18px;
+    height: 18px;
+    border: none;
+    border-left: 3px solid var(--main-color);
+    transform: rotate(45deg);
+}
+#caw-tabcontainer a.scheda-back-btn span:after {
+	top: -4px;
+    left: 4px;
+    transform: rotate(-45deg);
+}
 /* LISTA SPONSORSS */
 #caw-tabcontainer .wp-block-table {
 	color: transparent;
@@ -587,6 +625,16 @@ button.menu-toggle:after {
 
 @media all and (min-width: 37.5em) {
 	#caw-tabcontainer { padding: 0 20px 0 40px; }
+	#caw-tabcontainer .small-tabcontent {
+    	min-height: 48px;
+	}
+	#caw-tabcontainer a.scheda-back-btn {
+		position: absolute;
+		top: 65px;
+		right: 17px;
+		background: transparent;
+		border: none;
+	}
 }
 
 

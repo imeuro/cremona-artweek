@@ -433,27 +433,6 @@ function get_artists_for_location_id ( CAWdata, id, callback ) {
 	).then( callback );
 }
 
-// function get_faville_for_location_id ( CAWdata, id, callback ) {
-// 	// query all posts (Artists) with acf 'location_id' == CAWdata.acf.location_id
-// 	//. dconsole.debug(id);
-// 	fav_display=[];
-// 	const FAVhere_data = getPostsFromWp(WPREST_Base+'/faville/?_fields=id,acf.location,acf.testo_eng,slug,title,content&per_page=99');
-// 	let i = 0;
-// 	FAVhere_data.then( fheredata => {
-// 		fheredata.forEach((el) => {
-// 			if (el.acf.location.includes(id)) {
-// 				fav_display[f]={};
-// 				// console.debug(CAWdata.id,el);
-// 				fav_display[f].id = el.id;
-// 				fav_display[f].slug = el.slug;
-// 				fav_display[f].title = el.title.rendered;
-// 				fav_display[f].content = current_lang == 'en' ? el.acf.testo_eng : el.content.rendered;
-// 				f++;
-// 			}
-// 		});
-// 	}).then( callback );
-// }
-
 function setLocalStorageWithExpiry( key, value, ttl ) {
 	const now = new Date()
 
@@ -925,6 +904,8 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 					if (typeof(content_orari) === 'undefined') { content_orari = '-' };
 
 					function printLocationsTab () {
+						let backpageId = current_lang == 'it' ? 1043 : 1045;
+
 						console.debug(art_display.length+' artists displaying here', art_display);
 						console.debug(fav_display.length+' faville displaying here', fav_display);
 
@@ -935,7 +916,9 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 								<span style="margin-bottom:12px;">${CAWdata.acf.location.street_name}, ${CAWdata.acf.location.street_number}</span>
 							</p>
 							<hr class="spacerbar" />
-							<div class="content-tabcontent">${content_tabcontent}</div>`;
+							<div class="content-tabcontent">${content_tabcontent}</div>
+							<a href="javascript:LoadItInTheDiv(${backpageId},'', 'HalfDiv', '${current_lang}')" class="scheda-back-btn"><span></span></a>
+							`;
 
 
 							for (let i = 0; i < art_display.length; i++) {
@@ -961,6 +944,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 				} else if (CAWdata.acf.location_id === '') {
 					// 👉 SPOTS
 					let content_orari = (current_lang == 'en') ? CAWdata.acf.orari_evento_en : CAWdata.acf.orari_evento_it;
+					let backpageId = current_lang == 'it' ? 1043 : 1045;
 					if (typeof(content_orari) === 'undefined') { content_orari = '-' };
 					TabContent += `
 						<h2 class="title-tabcontent
@@ -971,15 +955,19 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						</p>
 						<hr class="spacerbar" />
 						<div class="content-tabcontent">${content_tabcontent}</div>
+						<a href="javascript:LoadItInTheDiv(${backpageId},'', 'HalfDiv', '${current_lang}')" class="scheda-back-btn"><span></span></a>
 					`;
 					TabContainer.innerHTML = TabContent;
 				} else if (CAWdata.type === 'faville') {
 					// 👉 FAVILLE
 					GA4pageTitle += '/faville/'+CAWdata.slug;
+					let backpageId = current_lang == 'it' ? 1492 : 1494;
 					TabContent += `
 						<h2 class="title-tabcontent">${CAWdata.title.rendered}</h2>
+						<p class="small-tabcontent empty"></p>
 						<hr class="spacerbar" />
 						<div class="content-tabcontent">${content_tabcontent}</div>
+						<a href="javascript:LoadItInTheDiv(${backpageId},'', 'HalfDiv', '${current_lang}')" class="scheda-back-btn"><span></span></a>
 					`;
 					setTimeout(() => {
 						TabContainer.innerHTML = TabContent;
@@ -988,11 +976,23 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 				} else { 
 					// 👉 SIMPLE POSTS/PAGES:
 					GA4pageTitle += '/'+CAWdata.slug;
+					let backpageId = current_lang == 'it' ? 498 : 500;
 					TabContent += `
-						<h2 class="title-tabcontent">${CAWdata.title.rendered}</h2>
+						<h2 class="title-tabcontent">${CAWdata.title.rendered}</h2>`;
+					if (CAWdata.type == 'post') {
+						TabContent += `
+						<p class="small-tabcontent empty"></p>
+						`;
+					}
+					TabContent += `
 						<hr class="spacerbar" />
 						<div class="content-tabcontent">${content_tabcontent}</div>
 					`;
+					if (CAWdata.type == 'post') {
+						TabContent += `
+						<a href="javascript:LoadItInTheDiv(${backpageId},'', 'HalfDiv', '${current_lang}')" class="scheda-back-btn"><span></span></a>
+						`;
+					}
 					// if (CAWdata.acf.location) {
 					// 	TabContent += `rrrr`;
 					// 	CAWdata.acf.location.forEach((el) => {
