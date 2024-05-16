@@ -976,7 +976,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						let picToExplode = document.querySelectorAll('.wp-block-media-text');
 						Array.from(picToExplode).forEach((el)=>{
 							el.addEventListener('click',(e)=>{
-								el.classList.toggle('wp-block-media-text');
+								el.classList.toggle('explode');
 							})
 						})
 

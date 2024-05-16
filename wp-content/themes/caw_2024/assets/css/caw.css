@@ -576,14 +576,19 @@ button.menu-toggle:after {
     font-size: 12px;
     justify-content: flex-start;
     align-items: center;
+    cursor: pointer;
+}
+#caw-tabcontainer .wp-block-media-text.explode {
+	display: inline-block;
 }
 #caw-tabcontainer .wp-block-media-text figure {
 	flex: 1 0 33%;
 	max-width: 100px;
-	cursor: pointer;
+	transition: max-width 250ms linear;
 }
-
-
+#caw-tabcontainer .wp-block-media-text.explode figure {
+	max-width: 100%;
+}
 
 #caw-tabcontainer a.scheda-back-btn {
 	position: fixed;
