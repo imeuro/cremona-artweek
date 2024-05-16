@@ -893,7 +893,16 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 
 			}
 			else { // LOCATIONS & SIMPLE POSTS/PAGES:
-				const content_tabcontent = (current_lang == 'en' && CAWdata.acf.testo_eng) ? formatACFText(CAWdata.acf.testo_eng).text : CAWdata.content.rendered;
+
+				// 16/05/2024 nuovo metodo: si usa il separatore <!--nextpage--> all'interno del block editor principale sia per testo ita che per testo eng
+				const content_split = CAWdata.content.rendered.split("<!--nextpage-->");
+				console.debug(content_split.length,content_split);
+				let content_tabcontent = '';
+				if (content_split.length > 1) {
+					content_tabcontent = (current_lang == 'en') ? content_split[1] : content_split[0];
+				} else {
+					content_tabcontent = (current_lang == 'en' && CAWdata.acf.testo_eng) ? formatACFText(CAWdata.acf.testo_eng).text : CAWdata.content.rendered;
+				}
 
 				//console.debug(CAWdata);
 				if (CAWdata.acf.location_id) {
@@ -970,7 +979,7 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						<a href="javascript:LoadItInTheDiv(${backpageId},'', 'HalfDiv', '${current_lang}')" class="scheda-back-btn"><span></span></a>
 					`;
 					setTimeout(() => {
-						
+
 						TabContainer.innerHTML = TabContent;
 
 						let picToExplode = document.querySelectorAll('.wp-block-media-text');
