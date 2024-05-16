@@ -970,8 +970,16 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						<a href="javascript:LoadItInTheDiv(${backpageId},'', 'HalfDiv', '${current_lang}')" class="scheda-back-btn"><span></span></a>
 					`;
 					setTimeout(() => {
+						
 						TabContainer.innerHTML = TabContent;
-						console.debug(TabContainer.innerHTML);
+
+						let picToExplode = document.querySelectorAll('.wp-block-media-text');
+						Array.from(picToExplode).forEach((el)=>{
+							el.addEventListener('click',(e)=>{
+								el.classList.toggle('wp-block-media-text');
+							})
+						})
+
 					},100);	
 				} else { 
 					// 👉 SIMPLE POSTS/PAGES:
@@ -993,16 +1001,10 @@ const LoadItInTheDiv = (itemID, postType, divType, lang) => {
 						<a href="javascript:LoadItInTheDiv(${backpageId},'', 'HalfDiv', '${current_lang}')" class="scheda-back-btn"><span></span></a>
 						`;
 					}
-					// if (CAWdata.acf.location) {
-					// 	TabContent += `rrrr`;
-					// 	CAWdata.acf.location.forEach((el) => {
-					// 		TabContent += `ooooooo-- ${el}`+el;
-					// 	});
-					// }
+
 					setTimeout(() => {
 						TabContainer.innerHTML = TabContent;
 					},100);	
-
 				}
 				
 			}
